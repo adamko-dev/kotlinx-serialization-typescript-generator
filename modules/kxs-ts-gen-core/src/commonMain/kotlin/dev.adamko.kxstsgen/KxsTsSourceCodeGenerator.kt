@@ -103,8 +103,6 @@ class KxsTsSourceCodeGenerator(
     }
   }
 
-//  private fun generateTypeReference(typeRefs: Collection<TsTyping>) =
-//    generateTypeReference(*typeRefs.toTypedArray())
 
   /**
    * A type-reference, be it for the field of an interface, a type alias, or a generic type
