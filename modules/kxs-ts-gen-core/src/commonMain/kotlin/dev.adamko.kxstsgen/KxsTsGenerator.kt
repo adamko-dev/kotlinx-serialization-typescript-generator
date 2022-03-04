@@ -62,7 +62,7 @@ class TsConverter(
     convertToTsElement(null, target)
   }
 
-  private fun convertToTsElement(requestor: TsElementId?, target: SerialDescriptor): TsElementId {
+  private fun convertToTsElement(requestor: TsElementId?, target: SerialDescriptor): TsElement {
 
     val targetId = TsElementId(target.serialName.removeSuffix("?"))
 
@@ -112,7 +112,7 @@ class TsConverter(
       }
 
       result
-    }.id
+    }
   }
 
 
@@ -123,18 +123,18 @@ class TsConverter(
 
     if (structDescriptor.isInline) {
       val fieldDescriptor = structDescriptor.elementDescriptors.first()
-      val typeId = convertToTsElement(targetId, fieldDescriptor)
-      val typeReference = TsTypeReference(typeId, fieldDescriptor.isNullable)
-      return TsTypeAlias(targetId, setOf(typeReference))
+      val fieldType = convertToTsElement(targetId, fieldDescriptor)
+      val fieldTyping = TsTyping(fieldType, fieldDescriptor.isNullable)
+      return TsTypeAlias(targetId, fieldTyping)
     } else {
 
-      val properties = structDescriptor.elementDescriptors.mapIndexed { index, field ->
+      val properties = structDescriptor.elementDescriptors.mapIndexed { index, fieldDescriptor ->
         val name = structDescriptor.getElementName(index)
-        val fieldTypeId = convertToTsElement(targetId, field)
-        val fieldTypeReference = TsTypeReference(fieldTypeId, field.isNullable)
+        val fieldType = convertToTsElement(targetId, fieldDescriptor)
+        val fieldTyping = TsTyping(fieldType, fieldDescriptor.isNullable)
         when {
-          structDescriptor.isElementOptional(index) -> TsProperty.Optional(name, fieldTypeReference)
-          else                                      -> TsProperty.Required(name, fieldTypeReference)
+          structDescriptor.isElementOptional(index) -> TsProperty.Optional(name, fieldTyping)
+          else                                      -> TsProperty.Required(name, fieldTyping)
         }
       }
 
@@ -146,10 +146,6 @@ class TsConverter(
     targetId: TsElementId,
     enumDescriptor: SerialDescriptor,
   ): TsElement {
-//    if (descriptor.elementsCount > 0) {
-//      convertStructure(descriptor)
-//    }
-
     return TsStructure.TsEnum(
       targetId,
       enumDescriptor.elementNames.toSet(),
@@ -160,12 +156,10 @@ class TsConverter(
     targetId: TsElementId,
     listDescriptor: SerialDescriptor,
   ): TsStructure.TsList {
-
-    val typeDescriptor = listDescriptor.elementDescriptors.first()
-    val typeId =
-      TsTypeReference(convertToTsElement(targetId, typeDescriptor), typeDescriptor.isNullable)
-
-    return TsStructure.TsList(targetId, typeId)
+    val elementDescriptor = listDescriptor.elementDescriptors.first()
+    val elementType = convertToTsElement(targetId, elementDescriptor)
+    val elementTyping = TsTyping(elementType, elementDescriptor.isNullable)
+    return TsStructure.TsList(targetId, elementTyping)
   }
 
   private fun convertMap(
@@ -174,10 +168,13 @@ class TsConverter(
   ): TsStructure.TsMap {
 
     val (keyDescriptor, valueDescriptor) = mapDescriptor.elementDescriptors.toList()
-    val keyType =
-      TsTypeReference(convertToTsElement(targetId, keyDescriptor), keyDescriptor.isNullable)
-    val valueType =
-      TsTypeReference(convertToTsElement(targetId, valueDescriptor), valueDescriptor.isNullable)
-    return TsStructure.TsMap(targetId, keyType, valueType)
+
+    val keyType = convertToTsElement(targetId, keyDescriptor)
+    val keyTyping = TsTyping(keyType, keyDescriptor.isNullable)
+
+    val valueType = convertToTsElement(targetId, valueDescriptor)
+    val valueTyping = TsTyping(valueType, valueDescriptor.isNullable)
+
+    return TsStructure.TsMap(targetId, keyTyping, valueTyping)
   }
 }

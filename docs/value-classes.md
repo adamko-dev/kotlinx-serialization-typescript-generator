@@ -62,10 +62,46 @@ type UInt = number;
 type ULong = number;
 ```
 
-(At present this is not very useful as Typescript will make no distinction between any of these
-numbers, even though they are distinct in Kotlin. 'Brand typing' might be introduced in the future.)
+<!--- TEST -->
+
+
+### Brand typing
+
+To make value classes a little more strict, we can use brand typing
+
+
+```kotlin
+import kotlinx.serialization.builtins.serializer
+import dev.adamko.kxstsgen.KxsTsConfig.TypeAliasTypingConfig.BrandTyping
+```
+
+<!-- IMPORT -->
+
+```kotlin
+
+fun main() {
+
+  val tsConfig = KxsTsConfig(typeAliasTyping = BrandTyping)
+
+  val tsGenerator = KxsTsGenerator(config = tsConfig)
+  println(
+    tsGenerator.generate(
+      ULong.serializer().descriptor,
+    )
+  )
+}
+```
+
+<!-- PREFIX -->
+
+> You can get the full code [here](./knit/example/example-value-classes-03.kt).
+
+```typescript
+type ULong = number & { __ULong__: void };
+```
 
 <!--- TEST -->
+
 
 ### Nested value classes
 
@@ -83,7 +119,7 @@ fun main() {
 }
 ```
 
-> You can get the full code [here](./knit/example/example-value-classes-03.kt).
+> You can get the full code [here](./knit/example/example-value-classes-04.kt).
 
 ```typescript
 type UInt = number;

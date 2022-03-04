@@ -5,18 +5,15 @@ import kotlin.jvm.JvmInline
 
 @JvmInline
 value class TsElementId(private val id: String) {
-
   val namespace: String
     get() = id.substringBeforeLast(".")
   val name: String
     get() = id.substringAfterLast(".")
-  val filename: String
-    get() = namespace.lowercase().replace('.', '-') + ".d.ts"
 }
+
 
 sealed interface TsElement {
   val id: TsElementId
-//  val namespace: String
 }
 
 
@@ -42,40 +39,29 @@ sealed class TsPrimitive(
 
 data class TsTypeAlias(
   override val id: TsElementId,
-  val types: Set<TsTypeReference>,
+  val type: TsTyping,
 ) : TsElement
-//{
-//  constructor(id: TsElementId, vararg types: TsElementId)
-//    : this(id, types.map { it.id }.toSet())
-//}
 
 
-data class TsTypeReference(
-  val id: TsElementId,
+data class TsTyping(
+  val type: TsElement,
   val nullable: Boolean,
 )
 
 
 sealed interface TsProperty {
   val name: String
-  val typeReference: TsTypeReference
-//  val optional: Boolean
+  val typing: TsTyping
 
   data class Required(
     override val name: String,
-    override val typeReference: TsTypeReference,
+    override val typing: TsTyping,
   ) : TsProperty
-//  {
-//    override val optional: Boolean = false
-//  }
 
   data class Optional(
     override val name: String,
-    override val typeReference: TsTypeReference,
+    override val typing: TsTyping,
   ) : TsProperty
-//  {
-//    override val optional: Boolean = true
-//  }
 }
 
 
@@ -93,22 +79,16 @@ sealed interface TsStructure : TsElement {
 
   data class TsList(
     override val id: TsElementId,
-    val elementsTsType: TsTypeReference,
+    val elementsTyping: TsTyping,
   ) : TsStructure
 
   data class TsMap(
     override val id: TsElementId,
-    val keyTsType: TsTypeReference,
-    val valueTsType: TsTypeReference,
+    val keyTyping: TsTyping,
+    val valueTyping: TsTyping,
   ) : TsStructure
 }
 
-//@JvmInline
-//value class TsProperties(
-//  private val properties: List<TsProperty>,
-//) {
-//  override fun toString(): String = properties.joinToString("\n") { it.output + ";" }
-//}
 
 sealed interface TsPolymorphicDiscriminator {
   sealed interface Closed

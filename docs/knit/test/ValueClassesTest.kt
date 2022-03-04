@@ -34,6 +34,15 @@ class ValueClassesTest {
     captureOutput("ExampleValueClasses03") {
       example.exampleValueClasses03.main()
     }.verifyOutputLines(
+      "type ULong = number & { __ULong__: void };"
+    )
+  }
+
+  @Test
+  fun testExampleValueClasses04() {
+    captureOutput("ExampleValueClasses04") {
+      example.exampleValueClasses04.main()
+    }.verifyOutputLines(
       "type UInt = number;",
       "",
       "type UserCount = UInt;"

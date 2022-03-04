@@ -23,7 +23,7 @@ fun main() {
 
 ```typescript
 interface CalendarEvent {
-  attendeeNames: string[]
+  attendeeNames: string[];
 }
 ```
 

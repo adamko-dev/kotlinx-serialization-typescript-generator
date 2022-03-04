@@ -5,16 +5,22 @@ import kotlinx.serialization.descriptors.SerialDescriptor
 
 data class KxsTsConfig(
   val indent: String = "  ",
-  val namespaceConfig: NamespaceConfig = NamespaceConfig.None,
+  val namespaceConfig: NamespaceConfig = NamespaceConfig.Disabled,
+  val typeAliasTyping: TypeAliasTypingConfig = TypeAliasTypingConfig.None,
 ) {
 
   sealed interface NamespaceConfig {
     /** Use the prefix of the [SerialDescriptor]  */
     object UseDescriptorNamePrefix : NamespaceConfig
     /** don't generate a namespace */
-    object None : NamespaceConfig
+    object Disabled : NamespaceConfig
     @JvmInline
-    value class Hardcoded(val namespace: String) : NamespaceConfig
+    value class Static(val namespace: String) : NamespaceConfig
+  }
+
+  sealed interface TypeAliasTypingConfig {
+    object None : TypeAliasTypingConfig
+    object BrandTyping : TypeAliasTypingConfig
   }
 
 }

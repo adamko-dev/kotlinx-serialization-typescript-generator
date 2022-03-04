@@ -30,4 +30,15 @@ class AbstractClassesTest {
       "}"
     )
   }
+
+  @Test
+  fun testExampleAbstractClassAbstractField01() {
+    captureOutput("ExampleAbstractClassAbstractField01") {
+      example.exampleAbstractClassAbstractField01.main()
+    }.verifyOutputLines(
+      "interface Color {",
+      "  rgb: number;",
+      "}"
+    )
+  }
 }

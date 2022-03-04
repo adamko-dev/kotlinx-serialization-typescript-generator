@@ -6,9 +6,9 @@ import kotlinx.serialization.*
 import dev.adamko.kxstsgen.*
 
 @Serializable
-class Config {
-  val properties: Map<String, String> = mapOf()
-}
+data class Config(
+  val properties: Map<String, String>
+)
 
 fun main() {
   val tsGenerator = KxsTsGenerator()

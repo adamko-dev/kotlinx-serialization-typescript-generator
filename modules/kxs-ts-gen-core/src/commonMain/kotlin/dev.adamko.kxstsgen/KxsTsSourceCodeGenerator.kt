@@ -12,8 +12,8 @@ class KxsTsSourceCodeGenerator(
     return elements
       .groupBy {
         when (config.namespaceConfig) {
-          is KxsTsConfig.NamespaceConfig.Hardcoded            -> config.namespaceConfig.namespace
-          KxsTsConfig.NamespaceConfig.None                    -> ""
+          is KxsTsConfig.NamespaceConfig.Static               -> config.namespaceConfig.namespace
+          KxsTsConfig.NamespaceConfig.Disabled                -> ""
           KxsTsConfig.NamespaceConfig.UseDescriptorNamePrefix -> it.id.namespace
         }
       }
@@ -21,11 +21,11 @@ class KxsTsSourceCodeGenerator(
 
         elements.mapNotNull { element ->
           when (element) {
+            is TsStructure.TsMap,
+            is TsStructure.TsList,
             is TsPrimitive             -> null
             is TsStructure.TsEnum      -> generateEnum(element)
             is TsStructure.TsInterface -> generateInterface(element)
-            is TsStructure.TsMap       -> generateMap(element)
-            is TsStructure.TsList      -> generateList(element)
             is TsTypeAlias             -> generateTypeAlias(element)
           }
         }
@@ -69,7 +69,7 @@ class KxsTsSourceCodeGenerator(
         is TsProperty.Optional -> "?: "
         is TsProperty.Required -> ": "
       }
-      val propertyType = generateTypeReference(property.typeReference)
+      val propertyType = generateTypeReference(property.typing)
       // generate `  name: Type;`
       // or       `  name:? Type;`
       "${indent}${property.name}${separator}${propertyType};"
@@ -83,43 +83,55 @@ class KxsTsSourceCodeGenerator(
   }
 
   private fun generateTypeAlias(element: TsTypeAlias): String {
-    val aliases = generateTypeReference(element.types)
-    return """
-      |type ${element.id.name} = ${aliases};
-    """.trimMargin()
+    val aliases = generateTypeReference(element.type)
+
+    return when (config.typeAliasTyping) {
+      KxsTsConfig.TypeAliasTypingConfig.None        ->
+        """
+          |type ${element.id.name} = ${aliases};
+        """.trimMargin()
+      KxsTsConfig.TypeAliasTypingConfig.BrandTyping -> {
+
+        val brandType = element.id.name
+          .replace(".", "_")
+          .filter { it.isLetter() || it == '_' }
+
+        """
+          |type ${element.id.name} = $aliases & { __${brandType}__: void };
+        """.trimMargin()
+      }
+    }
   }
 
-  private fun generateTypeReference(typeRefs: Collection<TsTypeReference>) =
-    generateTypeReference(*typeRefs.toTypedArray())
+//  private fun generateTypeReference(typeRefs: Collection<TsTyping>) =
+//    generateTypeReference(*typeRefs.toTypedArray())
 
   /**
    * A type-reference, be it for the field of an interface, a type alias, or a generic type
    * constraint.
    */
-  private fun generateTypeReference(vararg typeRefs: TsTypeReference): String {
-
-    val includeNull = typeRefs.any { it.nullable }
-
-    return typeRefs
-      .map { it.id.name }
-      .sorted()
-      .plus(if (includeNull) "null" else null)
-      .filterNotNull()
-      .joinToString(separator = " | ")
-  }
-
-  private fun generateList(element: TsStructure.TsList): String {
-    val elementsTypeRef = generateTypeReference(element.elementsTsType)
-    return """
-      |${elementsTypeRef}[]
-    """.trimMargin()
-  }
-
-  private fun generateMap(element: TsStructure.TsMap): String {
-    val keyTypeRef = generateTypeReference(element.keyTsType)
-    val valueTypeRef = generateTypeReference(element.keyTsType)
-    return """
-      |{ [key: $keyTypeRef]: $valueTypeRef }
-    """.trimMargin()
+  private fun generateTypeReference(typing: TsTyping): String {
+    return buildString {
+      when (typing.type) {
+        is TsStructure.TsEnum,
+        is TsStructure.TsInterface,
+        is TsTypeAlias,
+        is TsPrimitive        -> {
+          append(typing.type.id.name)
+          if (typing.nullable) {
+            append(" | " + TsPrimitive.TsNull.id.name)
+          }
+        }
+        is TsStructure.TsList -> {
+          append(generateTypeReference(typing.type.elementsTyping))
+          append("[]")
+        }
+        is TsStructure.TsMap  -> {
+          val keyTypeRef = generateTypeReference(typing.type.keyTyping)
+          val valueTypeRef = generateTypeReference(typing.type.valueTyping)
+          append("{ [key: $keyTypeRef]: $valueTypeRef }")
+        }
+      }
+    }
   }
 }

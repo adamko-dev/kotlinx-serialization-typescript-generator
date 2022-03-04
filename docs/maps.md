@@ -1,17 +1,18 @@
 <!--- TEST_NAME MapsTests -->
 
-### Primitive lists
-
 <!--- INCLUDE .*\.kt
 import kotlinx.serialization.*
 import dev.adamko.kxstsgen.*
 -->
 
+### Primitive lists
+
+
 ```kotlin
 @Serializable
-class Config {
-  val properties: Map<String, String> = mapOf()
-}
+data class Config(
+  val properties: Map<String, String>
+)
 
 fun main() {
   val tsGenerator = KxsTsGenerator()

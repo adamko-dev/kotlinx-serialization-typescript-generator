@@ -11,7 +11,7 @@ class ListsTests {
       example.exampleListPrimitive01.main()
     }.verifyOutputLines(
       "interface CalendarEvent {",
-      "  attendeeNames: string[]",
+      "  attendeeNames: string[];",
       "}"
     )
   }
