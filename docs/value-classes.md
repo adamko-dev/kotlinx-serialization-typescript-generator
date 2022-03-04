@@ -1,9 +1,25 @@
 <!--- TEST_NAME ValueClassesTest -->
 
+
+**Table of contents**
+
+<!--- TOC -->
+
+* [Introduction](#introduction)
+  * [Inline value classes](#inline-value-classes)
+  * [Brand typing](#brand-typing)
+  * [Nested value classes](#nested-value-classes)
+
+<!--- END -->
+
+
 <!--- INCLUDE .*\.kt
 import kotlinx.serialization.*
 import dev.adamko.kxstsgen.*
 -->
+
+## Introduction
+
 
 ### Inline value classes
 

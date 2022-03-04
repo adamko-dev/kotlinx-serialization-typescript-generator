@@ -1,9 +1,23 @@
 <!--- TEST_NAME AbstractClassesTest -->
 
+**Table of contents**
+
+<!--- TOC -->
+
+* [Introduction](#introduction)
+  * [Abstract class with a single field](#abstract-class-with-a-single-field)
+  * [Abstract class with primitive fields](#abstract-class-with-primitive-fields)
+  * [Abstract class, abstract value](#abstract-class-abstract-value)
+
+<!--- END -->
+
+
 <!--- INCLUDE .*\.kt
 import kotlinx.serialization.*
 import dev.adamko.kxstsgen.*
 -->
+
+## Introduction
 
 ### Abstract class with a single field
 
@@ -63,13 +77,16 @@ interface SimpleTypes {
 
 ```kotlin
 @Serializable
-abstract class Color {
-  abstract val rgb: Int
+abstract class AbstractSimpleTypes {
+  abstract val aString: String
+  abstract var anInt: Int
+  abstract val aDouble: Double
+  abstract val bool: Boolean
 }
 
 fun main() {
   val tsGenerator = KxsTsGenerator()
-  println(tsGenerator.generate(Color.serializer().descriptor))
+  println(tsGenerator.generate(AbstractSimpleTypes.serializer().descriptor))
 }
 ```
 

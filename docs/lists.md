@@ -1,11 +1,24 @@
 <!--- TEST_NAME ListsTests -->
 
-### Primitive lists
+**Table of contents**
+
+<!--- TOC -->
+
+* [Introduction](#introduction)
+  * [Primitive lists](#primitive-lists)
+
+<!--- END -->
+
 
 <!--- INCLUDE .*\.kt
 import kotlinx.serialization.*
 import dev.adamko.kxstsgen.*
 -->
+
+## Introduction
+
+
+### Primitive lists
 
 ```kotlin
 @Serializable

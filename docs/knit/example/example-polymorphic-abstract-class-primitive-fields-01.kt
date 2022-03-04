@@ -1,6 +1,6 @@
-// This file was automatically generated from abstract-classes.md by Knit tool. Do not edit.
+// This file was automatically generated from polymorphism.md by Knit tool. Do not edit.
 @file:Suppress("PackageDirectoryMismatch", "unused")
-package example.exampleAbstractClassPrimitiveFields01
+package example.examplePolymorphicAbstractClassPrimitiveFields01
 
 import kotlinx.serialization.*
 import dev.adamko.kxstsgen.*

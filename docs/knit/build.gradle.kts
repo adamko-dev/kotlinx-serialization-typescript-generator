@@ -7,7 +7,6 @@ plugins {
 }
 
 
-
 val kotlinxSerializationVersion = "1.3.2"
 
 dependencies {
@@ -16,6 +15,8 @@ dependencies {
   implementation(platform("org.jetbrains.kotlinx:kotlinx-serialization-bom:${kotlinxSerializationVersion}"))
   implementation("org.jetbrains.kotlinx:kotlinx-serialization-core")
   implementation("org.jetbrains.kotlinx:kotlinx-serialization-json")
+
+  implementation("org.jetbrains.kotlinx:kotlinx-knit:0.3.0")
 
   testImplementation(kotlin("test"))
 

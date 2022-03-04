@@ -124,12 +124,38 @@ class KxsTsSourceCodeGenerator(
           append(generateTypeReference(typing.type.elementsTyping))
           append("[]")
         }
-        is TsStructure.TsMap  -> {
-          val keyTypeRef = generateTypeReference(typing.type.keyTyping)
-          val valueTypeRef = generateTypeReference(typing.type.valueTyping)
-          append("{ [key: $keyTypeRef]: $valueTypeRef }")
-        }
+        is TsStructure.TsMap  -> append(mapTypeReference(typing))
       }
     }
   }
+
+  private fun mapTypeReference(typing: TsTyping): String {
+    require(typing.type is TsStructure.TsMap)
+
+    val keyTypeRef = generateTypeReference(typing.type.keyTyping)
+    val valueTypeRef = generateTypeReference(typing.type.valueTyping)
+
+    return when (typing.type.keyTyping.type) {
+
+      TsPrimitive.TsString,
+      TsPrimitive.TsNumber  -> "{ [key: $keyTypeRef]: $valueTypeRef }"
+
+      is TsStructure.TsEnum -> "{ [key in $keyTypeRef]: $valueTypeRef }"
+
+      TsPrimitive.TsBoolean,
+      TsPrimitive.TsObject,
+      TsPrimitive.TsAny,
+      TsPrimitive.TsNever,
+      TsPrimitive.TsNull,
+      TsPrimitive.TsUndefined,
+      TsPrimitive.TsUnknown,
+      TsPrimitive.TsVoid,
+      is TsTypeAlias,
+      is TsStructure.TsInterface,
+      is TsStructure.TsList,
+      is TsStructure.TsMap  -> "Map<$keyTypeRef, $valueTypeRef>"
+
+    }
+  }
+
 }

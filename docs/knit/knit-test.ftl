@@ -1,11 +1,11 @@
-<#-- @ftlvariable name="test.name" type="String" -->
-<#-- @ftlvariable name="test.package" type="String" -->
-<#-- @ftlvariable name="file.name" type="String" -->
+<#-- @ftlvariable name="test.name" type="java.lang.String" -->
+<#-- @ftlvariable name="test.package" type="java.lang.String" -->
 // This file was automatically generated from ${file.name} by Knit tool. Do not edit.
 package ${test.package}
 
-import org.junit.jupiter.api.Test
+import io.kotest.matchers.*
 import kotlinx.knit.test.*
+import org.junit.jupiter.api.Test
 
 class ${test.name} {
 <#list cases as case><#assign method = test["mode.${case.param}"]!"custom">
@@ -14,10 +14,13 @@ class ${test.name} {
     captureOutput("${case.name}") {
       ${case.knit.package}.${case.knit.name}.main()
     }<#if method != "custom">.${method}(
+        // language=TypeScript
+        """
 <#list case.lines as line>
-      "${line?j_string}"<#sep>,</#sep>
+          |${line}
 </#list>
-    )
+        """.trimMargin()
+      )
 <#else>.also { lines ->
       check(${case.param})
     }

@@ -1,9 +1,25 @@
 <!--- TEST_NAME MapsTests -->
 
+**Table of contents**
+
+<!--- TOC -->
+
+* [Introduction](#introduction)
+  * [Primitive maps](#primitive-maps)
+  * [Enum keys](#enum-keys)
+  * [Nullable keys and values](#nullable-keys-and-values)
+  * [Maps with complex keys](#maps-with-complex-keys)
+
+<!--- END -->
+
+
 <!--- INCLUDE .*\.kt
 import kotlinx.serialization.*
 import dev.adamko.kxstsgen.*
 -->
+
+## Introduction
+
 
 ### Primitive maps
 
@@ -29,6 +45,41 @@ interface Config {
 
 <!--- TEST -->
 
+### Enum keys
+
+```kotlin
+@Serializable
+enum class SettingKeys {
+  SCREEN_SIZE,
+  MAX_MEMORY,
+}
+
+@Serializable
+class Application(
+  val settings: Map<SettingKeys, String>
+)
+
+fun main() {
+  val tsGenerator = KxsTsGenerator()
+  println(tsGenerator.generate(Application.serializer().descriptor))
+}
+```
+
+> You can get the full code [here](./knit/example/example-map-primitive-02.kt).
+
+```typescript
+enum SettingKeys {
+  SCREEN_SIZE = "SCREEN_SIZE",
+  MAX_MEMORY = "MAX_MEMORY",
+}
+
+interface Application {
+  settings: { [key in SettingKeys]: string };
+}
+```
+
+<!--- TEST -->
+
 ### Nullable keys and values
 
 ```kotlin
@@ -43,7 +94,7 @@ fun main() {
 }
 ```
 
-> You can get the full code [here](./knit/example/example-map-primitive-02.kt).
+> You can get the full code [here](./knit/example/example-map-primitive-03.kt).
 
 ```typescript
 interface Config {
@@ -88,7 +139,7 @@ interface Colour {
 }
 
 interface CanvasProperties {
-  colourNames: { [key: Colour]: string };
+  colourNames: Map<Colour, string>;
 }
 ```
 

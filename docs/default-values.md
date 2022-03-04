@@ -1,9 +1,23 @@
 <!--- TEST_NAME DefaultValuesTest -->
 
+**Table of contents**
+
+<!--- TOC -->
+
+* [Introduction](#introduction)
+  * [Default values](#default-values)
+  * [Default and nullable](#default-and-nullable)
+
+<!--- END -->
+
+
 <!--- INCLUDE .*\.kt
 import kotlinx.serialization.*
 import dev.adamko.kxstsgen.*
 -->
+
+## Introduction
+
 
 ### Default values
 

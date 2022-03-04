@@ -1,8 +1,24 @@
 <!--- TEST_NAME EnumClassTest -->
 
+
+**Table of contents**
+
+<!--- TOC -->
+
+* [Introduction](#introduction)
+  * [Plain class with a single field](#plain-class-with-a-single-field)
+  * [Plain class with primitive fields](#plain-class-with-primitive-fields)
+
+<!--- END -->
+
+
+<!--- INCLUDE .*\.kt
+import kotlinx.serialization.*
+import dev.adamko.kxstsgen.*
+-->
+
 ## Introduction
 
-Lorem ipsum...
 
 ### Plain class with a single field
 

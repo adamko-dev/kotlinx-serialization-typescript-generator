@@ -1,22 +1,16 @@
 // This file was automatically generated from maps.md by Knit tool. Do not edit.
 @file:Suppress("PackageDirectoryMismatch", "unused")
-package example.exampleMapPrimitive02
+package example.exampleMapPrimitive03
 
 import kotlinx.serialization.*
 import dev.adamko.kxstsgen.*
 
 @Serializable
-enum class SettingKeys {
-  SCREEN_SIZE,
-  MAX_MEMORY,
-}
-
-@Serializable
-class Application(
-  val settings: Map<SettingKeys, String>
+data class Config(
+  val properties: Map<String?, String?>
 )
 
 fun main() {
   val tsGenerator = KxsTsGenerator()
-  println(tsGenerator.generate(Application.serializer().descriptor))
+  println(tsGenerator.generate(Config.serializer().descriptor))
 }
