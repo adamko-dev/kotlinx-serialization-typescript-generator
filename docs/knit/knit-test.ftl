@@ -1,6 +1,7 @@
 <#-- @ftlvariable name="test.name" type="java.lang.String" -->
 <#-- @ftlvariable name="test.package" type="java.lang.String" -->
 // This file was automatically generated from ${file.name} by Knit tool. Do not edit.
+@file:Suppress("JSUnusedLocalSymbols")
 package ${test.package}
 
 import io.kotest.matchers.*

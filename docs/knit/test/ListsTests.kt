@@ -1,4 +1,5 @@
 // This file was automatically generated from lists.md by Knit tool. Do not edit.
+@file:Suppress("JSUnusedLocalSymbols")
 package example.test
 
 import io.kotest.matchers.*
