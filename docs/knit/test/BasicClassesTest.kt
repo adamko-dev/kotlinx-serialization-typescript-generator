@@ -59,4 +59,18 @@ class BasicClassesTest {
         """.trimMargin()
       )
   }
+
+  @Test
+  fun testExamplePlainClassPrimitiveFields02() {
+    captureOutput("ExamplePlainClassPrimitiveFields02") {
+      example.examplePlainClassPrimitiveFields02.main()
+    }.joinToString("\n")
+      .shouldBe(
+        // language=TypeScript
+        """
+          |interface SimpleTypes {
+          |}
+        """.trimMargin()
+      )
+  }
 }

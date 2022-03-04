@@ -64,22 +64,26 @@ class KxsTsSourceCodeGenerator(
 
   private fun generateInterface(element: TsStructure.TsInterface): String {
 
-    val properties = element.properties.joinToString("\n") { property ->
-      val separator = when (property) {
-        is TsProperty.Optional -> "?: "
-        is TsProperty.Required -> ": "
+    val properties = element
+      .properties
+      .joinToString(separator = "\n") { property ->
+        val separator = when (property) {
+          is TsProperty.Optional -> "?: "
+          is TsProperty.Required -> ": "
+        }
+        val propertyType = generateTypeReference(property.typing)
+        // generate `  name: Type;`
+        // or       `  name:? Type;`
+        "${indent}${property.name}${separator}${propertyType};"
       }
-      val propertyType = generateTypeReference(property.typing)
-      // generate `  name: Type;`
-      // or       `  name:? Type;`
-      "${indent}${property.name}${separator}${propertyType};"
-    }
 
-    return """
-      |interface ${element.id.name} {
-      |${properties}
-      |}
-    """.trimMargin()
+    return buildString {
+      appendLine("interface ${element.id.name} {")
+      if (properties.isNotBlank()) {
+        appendLine(properties)
+      }
+      append("}")
+    }
   }
 
   private fun generateTypeAlias(element: TsTypeAlias): String {
