@@ -1,6 +1,6 @@
 // This file was automatically generated from maps.md by Knit tool. Do not edit.
 @file:Suppress("JSUnusedLocalSymbols")
-package example.test
+package dev.adamko.kxstsgen.example.test
 
 import io.kotest.matchers.*
 import kotlinx.knit.test.*
@@ -10,7 +10,7 @@ class MapsTests {
   @Test
   fun testExampleMapPrimitive01() {
     captureOutput("ExampleMapPrimitive01") {
-      example.exampleMapPrimitive01.main()
+      dev.adamko.kxstsgen.example.exampleMapPrimitive01.main()
     }.joinToString("\n")
       .shouldBe(
         // language=TypeScript
@@ -25,7 +25,7 @@ class MapsTests {
   @Test
   fun testExampleMapPrimitive02() {
     captureOutput("ExampleMapPrimitive02") {
-      example.exampleMapPrimitive02.main()
+      dev.adamko.kxstsgen.example.exampleMapPrimitive02.main()
     }.joinToString("\n")
       .shouldBe(
         // language=TypeScript
@@ -45,7 +45,7 @@ class MapsTests {
   @Test
   fun testExampleMapPrimitive03() {
     captureOutput("ExampleMapPrimitive03") {
-      example.exampleMapPrimitive03.main()
+      dev.adamko.kxstsgen.example.exampleMapPrimitive03.main()
     }.joinToString("\n")
       .shouldBe(
         // language=TypeScript
@@ -60,7 +60,7 @@ class MapsTests {
   @Test
   fun testExampleMapComplex01() {
     captureOutput("ExampleMapComplex01") {
-      example.exampleMapComplex01.main()
+      dev.adamko.kxstsgen.example.exampleMapComplex01.main()
     }.joinToString("\n")
       .shouldBe(
         // language=TypeScript

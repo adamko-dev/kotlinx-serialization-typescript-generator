@@ -1,6 +1,6 @@
 // This file was automatically generated from polymorphism.md by Knit tool. Do not edit.
 @file:Suppress("PackageDirectoryMismatch", "unused")
-package example.examplePolymorphicObjects01
+package dev.adamko.kxstsgen.example.examplePolymorphicObjects01
 
 import kotlinx.serialization.*
 import dev.adamko.kxstsgen.*

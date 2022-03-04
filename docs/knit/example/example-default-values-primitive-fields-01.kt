@@ -1,6 +1,6 @@
 // This file was automatically generated from default-values.md by Knit tool. Do not edit.
 @file:Suppress("PackageDirectoryMismatch", "unused")
-package example.exampleDefaultValuesPrimitiveFields01
+package dev.adamko.kxstsgen.example.exampleDefaultValuesPrimitiveFields01
 
 import kotlinx.serialization.*
 import dev.adamko.kxstsgen.*

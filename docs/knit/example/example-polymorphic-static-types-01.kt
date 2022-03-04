@@ -1,6 +1,6 @@
 // This file was automatically generated from polymorphism.md by Knit tool. Do not edit.
 @file:Suppress("PackageDirectoryMismatch", "unused")
-package example.examplePolymorphicStaticTypes01
+package dev.adamko.kxstsgen.example.examplePolymorphicStaticTypes01
 
 import kotlinx.serialization.*
 import dev.adamko.kxstsgen.*

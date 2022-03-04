@@ -1,6 +1,6 @@
 // This file was automatically generated from polymorphism.md by Knit tool. Do not edit.
 @file:Suppress("JSUnusedLocalSymbols")
-package example.test
+package dev.adamko.kxstsgen.example.test
 
 import io.kotest.matchers.*
 import kotlinx.knit.test.*
@@ -10,7 +10,7 @@ class PolymorphismTest {
   @Test
   fun testExamplePolymorphicAbstractClassPrimitiveFields01() {
     captureOutput("ExamplePolymorphicAbstractClassPrimitiveFields01") {
-      example.examplePolymorphicAbstractClassPrimitiveFields01.main()
+      dev.adamko.kxstsgen.example.examplePolymorphicAbstractClassPrimitiveFields01.main()
     }.joinToString("\n")
       .shouldBe(
         // language=TypeScript
@@ -29,7 +29,7 @@ class PolymorphismTest {
   @Test
   fun testExamplePolymorphicStaticTypes01() {
     captureOutput("ExamplePolymorphicStaticTypes01") {
-      example.examplePolymorphicStaticTypes01.main()
+      dev.adamko.kxstsgen.example.examplePolymorphicStaticTypes01.main()
     }.joinToString("\n")
       .shouldBe(
         // language=TypeScript
@@ -44,7 +44,7 @@ class PolymorphismTest {
   @Test
   fun testExamplePolymorphicStaticTypes02() {
     captureOutput("ExamplePolymorphicStaticTypes02") {
-      example.examplePolymorphicStaticTypes02.main()
+      dev.adamko.kxstsgen.example.examplePolymorphicStaticTypes02.main()
     }.joinToString("\n")
       .shouldBe(
         // language=TypeScript
@@ -64,7 +64,7 @@ class PolymorphismTest {
   @Test
   fun testExamplePolymorphicSealedClass01() {
     captureOutput("ExamplePolymorphicSealedClass01") {
-      example.examplePolymorphicSealedClass01.main()
+      dev.adamko.kxstsgen.example.examplePolymorphicSealedClass01.main()
     }.joinToString("\n")
       .shouldBe(
         // language=TypeScript
@@ -96,7 +96,7 @@ class PolymorphismTest {
   @Test
   fun testExamplePolymorphicObjects01() {
     captureOutput("ExamplePolymorphicObjects01") {
-      example.examplePolymorphicObjects01.main()
+      dev.adamko.kxstsgen.example.examplePolymorphicObjects01.main()
     }.joinToString("\n")
       .shouldBe(
         // language=TypeScript

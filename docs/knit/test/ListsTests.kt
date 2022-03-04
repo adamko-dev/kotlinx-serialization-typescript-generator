@@ -1,6 +1,6 @@
 // This file was automatically generated from lists.md by Knit tool. Do not edit.
 @file:Suppress("JSUnusedLocalSymbols")
-package example.test
+package dev.adamko.kxstsgen.example.test
 
 import io.kotest.matchers.*
 import kotlinx.knit.test.*
@@ -10,7 +10,7 @@ class ListsTests {
   @Test
   fun testExampleListPrimitive01() {
     captureOutput("ExampleListPrimitive01") {
-      example.exampleListPrimitive01.main()
+      dev.adamko.kxstsgen.example.exampleListPrimitive01.main()
     }.joinToString("\n")
       .shouldBe(
         // language=TypeScript

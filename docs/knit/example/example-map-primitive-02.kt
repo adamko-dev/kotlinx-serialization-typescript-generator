@@ -1,6 +1,6 @@
 // This file was automatically generated from maps.md by Knit tool. Do not edit.
 @file:Suppress("PackageDirectoryMismatch", "unused")
-package example.exampleMapPrimitive02
+package dev.adamko.kxstsgen.example.exampleMapPrimitive02
 
 import kotlinx.serialization.*
 import dev.adamko.kxstsgen.*

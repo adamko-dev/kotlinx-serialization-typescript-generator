@@ -1,6 +1,6 @@
 // This file was automatically generated from basic-classes.md by Knit tool. Do not edit.
 @file:Suppress("PackageDirectoryMismatch", "unused")
-package example.examplePlainClassPrimitiveFields02
+package dev.adamko.kxstsgen.example.examplePlainClassPrimitiveFields02
 
 import kotlinx.serialization.*
 import dev.adamko.kxstsgen.*

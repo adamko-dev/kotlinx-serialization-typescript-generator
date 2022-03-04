@@ -40,7 +40,7 @@ knit {
 }
 
 tasks.test {
-  dependsOn(tasks.knitCheck)
+  dependsOn(tasks.knit)
 //  finalizedBy(tasks.knitCheck)
 }
 

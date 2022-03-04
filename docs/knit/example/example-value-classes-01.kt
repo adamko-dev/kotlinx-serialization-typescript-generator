@@ -1,6 +1,6 @@
 // This file was automatically generated from value-classes.md by Knit tool. Do not edit.
 @file:Suppress("PackageDirectoryMismatch", "unused")
-package example.exampleValueClasses01
+package dev.adamko.kxstsgen.example.exampleValueClasses01
 
 import kotlinx.serialization.*
 import dev.adamko.kxstsgen.*

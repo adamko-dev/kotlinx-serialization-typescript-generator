@@ -1,6 +1,6 @@
 // This file was automatically generated from value-classes.md by Knit tool. Do not edit.
 @file:Suppress("JSUnusedLocalSymbols")
-package example.test
+package dev.adamko.kxstsgen.example.test
 
 import io.kotest.matchers.*
 import kotlinx.knit.test.*
@@ -10,7 +10,7 @@ class ValueClassesTest {
   @Test
   fun testExampleValueClasses01() {
     captureOutput("ExampleValueClasses01") {
-      example.exampleValueClasses01.main()
+      dev.adamko.kxstsgen.example.exampleValueClasses01.main()
     }.joinToString("\n")
       .shouldBe(
         // language=TypeScript
@@ -23,7 +23,7 @@ class ValueClassesTest {
   @Test
   fun testExampleValueClasses02() {
     captureOutput("ExampleValueClasses02") {
-      example.exampleValueClasses02.main()
+      dev.adamko.kxstsgen.example.exampleValueClasses02.main()
     }.joinToString("\n")
       .shouldBe(
         // language=TypeScript
@@ -42,7 +42,7 @@ class ValueClassesTest {
   @Test
   fun testExampleValueClasses03() {
     captureOutput("ExampleValueClasses03") {
-      example.exampleValueClasses03.main()
+      dev.adamko.kxstsgen.example.exampleValueClasses03.main()
     }.joinToString("\n")
       .shouldBe(
         // language=TypeScript
@@ -55,7 +55,7 @@ class ValueClassesTest {
   @Test
   fun testExampleValueClasses04() {
     captureOutput("ExampleValueClasses04") {
-      example.exampleValueClasses04.main()
+      dev.adamko.kxstsgen.example.exampleValueClasses04.main()
     }.joinToString("\n")
       .shouldBe(
         // language=TypeScript

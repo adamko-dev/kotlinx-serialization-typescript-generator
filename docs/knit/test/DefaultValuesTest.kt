@@ -1,6 +1,6 @@
 // This file was automatically generated from default-values.md by Knit tool. Do not edit.
 @file:Suppress("JSUnusedLocalSymbols")
-package example.test
+package dev.adamko.kxstsgen.example.test
 
 import io.kotest.matchers.*
 import kotlinx.knit.test.*
@@ -10,7 +10,7 @@ class DefaultValuesTest {
   @Test
   fun testExampleDefaultValuesSingleField01() {
     captureOutput("ExampleDefaultValuesSingleField01") {
-      example.exampleDefaultValuesSingleField01.main()
+      dev.adamko.kxstsgen.example.exampleDefaultValuesSingleField01.main()
     }.joinToString("\n")
       .shouldBe(
         // language=TypeScript
@@ -25,7 +25,7 @@ class DefaultValuesTest {
   @Test
   fun testExampleDefaultValuesPrimitiveFields01() {
     captureOutput("ExampleDefaultValuesPrimitiveFields01") {
-      example.exampleDefaultValuesPrimitiveFields01.main()
+      dev.adamko.kxstsgen.example.exampleDefaultValuesPrimitiveFields01.main()
     }.joinToString("\n")
       .shouldBe(
         // language=TypeScript

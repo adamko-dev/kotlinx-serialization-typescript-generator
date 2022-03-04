@@ -1,6 +1,5 @@
 plugins {
-  kotlin("multiplatform")
-  `java-library`
+  buildsrc.convention.`kotlin-multiplatform`
   kotlin("plugin.serialization")
 }
 

@@ -1,6 +1,6 @@
 // This file was automatically generated from lists.md by Knit tool. Do not edit.
 @file:Suppress("PackageDirectoryMismatch", "unused")
-package example.exampleListPrimitive01
+package dev.adamko.kxstsgen.example.exampleListPrimitive01
 
 import kotlinx.serialization.*
 import dev.adamko.kxstsgen.*

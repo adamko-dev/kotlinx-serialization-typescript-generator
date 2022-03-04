@@ -2,7 +2,6 @@ package buildsrc.convention
 
 import org.gradle.kotlin.dsl.`java-library`
 import org.gradle.kotlin.dsl.dependencies
-import org.gradle.kotlin.dsl.jacoco
 import org.gradle.kotlin.dsl.kotlin
 import org.gradle.kotlin.dsl.withType
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
@@ -11,7 +10,6 @@ plugins {
   id("buildsrc.convention.subproject")
   kotlin("jvm")
   `java-library`
-  jacoco
 }
 
 dependencies {
@@ -53,5 +51,4 @@ tasks.compileTestKotlin {
 
 tasks.test {
   useJUnitPlatform()
-  finalizedBy(tasks.jacocoTestReport)
 }
