@@ -15,7 +15,7 @@ class EnumClassTest {
       .shouldBe(
         // language=TypeScript
         """
-          |enum SomeType {
+          |export enum SomeType {
           |  Alpha = "Alpha",
           |  Beta = "Beta",
           |  Gamma = "Gamma",
@@ -32,7 +32,7 @@ class EnumClassTest {
       .shouldBe(
         // language=TypeScript
         """
-          |enum SomeType2 {
+          |export enum SomeType2 {
           |  Alpha = "Alpha",
           |  Beta = "Beta",
           |  Gamma = "Gamma",

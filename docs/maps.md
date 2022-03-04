@@ -68,7 +68,7 @@ fun main() {
 > You can get the full code [here](./knit/example/example-map-primitive-02.kt).
 
 ```typescript
-enum SettingKeys {
+export enum SettingKeys {
   SCREEN_SIZE = "SCREEN_SIZE",
   MAX_MEMORY = "MAX_MEMORY",
 }

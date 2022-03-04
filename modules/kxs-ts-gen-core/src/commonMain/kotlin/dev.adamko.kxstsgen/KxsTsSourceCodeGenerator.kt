@@ -56,7 +56,7 @@ class KxsTsSourceCodeGenerator(
     }
 
     return """
-      |enum ${enum.id.name} {
+      |export enum ${enum.id.name} {
       |${enumMembers}
       |}
     """.trimMargin()

@@ -30,7 +30,7 @@ class MapsTests {
       .shouldBe(
         // language=TypeScript
         """
-          |enum SettingKeys {
+          |export enum SettingKeys {
           |  SCREEN_SIZE = "SCREEN_SIZE",
           |  MAX_MEMORY = "MAX_MEMORY",
           |}

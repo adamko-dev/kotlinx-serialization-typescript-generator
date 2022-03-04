@@ -6,8 +6,8 @@
 <!--- TOC -->
 
 * [Introduction](#introduction)
-  * [Plain class with a single field](#plain-class-with-a-single-field)
-  * [Plain class with primitive fields](#plain-class-with-primitive-fields)
+  * [Simple enum](#simple-enum)
+  * [Enum with properties](#enum-with-properties)
 
 <!--- END -->
 
@@ -19,8 +19,7 @@ import dev.adamko.kxstsgen.*
 
 ## Introduction
 
-
-### Plain class with a single field
+### Simple enum
 
 <!--- INCLUDE .*\.kt
 import kotlinx.serialization.*
@@ -44,7 +43,7 @@ fun main() {
 > You can get the full code [here](./knit/example/example-enum-class-01.kt).
 
 ```typescript
-enum SomeType {
+export enum SomeType {
   Alpha = "Alpha",
   Beta = "Beta",
   Gamma = "Gamma",
@@ -53,7 +52,9 @@ enum SomeType {
 
 <!--- TEST -->
 
-### Plain class with primitive fields
+### Enum with properties
+
+Because enums are static, fields aren't converted.
 
 ```kotlin
 @Serializable
@@ -74,7 +75,7 @@ fun main() {
 > You can get the full code [here](./knit/example/example-enum-class-02.kt).
 
 ```typescript
-enum SomeType2 {
+export enum SomeType2 {
   Alpha = "Alpha",
   Beta = "Beta",
   Gamma = "Gamma",
