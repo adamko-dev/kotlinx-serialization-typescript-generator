@@ -9,6 +9,7 @@
 * [Closed Polymorphism](#closed-polymorphism)
   * [Static types](#static-types)
   * [Sealed classes](#sealed-classes)
+  * [Objects](#objects)
 
 <!--- END -->
 
@@ -19,8 +20,6 @@ import dev.adamko.kxstsgen.*
 -->
 
 ## Introduction
-
-
 
 ### Abstract class with primitive fields
 
@@ -102,7 +101,11 @@ fun main() {
 > You can get the full code [here](./knit/example/example-polymorphic-static-types-02.kt).
 
 ```typescript
-interface OwnedProject {
+interface Project {
+  name: string;
+}
+
+interface OwnedProject extends Project {
   name: string;
   owner: string;
 }
@@ -132,7 +135,6 @@ fun main() {
 
 > You can get the full code [here](./knit/example/example-polymorphic-sealed-class-01.kt).
 
-
 ```typescript
 enum ProjectKind {
   OwnedProject,
@@ -143,16 +145,63 @@ interface Project {
   type: ProjectKind;
 }
 
-interface OwnedProject {
+interface OwnedProject extends Project {
   type: ProjectKind.OwnedProject;
   name: string;
   owner: string;
 }
 
-interface DeprecatedProject {
+interface DeprecatedProject extends Project {
   type: ProjectKind.DeprecatedProject;
   name: string;
   reason: string;
+}
+```
+
+<!--- TEST -->
+
+### Objects
+
+```kotlin
+@Serializable
+sealed class Response
+
+@Serializable
+object EmptyResponse : Response()
+
+@Serializable
+class TextResponse(val text: String) : Response()
+
+fun main() {
+  val tsGenerator = KxsTsGenerator()
+  println(
+    tsGenerator.generate(
+      EmptyResponse.serializer().descriptor,
+      TextResponse.serializer().descriptor,
+    )
+  )
+}
+```
+
+> You can get the full code [here](./knit/example/example-polymorphic-objects-01.kt).
+
+```typescript
+export enum ResponseKind {
+  EmptyResponse = "EmptyResponse",
+  TextResponse = "TextResponse",
+}
+
+interface Response {
+  type: ResponseKind;
+}
+
+interface EmptyResponse extends Response {
+  type: ResponseKind.EmptyResponse;
+}
+
+interface TextResponse extends Response {
+  type: ResponseKind.TextResponse;
+  text: string;
 }
 ```
 

@@ -49,7 +49,11 @@ class PolymorphismTest {
       .shouldBe(
         // language=TypeScript
         """
-          |interface OwnedProject {
+          |interface Project {
+          |  name: string;
+          |}
+          |
+          |interface OwnedProject extends Project {
           |  name: string;
           |  owner: string;
           |}
@@ -74,16 +78,45 @@ class PolymorphismTest {
           |  type: ProjectKind;
           |}
           |
-          |interface OwnedProject {
+          |interface OwnedProject extends Project {
           |  type: ProjectKind.OwnedProject;
           |  name: string;
           |  owner: string;
           |}
           |
-          |interface DeprecatedProject {
+          |interface DeprecatedProject extends Project {
           |  type: ProjectKind.DeprecatedProject;
           |  name: string;
           |  reason: string;
+          |}
+        """.trimMargin()
+      )
+  }
+
+  @Test
+  fun testExamplePolymorphicObjects01() {
+    captureOutput("ExamplePolymorphicObjects01") {
+      example.examplePolymorphicObjects01.main()
+    }.joinToString("\n")
+      .shouldBe(
+        // language=TypeScript
+        """
+          |export enum ResponseKind {
+          |  EmptyResponse = "EmptyResponse",
+          |  TextResponse = "TextResponse",
+          |}
+          |
+          |interface Response {
+          |  type: ResponseKind;
+          |}
+          |
+          |interface EmptyResponse extends Response {
+          |  type: ResponseKind.EmptyResponse;
+          |}
+          |
+          |interface TextResponse extends Response {
+          |  type: ResponseKind.TextResponse;
+          |  text: string;
           |}
         """.trimMargin()
       )
