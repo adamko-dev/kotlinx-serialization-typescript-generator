@@ -1,5 +1,3 @@
-import buildsrc.config.excludeGeneratedGradleDsl
-
 plugins {
   buildsrc.convention.`kotlin-jvm`
   kotlin("plugin.serialization")
@@ -33,13 +31,21 @@ sourceSets.test {
   java.srcDirs("example", "test")
 }
 
-//knit {
-//  rootDir = layout.projectDirectory.asFile
-//  files = rootProject.fileTree("docs")
-//}
+knit {
+  val docsDir = rootProject.layout.projectDirectory.dir("docs")
+  rootDir = docsDir.asFile
+  files = project.fileTree(docsDir) {
+    include("*.md")
+  }
+}
 
 tasks.test {
-  dependsOn(tasks.knit)
+  dependsOn(tasks.knitCheck)
+//  finalizedBy(tasks.knitCheck)
 }
 
 tasks.compileKotlin { mustRunAfter(tasks.knit) }
+
+//tasks.knitCheck {
+//  dependsOn(tasks.test)
+//}
