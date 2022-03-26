@@ -1,5 +1,12 @@
+@file:OptIn(InternalSerializationApi::class)
+
 package dev.adamko.kxstsgen
 
+import kotlinx.serialization.ContextualSerializer
+import kotlinx.serialization.InternalSerializationApi
+import kotlinx.serialization.KSerializer
+import kotlinx.serialization.PolymorphicSerializer
+import kotlinx.serialization.SealedClassSerializer
 import kotlinx.serialization.descriptors.PolymorphicKind
 import kotlinx.serialization.descriptors.PrimitiveKind
 import kotlinx.serialization.descriptors.SerialDescriptor
@@ -7,174 +14,334 @@ import kotlinx.serialization.descriptors.SerialKind
 import kotlinx.serialization.descriptors.StructureKind
 import kotlinx.serialization.descriptors.elementDescriptors
 import kotlinx.serialization.descriptors.elementNames
-import kotlinx.serialization.modules.EmptySerializersModule
+import kotlinx.serialization.descriptors.getPolymorphicDescriptors
 import kotlinx.serialization.modules.SerializersModule
+
 
 class KxsTsGenerator(
   private val config: KxsTsConfig = KxsTsConfig(),
-  private val serializersModule: SerializersModule = EmptySerializersModule,
+  private val kxsTsModule: KxsTsModule = KxsTsModule(),
 ) {
 
-  private val codeGenerator: KxsTsSourceCodeGenerator = KxsTsSourceCodeGenerator(config)
+  constructor(
+    config: KxsTsConfig = KxsTsConfig(),
+    serializersModule: SerializersModule,
+  ) : this(config, KxsTsModule(serializersModule))
 
+//  private val codeGenerator: KxsTsSourceCodeGenerator = KxsTsSourceCodeGenerator(config)
 
-  fun generate(vararg descriptors: SerialDescriptor): String {
-//    val allDescriptors = getAllDescriptors(descriptors, setOf())
+//  private val descriptorSerializers: MutableMap<SerialDescriptor, KSerializer<*>> = mutableMapOf()
 
+  fun generate(vararg serializers: KSerializer<*>): String {
 
-//    serializersModule.getContextualDescriptor()
-//    serializersModule.getPolymorphicDescriptors()
+    val converter = TsConverter(kxsTsModule)
 
-    val elements = descriptors
-      .fold(mapOf<TsElementId, TsElement>()) { acc, descriptor ->
-        TsConverter(descriptor, acc).result
-      }
-      .values
-      .toSet()
+    serializers.forEach { serializer -> converter(serializer) }
 
-    return codeGenerator.joinElementsToString(elements)
+    val codeGenerator = KxsTsSourceCodeGenerator(config, converter.convertedElements)
+
+    return codeGenerator.joinElementsToString()
   }
-
-
-//  private fun convertSealedPolymorphic(
-//    descriptor: SerialDescriptor,
-//    discriminator: TsStructure.Enum,
-//  ): TsElement {
-//  }
 
 }
 
+
 class TsConverter(
-  target: SerialDescriptor,
-  existingElements: Map<TsElementId, TsElement>,
-  private val serializersModule: SerializersModule = EmptySerializersModule,
+  private val kxsTsModule: KxsTsModule,
+  elementsState: Map<SerialDescriptor, TsElement> = emptyMap(),
 ) {
+  private val elementsState: MutableMap<SerialDescriptor, TsElement> = elementsState.toMutableMap()
 
-  private val existingElements = existingElements.toMutableMap()
-  val result: Map<TsElementId, TsElement>
-    get() = existingElements
+  private val descriptorExtractor = DescriptorExtractor(kxsTsModule)
 
-  private val _dependencies = mutableMapOf<TsElementId, MutableSet<TsElementId>>()
-  private val dependencies: Map<TsElementId, Set<TsElementId>>
-    get() = _dependencies
+  val convertedElements: Set<TsElement>
+    get() = elementsState.values.toSet()
 
-  init {
-    convertToTsElement(null, target)
+  operator fun invoke(serializer: KSerializer<*>) {
+    val descriptors: Map<SerialDescriptor, TsTypeRef> = descriptorExtractor(serializer)
+    descriptors.keys.forEach { descriptor -> convertToTsElement(descriptor, descriptors) }
   }
 
-  private fun convertToTsElement(requestor: TsElementId?, target: SerialDescriptor): TsElement {
+  private fun convertToTsElement(
+    descriptor: SerialDescriptor,
+    typeRefs: Map<SerialDescriptor, TsTypeRef>,
+  ): TsElement {
+    return elementsState.getOrPut(descriptor) {
 
-    val targetId = TsElementId(target.serialName.removeSuffix("?"))
+      when (descriptor.kind) {
+        SerialKind.ENUM       -> convertEnum(descriptor)
+        SerialKind.CONTEXTUAL -> {
+          // TODO contextual
+          TsLiteral.Primitive.TsAny
+        }
 
-    return existingElements.getOrPut(targetId) {
+        PrimitiveKind.BOOLEAN -> TsLiteral.Primitive.TsBoolean
 
-      val result: TsElement = when (target.kind) {
-
-        PrimitiveKind.BOOLEAN  -> TsPrimitive.TsBoolean
+        PrimitiveKind.CHAR,
+        PrimitiveKind.STRING  -> TsLiteral.Primitive.TsString
 
         PrimitiveKind.BYTE,
         PrimitiveKind.SHORT,
         PrimitiveKind.INT,
         PrimitiveKind.LONG,
         PrimitiveKind.FLOAT,
-        PrimitiveKind.DOUBLE   -> TsPrimitive.TsNumber
+        PrimitiveKind.DOUBLE  -> TsLiteral.Primitive.TsNumber
 
-        PrimitiveKind.CHAR,
-        PrimitiveKind.STRING   -> TsPrimitive.TsString
-
-        StructureKind.LIST     -> convertList(targetId, target)
-        StructureKind.MAP      -> convertMap(targetId, target)
+        StructureKind.LIST    -> convertList(descriptor, typeRefs)
+        StructureKind.MAP     -> convertMap(descriptor, typeRefs)
 
         StructureKind.CLASS,
-        StructureKind.OBJECT   -> convertStructure(targetId, target)
-
-        SerialKind.ENUM        -> convertEnum(targetId, target)
-
-        PolymorphicKind.SEALED -> {
-          // TODO PolymorphicKind.SEALED
-          convertStructure(targetId, target)
-        }
-        PolymorphicKind.OPEN   -> {
-          // TODO PolymorphicKind.SEALED
-          val openTargetId = TsElementId(
-            targetId.namespace + "." + targetId.name.substringAfter("<").substringBeforeLast(">")
-          )
-          convertStructure(openTargetId, target)
-        }
-        SerialKind.CONTEXTUAL  -> {
-          // TODO SerialKind.CONTEXTUAL
-          TsPrimitive.TsUnknown
+        StructureKind.OBJECT,
+        PolymorphicKind.SEALED,
+        PolymorphicKind.OPEN  -> when {
+          descriptor.isInline -> convertTypeAlias(descriptor, typeRefs)
+          else                -> convertInterface(descriptor, typeRefs)
         }
       }
 
-      if (requestor != null) {
-        dependencies.getOrElse(requestor) { mutableSetOf() }.plus(result)
-      }
-
-      result
     }
   }
 
 
-  private fun convertStructure(
-    targetId: TsElementId,
+  private fun convertTypeAlias(
     structDescriptor: SerialDescriptor,
-  ): TsElement {
+    typeRefs: Map<SerialDescriptor, TsTypeRef>,
+  ): TsDeclaration {
+    val resultId = createElementId(structDescriptor)
+    val fieldDescriptor = structDescriptor.elementDescriptors.first()
+    val fieldTypeRef = typeRefs[fieldDescriptor] ?: TsTypeRef.Unknown
+    return TsDeclaration.TsTypeAlias(resultId, fieldTypeRef)
 
-    if (structDescriptor.isInline) {
-      val fieldDescriptor = structDescriptor.elementDescriptors.first()
-      val fieldType = convertToTsElement(targetId, fieldDescriptor)
-      val fieldTyping = TsTyping(fieldType, fieldDescriptor.isNullable)
-      return TsTypeAlias(targetId, fieldTyping)
-    } else {
-
-      val properties = structDescriptor.elementDescriptors.mapIndexed { index, fieldDescriptor ->
-        val name = structDescriptor.getElementName(index)
-        val fieldType = convertToTsElement(targetId, fieldDescriptor)
-        val fieldTyping = TsTyping(fieldType, fieldDescriptor.isNullable)
-        when {
-          structDescriptor.isElementOptional(index) -> TsProperty.Optional(name, fieldTyping)
-          else                                      -> TsProperty.Required(name, fieldTyping)
-        }
-      }
-
-      return TsStructure.TsInterface(targetId, properties)
-    }
   }
+
+
+  private fun convertInterface(
+    structDescriptor: SerialDescriptor,
+    typeRefs: Map<SerialDescriptor, TsTypeRef>,
+  ): TsDeclaration {
+    val resultId = createElementId(structDescriptor)
+
+    val properties = structDescriptor.elementDescriptors.mapIndexed { index, fieldDescriptor ->
+      val name = structDescriptor.getElementName(index)
+      val fieldTypeRef = typeRefs[fieldDescriptor] ?: TsTypeRef.Unknown
+      when {
+        structDescriptor.isElementOptional(index) -> TsProperty.Optional(name, fieldTypeRef)
+        else                                      -> TsProperty.Required(name, fieldTypeRef)
+      }
+    }.toSet()
+    return TsDeclaration.TsInterface(resultId, properties, TsPolymorphicDiscriminator.Open)
+  }
+
 
   private fun convertEnum(
-    targetId: TsElementId,
     enumDescriptor: SerialDescriptor,
-  ): TsElement {
-    return TsStructure.TsEnum(
-      targetId,
-      enumDescriptor.elementNames.toSet(),
-    )
+  ): TsDeclaration.TsEnum {
+    val resultId = createElementId(enumDescriptor)
+    return TsDeclaration.TsEnum(resultId, enumDescriptor.elementNames.toSet())
   }
+
 
   private fun convertList(
-    targetId: TsElementId,
     listDescriptor: SerialDescriptor,
-  ): TsStructure.TsList {
+    typeRefs: Map<SerialDescriptor, TsTypeRef>,
+  ): TsLiteral.TsList {
     val elementDescriptor = listDescriptor.elementDescriptors.first()
-    val elementType = convertToTsElement(targetId, elementDescriptor)
-    val elementTyping = TsTyping(elementType, elementDescriptor.isNullable)
-    return TsStructure.TsList(targetId, elementTyping)
+    val elementTypeRef = typeRefs[elementDescriptor] ?: TsTypeRef.Unknown
+    return TsLiteral.TsList(elementTypeRef)
   }
 
+
   private fun convertMap(
-    targetId: TsElementId,
     mapDescriptor: SerialDescriptor,
-  ): TsStructure.TsMap {
+    typeRefs: Map<SerialDescriptor, TsTypeRef>,
+  ): TsLiteral.TsMap {
 
     val (keyDescriptor, valueDescriptor) = mapDescriptor.elementDescriptors.toList()
 
-    val keyType = convertToTsElement(targetId, keyDescriptor)
-    val keyTyping = TsTyping(keyType, keyDescriptor.isNullable)
+    val keyTypeRef = typeRefs[keyDescriptor] ?: TsTypeRef.Unknown
+    val valueTypeRef = typeRefs[valueDescriptor] ?: TsTypeRef.Unknown
 
-    val valueType = convertToTsElement(targetId, valueDescriptor)
-    val valueTyping = TsTyping(valueType, valueDescriptor.isNullable)
+    val type = convertMapType(keyDescriptor)
 
-    return TsStructure.TsMap(targetId, keyTyping, valueTyping)
+    return TsLiteral.TsMap(keyTypeRef, valueTypeRef, type)
+  }
+
+
+}
+
+
+class DescriptorExtractor(
+  private val kxsTsModule: KxsTsModule
+) {
+
+  operator fun invoke(serializer: KSerializer<*>): Map<SerialDescriptor, TsTypeRef> {
+    return sequence {
+      when (serializer) {
+        is PolymorphicSerializer<*> -> {
+          yieldAll(kxsTsModule.serializersModule.getPolymorphicDescriptors(serializer.descriptor))
+        }
+        is SealedClassSerializer<*> ->
+          yield(serializer.descriptor)
+        is ContextualSerializer<*>  ->
+          yield(extractContextualSerializer(serializer, kxsTsModule)?.descriptor)
+        else                        ->
+          yield(serializer.descriptor)
+      }
+    }.filterNotNull()
+      .flatMap { descriptor -> extractAll(descriptor) }
+      .distinct()
+      .associateWith { descriptor ->
+        createTypeRef(descriptor)
+      }
+  }
+
+  private fun extractAll(descriptor: SerialDescriptor): Sequence<SerialDescriptor> {
+    return sequence {
+      val seen = mutableSetOf<SerialDescriptor>()
+      val deque = ArrayDeque<SerialDescriptor>()
+      deque.addLast(descriptor)
+      while (deque.isNotEmpty()) {
+        val next = deque.removeFirst()
+
+        val nextElementDescriptors = extractElementDescriptors(next)
+
+        nextElementDescriptors
+          .filter { it !in seen }
+          .forEach { deque.addLast(it) }
+
+        seen.add(next)
+        yield(next)
+      }
+    }.distinct()
+  }
+
+
+  private fun extractElementDescriptors(serialDescriptor: SerialDescriptor): Iterable<SerialDescriptor> {
+    return when (serialDescriptor.kind) {
+      SerialKind.ENUM       -> emptyList()
+
+      SerialKind.CONTEXTUAL -> emptyList()
+
+      PrimitiveKind.BOOLEAN,
+      PrimitiveKind.BYTE,
+      PrimitiveKind.CHAR,
+      PrimitiveKind.SHORT,
+      PrimitiveKind.INT,
+      PrimitiveKind.LONG,
+      PrimitiveKind.FLOAT,
+      PrimitiveKind.DOUBLE,
+      PrimitiveKind.STRING  -> emptyList()
+
+      StructureKind.CLASS,
+      StructureKind.LIST,
+      StructureKind.MAP,
+      StructureKind.OBJECT  -> serialDescriptor.elementDescriptors
+
+      PolymorphicKind.SEALED,
+      PolymorphicKind.OPEN  -> serialDescriptor
+        .elementDescriptors
+        .filter { it.kind is PolymorphicKind }
+        .flatMap { it.elementDescriptors }
+    }
+  }
+
+
+  private fun createTypeRef(descriptor: SerialDescriptor): TsTypeRef {
+    return when (descriptor.kind) {
+      is PrimitiveKind     -> {
+        val tsPrimitive = when (descriptor.kind as PrimitiveKind) {
+          PrimitiveKind.BOOLEAN -> TsLiteral.Primitive.TsBoolean
+
+          PrimitiveKind.BYTE,
+          PrimitiveKind.SHORT,
+          PrimitiveKind.INT,
+          PrimitiveKind.LONG,
+          PrimitiveKind.FLOAT,
+          PrimitiveKind.DOUBLE  -> TsLiteral.Primitive.TsNumber
+
+          PrimitiveKind.CHAR,
+          PrimitiveKind.STRING  -> TsLiteral.Primitive.TsString
+        }
+        TsTypeRef.Literal(tsPrimitive, descriptor.isNullable)
+      }
+
+      StructureKind.LIST   -> {
+        val elementDescriptor = descriptor.elementDescriptors.first()
+        val elementTypeRef = createTypeRef(elementDescriptor)
+        val listRef = TsLiteral.TsList(elementTypeRef)
+        TsTypeRef.Literal(listRef, descriptor.isNullable)
+      }
+      StructureKind.MAP    -> {
+        val (keyDescriptor, valueDescriptor) = descriptor.elementDescriptors.toList()
+        val keyTypeRef = createTypeRef(keyDescriptor)
+        val valueTypeRef = createTypeRef(valueDescriptor)
+        val type = convertMapType(keyDescriptor)
+        val map = TsLiteral.TsMap(keyTypeRef, valueTypeRef, type)
+        TsTypeRef.Literal(map, descriptor.isNullable)
+      }
+
+      SerialKind.CONTEXTUAL,
+      PolymorphicKind.SEALED,
+      PolymorphicKind.OPEN,
+      SerialKind.ENUM,
+      StructureKind.CLASS,
+      StructureKind.OBJECT -> {
+        val id = createElementId(descriptor)
+        TsTypeRef.Named(id, descriptor.isNullable)
+      }
+    }
+  }
+
+}
+
+
+private fun createElementId(descriptor: SerialDescriptor): TsElementId {
+
+  val targetId = TsElementId(descriptor.serialName.removeSuffix("?"))
+
+  return when (descriptor.kind) {
+    PolymorphicKind.OPEN -> TsElementId(
+      targetId.namespace + "." + targetId.name.substringAfter("<").substringBeforeLast(">")
+    )
+    PolymorphicKind.SEALED,
+    PrimitiveKind.BOOLEAN,
+    PrimitiveKind.BYTE,
+    PrimitiveKind.CHAR,
+    PrimitiveKind.DOUBLE,
+    PrimitiveKind.FLOAT,
+    PrimitiveKind.INT,
+    PrimitiveKind.LONG,
+    PrimitiveKind.SHORT,
+    PrimitiveKind.STRING,
+    SerialKind.CONTEXTUAL,
+    SerialKind.ENUM,
+    StructureKind.CLASS,
+    StructureKind.LIST,
+    StructureKind.MAP,
+    StructureKind.OBJECT -> targetId
+  }
+}
+
+private fun convertMapType(keyDescriptor: SerialDescriptor): TsLiteral.TsMap.Type {
+  return when (keyDescriptor.kind) {
+    SerialKind.ENUM      -> TsLiteral.TsMap.Type.MAPPED_OBJECT
+
+    PrimitiveKind.STRING -> TsLiteral.TsMap.Type.INDEX_SIGNATURE
+
+    SerialKind.CONTEXTUAL,
+    PrimitiveKind.BOOLEAN,
+    PrimitiveKind.BYTE,
+    PrimitiveKind.CHAR,
+    PrimitiveKind.SHORT,
+    PrimitiveKind.INT,
+    PrimitiveKind.LONG,
+    PrimitiveKind.FLOAT,
+    PrimitiveKind.DOUBLE,
+    StructureKind.CLASS,
+    StructureKind.LIST,
+    StructureKind.MAP,
+    StructureKind.OBJECT,
+    PolymorphicKind.SEALED,
+    PolymorphicKind.OPEN -> TsLiteral.TsMap.Type.MAP
   }
 }
