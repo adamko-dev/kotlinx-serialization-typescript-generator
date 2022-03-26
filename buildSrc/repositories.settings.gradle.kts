@@ -2,6 +2,7 @@
 dependencyResolutionManagement {
 
   repositories {
+    myMavenLocal()
     mavenCentral()
     jitpack()
     gradlePluginPortal()
@@ -9,6 +10,7 @@ dependencyResolutionManagement {
 
   pluginManagement {
     repositories {
+      myMavenLocal()
       jitpack()
       gradlePluginPortal()
       mavenCentral()
@@ -16,6 +18,19 @@ dependencyResolutionManagement {
   }
 }
 
+
 fun RepositoryHandler.jitpack() {
   maven("https://jitpack.io")
+}
+
+
+fun RepositoryHandler.myMavenLocal(enabled: Boolean = true) {
+  if (enabled) {
+    logger.lifecycle("Maven local is enabled")
+    mavenLocal {
+      content {
+        includeGroup("org.jetbrains.reflekt")
+      }
+    }
+  }
 }
