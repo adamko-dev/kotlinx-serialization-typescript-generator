@@ -13,7 +13,7 @@ plugins {
 }
 
 dependencies {
-  testImplementation(platform("io.kotest:kotest-bom:5.1.0"))
+  testImplementation(platform("io.kotest:kotest-bom:5.2.1"))
   testImplementation("io.kotest:kotest-runner-junit5")
   testImplementation("io.kotest:kotest-assertions-core")
   testImplementation("io.kotest:kotest-property")
@@ -31,7 +31,7 @@ java {
   withSourcesJar()
 }
 
-tasks.withType<KotlinCompile>().configureEach {
+tasks.withType<KotlinCompile> {
   kotlinOptions {
     jvmTarget = "11"
     apiVersion = "1.6"
