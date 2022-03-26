@@ -11,6 +11,7 @@ sealed class Project {
 }
 
 @Serializable
+@SerialName("owned-project")
 class OwnedProject(override val name: String, val owner: String) : Project()
 
 @Serializable
@@ -18,5 +19,5 @@ class DeprecatedProject(override val name: String, val reason: String) : Project
 
 fun main() {
   val tsGenerator = KxsTsGenerator()
-  println(tsGenerator.generate(OwnedProject.serializer().descriptor))
+  println(tsGenerator.generate(OwnedProject.serializer()))
 }

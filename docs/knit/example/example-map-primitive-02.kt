@@ -6,17 +6,17 @@ import kotlinx.serialization.*
 import dev.adamko.kxstsgen.*
 
 @Serializable
+class Application(
+  val settings: Map<SettingKeys, String>
+)
+
+@Serializable
 enum class SettingKeys {
   SCREEN_SIZE,
   MAX_MEMORY,
 }
 
-@Serializable
-class Application(
-  val settings: Map<SettingKeys, String>
-)
-
 fun main() {
   val tsGenerator = KxsTsGenerator()
-  println(tsGenerator.generate(Application.serializer().descriptor))
+  println(tsGenerator.generate(Application.serializer()))
 }

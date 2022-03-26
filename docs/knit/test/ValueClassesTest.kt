@@ -60,9 +60,9 @@ class ValueClassesTest {
       .shouldBe(
         // language=TypeScript
         """
-          |type UInt = number;
-          |
           |type UserCount = UInt;
+          |
+          |type UInt = number;
         """.trimMargin()
       )
   }

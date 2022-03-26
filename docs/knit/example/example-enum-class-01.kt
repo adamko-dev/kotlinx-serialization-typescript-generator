@@ -16,5 +16,5 @@ enum class SomeType {
 
 fun main() {
   val tsGenerator = KxsTsGenerator()
-  println(tsGenerator.generate(SomeType.serializer().descriptor))
+  println(tsGenerator.generate(SomeType.serializer()))
 }

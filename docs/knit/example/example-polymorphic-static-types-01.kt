@@ -12,5 +12,5 @@ class OwnedProject(name: String, val owner: String) : Project(name)
 
 fun main() {
   val tsGenerator = KxsTsGenerator()
-  println(tsGenerator.generate(Project.serializer().descriptor))
+  println(tsGenerator.generate(Project.serializer()))
 }

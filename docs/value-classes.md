@@ -32,7 +32,7 @@ value class AuthToken(private val token: String)
 
 fun main() {
   val tsGenerator = KxsTsGenerator()
-  println(tsGenerator.generate(AuthToken.serializer().descriptor))
+  println(tsGenerator.generate(AuthToken.serializer()))
 }
 ```
 
@@ -55,10 +55,10 @@ fun main() {
   val tsGenerator = KxsTsGenerator()
   println(
     tsGenerator.generate(
-      UByte.serializer().descriptor,
-      UShort.serializer().descriptor,
-      UInt.serializer().descriptor,
-      ULong.serializer().descriptor,
+      UByte.serializer(),
+      UShort.serializer(),
+      UInt.serializer(),
+      ULong.serializer(),
     )
   )
 }
@@ -102,7 +102,7 @@ fun main() {
   val tsGenerator = KxsTsGenerator(config = tsConfig)
   println(
     tsGenerator.generate(
-      ULong.serializer().descriptor,
+      ULong.serializer(),
     )
   )
 }
@@ -131,16 +131,16 @@ value class UserCount(private val count: UInt)
 
 fun main() {
   val tsGenerator = KxsTsGenerator()
-  println(tsGenerator.generate(UserCount.serializer().descriptor))
+  println(tsGenerator.generate(UserCount.serializer()))
 }
 ```
 
 > You can get the full code [here](./knit/example/example-value-classes-04.kt).
 
 ```typescript
-type UInt = number;
-
 type UserCount = UInt;
+
+type UInt = number;
 ```
 
 <!--- TEST -->

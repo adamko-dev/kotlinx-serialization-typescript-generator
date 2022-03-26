@@ -30,13 +30,13 @@ class MapsTests {
       .shouldBe(
         // language=TypeScript
         """
+          |interface Application {
+          |  settings: { [key in SettingKeys]: string };
+          |}
+          |
           |export enum SettingKeys {
           |  SCREEN_SIZE = "SCREEN_SIZE",
           |  MAX_MEMORY = "MAX_MEMORY",
-          |}
-          |
-          |interface Application {
-          |  settings: { [key in SettingKeys]: string };
           |}
         """.trimMargin()
       )
@@ -65,7 +65,9 @@ class MapsTests {
       .shouldBe(
         // language=TypeScript
         """
-          |type UByte = number;
+          |interface CanvasProperties {
+          |  colourNames: Map<Colour, string>;
+          |}
           |
           |interface Colour {
           |  r: UByte;
@@ -74,9 +76,7 @@ class MapsTests {
           |  a: UByte;
           |}
           |
-          |interface CanvasProperties {
-          |  colourNames: Map<Colour, string>;
-          |}
+          |type UByte = number;
         """.trimMargin()
       )
   }

@@ -14,5 +14,5 @@ data class ContactDetails(
 
 fun main() {
   val tsGenerator = KxsTsGenerator()
-  println(tsGenerator.generate(ContactDetails.serializer().descriptor))
+  println(tsGenerator.generate(ContactDetails.serializer()))
 }

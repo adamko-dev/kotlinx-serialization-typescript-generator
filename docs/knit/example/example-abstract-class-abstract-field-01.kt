@@ -15,5 +15,5 @@ abstract class AbstractSimpleTypes {
 
 fun main() {
   val tsGenerator = KxsTsGenerator()
-  println(tsGenerator.generate(AbstractSimpleTypes.serializer().descriptor))
+  println(tsGenerator.generate(AbstractSimpleTypes.serializer()))
 }

@@ -18,8 +18,8 @@ fun main() {
   val tsGenerator = KxsTsGenerator()
   println(
     tsGenerator.generate(
-      EmptyResponse.serializer().descriptor,
-      TextResponse.serializer().descriptor,
+      EmptyResponse.serializer(),
+      TextResponse.serializer(),
     )
   )
 }

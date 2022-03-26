@@ -10,7 +10,7 @@ data class PlayerDetails(
 )
 
 println(
-  KxsTsGenerator().generate(Color.serializer().descriptor)
+  KxsTsGenerator().generate(Color.serializer())
 )
 ```
 

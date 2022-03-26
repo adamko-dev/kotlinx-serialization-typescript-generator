@@ -15,8 +15,10 @@ class ListsTests {
       .shouldBe(
         // language=TypeScript
         """
-          |interface CalendarEvent {
-          |  attendeeNames: string[];
+          |interface MyLists {
+          |  strings: string[];
+          |  ints: number[];
+          |  longs: number[];
           |}
         """.trimMargin()
       )

@@ -1,20 +1,23 @@
-// This file was automatically generated from value-classes.md by Knit tool. Do not edit.
+// This file was automatically generated from polymorphism.md by Knit tool. Do not edit.
 @file:Suppress("PackageDirectoryMismatch", "unused")
-package dev.adamko.kxstsgen.example.exampleValueClasses02
+package dev.adamko.kxstsgen.example.exampleGenerics01
 
 import kotlinx.serialization.*
 import dev.adamko.kxstsgen.*
 
 import kotlinx.serialization.builtins.serializer
 
+@Serializable
+class Box<T>(
+  val value: T,
+)
+
 fun main() {
   val tsGenerator = KxsTsGenerator()
+
   println(
     tsGenerator.generate(
-      UByte.serializer(),
-      UShort.serializer(),
-      UInt.serializer(),
-      ULong.serializer(),
+      Box.serializer(Double.serializer()),
     )
   )
 }

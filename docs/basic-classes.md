@@ -29,7 +29,7 @@ class Color(val rgb: Int)
 
 fun main() {
   val tsGenerator = KxsTsGenerator()
-  println(tsGenerator.generate(Color.serializer().descriptor))
+  println(tsGenerator.generate(Color.serializer()))
 }
 ```
 
@@ -57,7 +57,7 @@ class SimpleTypes(
 
 fun main() {
   val tsGenerator = KxsTsGenerator()
-  println(tsGenerator.generate(SimpleTypes.serializer().descriptor))
+  println(tsGenerator.generate(SimpleTypes.serializer()))
 }
 ```
 
@@ -89,7 +89,7 @@ data class SomeDataClass(
 
 fun main() {
   val tsGenerator = KxsTsGenerator()
-  println(tsGenerator.generate(SomeDataClass.serializer().descriptor))
+  println(tsGenerator.generate(SomeDataClass.serializer()))
 }
 ```
 
@@ -130,7 +130,7 @@ class SimpleTypes(
 
 fun main() {
   val tsGenerator = KxsTsGenerator()
-  println(tsGenerator.generate(SimpleTypes.serializer().descriptor))
+  println(tsGenerator.generate(SimpleTypes.serializer()))
 }
 ```
 

@@ -9,7 +9,10 @@
 * [Closed Polymorphism](#closed-polymorphism)
   * [Static types](#static-types)
   * [Sealed classes](#sealed-classes)
+  * [Nested sealed classes](#nested-sealed-classes)
   * [Objects](#objects)
+* [Open Polymorphism](#open-polymorphism)
+  * [Generics](#generics)
 
 <!--- END -->
 
@@ -35,7 +38,7 @@ abstract class SimpleTypes(
 
 fun main() {
   val tsGenerator = KxsTsGenerator()
-  println(tsGenerator.generate(SimpleTypes.serializer().descriptor))
+  println(tsGenerator.generate(SimpleTypes.serializer()))
 }
 ```
 
@@ -67,7 +70,7 @@ class OwnedProject(name: String, val owner: String) : Project(name)
 
 fun main() {
   val tsGenerator = KxsTsGenerator()
-  println(tsGenerator.generate(Project.serializer().descriptor))
+  println(tsGenerator.generate(Project.serializer()))
 }
 ```
 
@@ -84,6 +87,8 @@ interface Project {
 <!--- TEST -->
 
 ```kotlin
+import kotlinx.serialization.modules.*
+
 @Serializable
 abstract class Project {
   abstract val name: String
@@ -92,9 +97,15 @@ abstract class Project {
 @Serializable
 class OwnedProject(override val name: String, val owner: String) : Project()
 
+val module = SerializersModule {
+  polymorphic(Project::class) {
+    subclass(OwnedProject::class)
+  }
+}
+
 fun main() {
-  val tsGenerator = KxsTsGenerator()
-  println(tsGenerator.generate(OwnedProject.serializer().descriptor))
+  val tsGenerator = KxsTsGenerator(serializersModule = module)
+  println(tsGenerator.generate(OwnedProject.serializer()))
 }
 ```
 
@@ -115,6 +126,8 @@ interface OwnedProject extends Project {
 
 ### Sealed classes
 
+https://www.typescriptlang.org/docs/handbook/enums.html#union-enums-and-enum-member-types
+
 ```kotlin
 @Serializable
 sealed class Project {
@@ -122,6 +135,7 @@ sealed class Project {
 }
 
 @Serializable
+@SerialName("owned-project")
 class OwnedProject(override val name: String, val owner: String) : Project()
 
 @Serializable
@@ -129,32 +143,116 @@ class DeprecatedProject(override val name: String, val reason: String) : Project
 
 fun main() {
   val tsGenerator = KxsTsGenerator()
-  println(tsGenerator.generate(OwnedProject.serializer().descriptor))
+  println(tsGenerator.generate(OwnedProject.serializer()))
 }
 ```
 
 > You can get the full code [here](./knit/example/example-polymorphic-sealed-class-01.kt).
 
 ```typescript
-enum ProjectKind {
-  OwnedProject,
-  DeprecatedProject,
+export type Project = Project.Owned | Project.Deprecated
+
+export namespace Project {
+
+  export enum Type {
+    Owned = "owned-project",
+    Deprecated = "DeprecatedProject",
+  }
+
+  export interface Owned {
+    type: Type.Owned;
+    name: string;
+    owner: string;
+  }
+
+  export interface Deprecated {
+    type: Type.Deprecated;
+    name: string;
+    reason: string;
+  }
+
+}
+```
+
+<!--- TEST -->
+
+### Nested sealed classes
+
+[Union enums and enum member types](https://www.typescriptlang.org/docs/handbook/enums.html#union-enums-and-enum-member-types)
+
+```kotlin
+@Serializable
+sealed class Dog {
+  abstract val name: String
+
+  @Serializable
+  class Mutt(override val name: String, val loveable: Boolean = true) : Dog()
+
+  @Serializable
+  sealed class Retriever : Dog() {
+    abstract val colour: String
+
+    @Serializable
+    data class Golden(
+      override val name: String,
+      override val colour: String,
+      val cute: Boolean = true,
+    ) : Retriever()
+
+    @Serializable
+    data class NovaScotia(
+      override val name: String,
+      override val colour: String,
+      val adorable: Boolean = true,
+    ) : Retriever()
+  }
 }
 
-interface Project {
-  type: ProjectKind;
+fun main() {
+  val tsGenerator = KxsTsGenerator()
+  println(tsGenerator.generate(Dog.serializer()))
 }
+```
 
-interface OwnedProject extends Project {
-  type: ProjectKind.OwnedProject;
-  name: string;
-  owner: string;
-}
+> You can get the full code [here](./knit/example/example-polymorphic-sealed-class-02.kt).
 
-interface DeprecatedProject extends Project {
-  type: ProjectKind.DeprecatedProject;
-  name: string;
-  reason: string;
+```typescript
+export type Dog = Dog.Mutt | Dog.Retriever
+
+export namespace Dog {
+
+  export enum Type {
+    Mutt = "Mutt",
+  }
+
+  export interface Mutt {
+    type: Type.Mutt;
+    name: string;
+    loveable?: boolean;
+  }
+
+  export type Retriever = Retriever.Golden | Retriever.NovaScotia
+
+  export namespace Retriever {
+
+    export enum Type {
+      Golden = "Golden",
+      NovaScotia = "NovaScotia",
+    }
+
+    export interface Golden {
+      type: Type.Golden;
+      name: string;
+      cute?: boolean;
+    }
+
+    export interface NovaScotia {
+      type: Type.NovaScotia;
+      name: string;
+      adorable?: boolean;
+    }
+  }
+
 }
 ```
 
@@ -176,8 +274,8 @@ fun main() {
   val tsGenerator = KxsTsGenerator()
   println(
     tsGenerator.generate(
-      EmptyResponse.serializer().descriptor,
-      TextResponse.serializer().descriptor,
+      EmptyResponse.serializer(),
+      TextResponse.serializer(),
     )
   )
 }
@@ -191,18 +289,51 @@ export enum ResponseKind {
   TextResponse = "TextResponse",
 }
 
-interface Response {
-  type: ResponseKind;
-}
+type Response = EmptyResponse | TextResponse
 
-interface EmptyResponse extends Response {
+interface EmptyResponse {
   type: ResponseKind.EmptyResponse;
 }
 
-interface TextResponse extends Response {
+interface TextResponse {
   type: ResponseKind.TextResponse;
   text: string;
 }
 ```
 
 <!--- TEST -->
+
+## Open Polymorphism
+
+### Generics
+
+<!--- INCLUDE
+import kotlinx.serialization.builtins.serializer
+-->
+
+```kotlin
+@Serializable
+class Box<T>(
+  val value: T,
+)
+
+fun main() {
+  val tsGenerator = KxsTsGenerator()
+
+  println(
+    tsGenerator.generate(
+      Box.serializer(Double.serializer()),
+    )
+  )
+}
+```
+
+> You can get the full code [here](./knit/example/example-generics-01.kt).
+
+```typescript
+type Double = number & { __kotlin_Double__: void }
+
+interface Box {
+  value: Double
+}
+```

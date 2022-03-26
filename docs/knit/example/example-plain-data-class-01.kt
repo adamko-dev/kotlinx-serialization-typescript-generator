@@ -16,5 +16,5 @@ data class SomeDataClass(
 
 fun main() {
   val tsGenerator = KxsTsGenerator()
-  println(tsGenerator.generate(SomeDataClass.serializer().descriptor))
+  println(tsGenerator.generate(SomeDataClass.serializer()))
 }

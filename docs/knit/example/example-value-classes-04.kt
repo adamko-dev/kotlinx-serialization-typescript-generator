@@ -11,5 +11,5 @@ value class UserCount(private val count: UInt)
 
 fun main() {
   val tsGenerator = KxsTsGenerator()
-  println(tsGenerator.generate(UserCount.serializer().descriptor))
+  println(tsGenerator.generate(UserCount.serializer()))
 }

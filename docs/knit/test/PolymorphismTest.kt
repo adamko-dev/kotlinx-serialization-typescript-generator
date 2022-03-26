@@ -69,25 +69,76 @@ class PolymorphismTest {
       .shouldBe(
         // language=TypeScript
         """
-          |enum ProjectKind {
-          |  OwnedProject,
-          |  DeprecatedProject,
-          |}
+          |export type Project = Project.Owned | Project.Deprecated
           |
-          |interface Project {
-          |  type: ProjectKind;
-          |}
+          |export namespace Project {
           |
-          |interface OwnedProject extends Project {
-          |  type: ProjectKind.OwnedProject;
-          |  name: string;
-          |  owner: string;
-          |}
+          |  export enum Type {
+          |    Owned = "owned-project",
+          |    Deprecated = "DeprecatedProject",
+          |  }
           |
-          |interface DeprecatedProject extends Project {
-          |  type: ProjectKind.DeprecatedProject;
-          |  name: string;
-          |  reason: string;
+          |  export interface Owned {
+          |    type: Type.Owned;
+          |    name: string;
+          |    owner: string;
+          |  }
+          |
+          |  export interface Deprecated {
+          |    type: Type.Deprecated;
+          |    name: string;
+          |    reason: string;
+          |  }
+          |
+          |}
+        """.trimMargin()
+      )
+  }
+
+  @Test
+  fun testExamplePolymorphicSealedClass02() {
+    captureOutput("ExamplePolymorphicSealedClass02") {
+      dev.adamko.kxstsgen.example.examplePolymorphicSealedClass02.main()
+    }.joinToString("\n")
+      .shouldBe(
+        // language=TypeScript
+        """
+          |export type Dog = Dog.Mutt | Dog.Retriever
+          |
+          |export namespace Dog {
+          |
+          |  export enum Type {
+          |    Mutt = "Mutt",
+          |  }
+          |
+          |  export interface Mutt {
+          |    type: Type.Mutt;
+          |    name: string;
+          |    loveable?: boolean;
+          |  }
+          |
+          |  export type Retriever = Retriever.Golden | Retriever.NovaScotia
+          |
+          |  export namespace Retriever {
+          |
+          |    export enum Type {
+          |      Golden = "Golden",
+          |      NovaScotia = "NovaScotia",
+          |    }
+          |
+          |    export interface Golden {
+          |      type: Type.Golden;
+          |      name: string;
+          |      cute?: boolean;
+          |    }
+          |
+          |    export interface NovaScotia {
+          |      type: Type.NovaScotia;
+          |      name: string;
+          |      adorable?: boolean;
+          |    }
+          |  }
+          |
           |}
         """.trimMargin()
       )
@@ -106,15 +157,13 @@ class PolymorphismTest {
           |  TextResponse = "TextResponse",
           |}
           |
-          |interface Response {
-          |  type: ResponseKind;
-          |}
+          |type Response = EmptyResponse | TextResponse
           |
-          |interface EmptyResponse extends Response {
+          |interface EmptyResponse {
           |  type: ResponseKind.EmptyResponse;
           |}
           |
-          |interface TextResponse extends Response {
+          |interface TextResponse {
           |  type: ResponseKind.TextResponse;
           |  text: string;
           |}

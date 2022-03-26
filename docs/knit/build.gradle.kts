@@ -16,6 +16,9 @@ dependencies {
 
   implementation("org.jetbrains.kotlinx:kotlinx-knit:0.3.0")
 
+  implementation(kotlin("reflect"))
+
+
   testImplementation(kotlin("test"))
 
   testImplementation("org.jetbrains.kotlinx:kotlinx-knit-test:0.3.0")

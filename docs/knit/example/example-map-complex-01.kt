@@ -20,5 +20,5 @@ data class CanvasProperties(
 
 fun main() {
   val tsGenerator = KxsTsGenerator()
-  println(tsGenerator.generate(CanvasProperties.serializer().descriptor))
+  println(tsGenerator.generate(CanvasProperties.serializer()))
 }

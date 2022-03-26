@@ -30,7 +30,7 @@ class Color(val rgb: Int = 12345)
 
 fun main() {
   val tsGenerator = KxsTsGenerator()
-  println(tsGenerator.generate(Color.serializer().descriptor))
+  println(tsGenerator.generate(Color.serializer()))
 }
 ```
 
@@ -56,7 +56,7 @@ data class ContactDetails(
 
 fun main() {
   val tsGenerator = KxsTsGenerator()
-  println(tsGenerator.generate(ContactDetails.serializer().descriptor))
+  println(tsGenerator.generate(ContactDetails.serializer()))
 }
 ```
 

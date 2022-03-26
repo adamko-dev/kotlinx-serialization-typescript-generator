@@ -10,5 +10,5 @@ class Color(val rgb: Int)
 
 fun main() {
   val tsGenerator = KxsTsGenerator()
-  println(tsGenerator.generate(Color.serializer().descriptor))
+  println(tsGenerator.generate(Color.serializer()))
 }

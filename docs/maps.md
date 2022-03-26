@@ -20,7 +20,6 @@ import dev.adamko.kxstsgen.*
 
 ## Introduction
 
-
 ### Primitive maps
 
 ```kotlin
@@ -31,7 +30,7 @@ data class Config(
 
 fun main() {
   val tsGenerator = KxsTsGenerator()
-  println(tsGenerator.generate(Config.serializer().descriptor))
+  println(tsGenerator.generate(Config.serializer()))
 }
 ```
 
@@ -49,32 +48,32 @@ interface Config {
 
 ```kotlin
 @Serializable
+class Application(
+  val settings: Map<SettingKeys, String>
+)
+
+@Serializable
 enum class SettingKeys {
   SCREEN_SIZE,
   MAX_MEMORY,
 }
 
-@Serializable
-class Application(
-  val settings: Map<SettingKeys, String>
-)
-
 fun main() {
   val tsGenerator = KxsTsGenerator()
-  println(tsGenerator.generate(Application.serializer().descriptor))
+  println(tsGenerator.generate(Application.serializer()))
 }
 ```
 
 > You can get the full code [here](./knit/example/example-map-primitive-02.kt).
 
 ```typescript
+interface Application {
+  settings: { [key in SettingKeys]: string };
+}
+
 export enum SettingKeys {
   SCREEN_SIZE = "SCREEN_SIZE",
   MAX_MEMORY = "MAX_MEMORY",
-}
-
-interface Application {
-  settings: { [key in SettingKeys]: string };
 }
 ```
 
@@ -90,7 +89,7 @@ data class Config(
 
 fun main() {
   val tsGenerator = KxsTsGenerator()
-  println(tsGenerator.generate(Config.serializer().descriptor))
+  println(tsGenerator.generate(Config.serializer()))
 }
 ```
 
@@ -122,14 +121,16 @@ data class CanvasProperties(
 
 fun main() {
   val tsGenerator = KxsTsGenerator()
-  println(tsGenerator.generate(CanvasProperties.serializer().descriptor))
+  println(tsGenerator.generate(CanvasProperties.serializer()))
 }
 ```
 
 > You can get the full code [here](./knit/example/example-map-complex-01.kt).
 
 ```typescript
-type UByte = number;
+interface CanvasProperties {
+  colourNames: Map<Colour, string>;
+}
 
 interface Colour {
   r: UByte;
@@ -138,9 +139,7 @@ interface Colour {
   a: UByte;
 }
 
-interface CanvasProperties {
-  colourNames: Map<Colour, string>;
-}
+type UByte = number;
 ```
 
 <!--- TEST -->

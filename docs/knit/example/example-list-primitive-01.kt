@@ -6,11 +6,13 @@ import kotlinx.serialization.*
 import dev.adamko.kxstsgen.*
 
 @Serializable
-data class CalendarEvent(
-  val attendeeNames: List<String>
+data class MyLists(
+  val strings: List<String>,
+  val ints: List<Int>,
+  val longs: List<Long>,
 )
 
 fun main() {
   val tsGenerator = KxsTsGenerator()
-  println(tsGenerator.generate(CalendarEvent.serializer().descriptor))
+  println(tsGenerator.generate(MyLists.serializer()))
 }

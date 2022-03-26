@@ -15,5 +15,5 @@ class SimpleTypes(
 
 fun main() {
   val tsGenerator = KxsTsGenerator()
-  println(tsGenerator.generate(SimpleTypes.serializer().descriptor))
+  println(tsGenerator.generate(SimpleTypes.serializer()))
 }

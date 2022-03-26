@@ -12,5 +12,5 @@ data class Config(
 
 fun main() {
   val tsGenerator = KxsTsGenerator()
-  println(tsGenerator.generate(Config.serializer().descriptor))
+  println(tsGenerator.generate(Config.serializer()))
 }

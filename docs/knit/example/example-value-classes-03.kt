@@ -16,7 +16,7 @@ fun main() {
   val tsGenerator = KxsTsGenerator(config = tsConfig)
   println(
     tsGenerator.generate(
-      ULong.serializer().descriptor,
+      ULong.serializer(),
     )
   )
 }

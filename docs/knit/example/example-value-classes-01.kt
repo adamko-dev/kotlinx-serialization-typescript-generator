@@ -11,5 +11,5 @@ value class AuthToken(private val token: String)
 
 fun main() {
   val tsGenerator = KxsTsGenerator()
-  println(tsGenerator.generate(AuthToken.serializer().descriptor))
+  println(tsGenerator.generate(AuthToken.serializer()))
 }
