@@ -23,5 +23,5 @@ val module = SerializersModule {
 
 fun main() {
   val tsGenerator = KxsTsGenerator(serializersModule = module)
-  println(tsGenerator.generate(OwnedProject.serializer()))
+  println(tsGenerator.generate(Project.serializer()))
 }

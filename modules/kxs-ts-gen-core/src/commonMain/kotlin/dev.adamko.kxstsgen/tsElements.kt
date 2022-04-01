@@ -36,6 +36,12 @@ sealed interface TsDeclaration : TsElement {
     val members: Set<String>,
   ) : TsDeclaration
 
+
+  data class TsNamespace(
+    override val id: TsElementId,
+    val members: Set<TsDeclaration>,
+  ) : TsDeclaration
+
 }
 
 
@@ -90,6 +96,7 @@ sealed interface TsTypeRef {
 
 }
 
+
 // source: kxs
 sealed interface TsProperty {
   val name: String
@@ -120,65 +127,3 @@ sealed interface TsPolymorphicDiscriminator {
   // source: introspection
   object Open : TsPolymorphicDiscriminator
 }
-
-
-/*
-//fun TsTypeRef.toTsTypeParamConstant(): TsTypeParam.Constant = TsTypeParam.Constant(this)
-
-///**
-// * A generic type parameter, either constant or generic.
-// *
-// * The output depends on whether it is used in a [TsStructure.TsInterface] or [TsProperty].
-// *
-// * ```typescript
-// * // T is 'TsTypeParam.Generic'
-// * interface Box<T> { value: T; }
-// * interface Pet<T: Animal> { pet: T; }
-// * interface NamedBox<T extends Named> { namedValue: T; }
-// * interface NamedPetBox<T: Animal> { pet: T; }
-// *
-// * // 'string' and 'Dog' are 'TsTypeParam.Constant'
-// * interface Person { aliases: string[] }
-// * interface DogBox extends PetBox<Dog> { override pet: Dog }
-// * ```
-// */
-//// source: introspection
-//sealed interface TsTypeParam {
-//
-//  data class Generic(
-//    val name: String,
-//    val constraints: Set<TsTypeParam>? = null
-//  ) : TsTypeParam
-//
-//  data class Constant(
-//    val typeRef: TsTypeRef
-//  ) : TsTypeParam
-//
-//}
-
-
-///** Defines how many generic types can be accepted. */
-//// source: introspection
-//sealed interface TsGenericSlot {
-//
-//  /** Enums, primitives, properties can't have generic slots. */
-//  object None : TsGenericSlot
-//
-//  /** A single generic type, e.g. `List<V>` */
-//  data class Value(
-//    val valueTyping: TsTypeParam,
-//  ) : TsGenericSlot
-//
-//  /** The generic types of a `Map<K, V>` */
-//  data class KeyValue(
-//    val keyTyping: TsTypeParam,
-//    val valueTyping: TsTypeParam,
-//  ) : TsGenericSlot
-//
-//  /** Can have zero-to-many [TsTypeParam]s. */
-//  data class Multiple(
-//    val typings: Set<TsTypeParam>,
-//  ) : TsGenericSlot
-//
-//}
-*/

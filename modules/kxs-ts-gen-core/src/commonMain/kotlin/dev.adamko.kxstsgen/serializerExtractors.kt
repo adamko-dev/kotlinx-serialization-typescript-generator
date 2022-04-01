@@ -21,10 +21,10 @@ expect fun <T : Any> extractSealedSubclassSerializers(
 /** Hacky exploit to capture the [KSerializer] of a [ContextualSerializer]. */
 fun extractContextualSerializer(
   serializer: ContextualSerializer<*>,
-  kxsTsModule: KxsTsModule,
+  kxsTsConfig: KxsTsConfig,
 ): KSerializer<*>? {
   return try {
-    val decoder = ContextualSerializerCaptorDecoder(kxsTsModule.serializersModule)
+    val decoder = ContextualSerializerCaptorDecoder(kxsTsConfig.serializersModule)
     serializer.deserialize(decoder)
     null // this should never be hit, decoder should always throw an exception
   } catch (e: SerializerCaptorException) {
@@ -44,6 +44,7 @@ private class ContextualSerializerCaptorDecoder(
   override fun <T> decodeSerializableValue(deserializer: DeserializationStrategy<T>): Nothing =
     throw SerializerCaptorException(deserializer as KSerializer<T>)
 }
+
 
 private class SerializerCaptorException(val serializer: KSerializer<*>) : Exception()
 

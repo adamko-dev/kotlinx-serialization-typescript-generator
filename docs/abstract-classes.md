@@ -27,7 +27,7 @@ abstract class Color(val rgb: Int)
 
 fun main() {
   val tsGenerator = KxsTsGenerator()
-  println(tsGenerator.generate(Color.serializer().descriptor))
+  println(tsGenerator.generate(Color.serializer()))
 }
 ```
 
@@ -55,7 +55,7 @@ abstract class SimpleTypes(
 
 fun main() {
   val tsGenerator = KxsTsGenerator()
-  println(tsGenerator.generate(SimpleTypes.serializer().descriptor))
+  println(tsGenerator.generate(SimpleTypes.serializer()))
 }
 ```
 
@@ -86,7 +86,7 @@ abstract class AbstractSimpleTypes {
 
 fun main() {
   val tsGenerator = KxsTsGenerator()
-  println(tsGenerator.generate(AbstractSimpleTypes.serializer().descriptor))
+  println(tsGenerator.generate(AbstractSimpleTypes.serializer()))
 }
 ```
 
