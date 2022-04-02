@@ -11,14 +11,16 @@ class DefaultValuesTest {
   fun testExampleDefaultValuesSingleField01() {
     captureOutput("ExampleDefaultValuesSingleField01") {
       dev.adamko.kxstsgen.example.exampleDefaultValuesSingleField01.main()
-    }.joinToString("\n")
+    }.joinToString("\n") { it.ifBlank { "" } }
       .shouldBe(
         // language=TypeScript
         """
-          |interface Color {
+          |export interface Color {
           |  rgb?: number;
           |}
         """.trimMargin()
+          .lines()
+          .joinToString("\n") { it.ifBlank { "" } }
       )
   }
 
@@ -26,16 +28,18 @@ class DefaultValuesTest {
   fun testExampleDefaultValuesPrimitiveFields01() {
     captureOutput("ExampleDefaultValuesPrimitiveFields01") {
       dev.adamko.kxstsgen.example.exampleDefaultValuesPrimitiveFields01.main()
-    }.joinToString("\n")
+    }.joinToString("\n") { it.ifBlank { "" } }
       .shouldBe(
         // language=TypeScript
         """
-          |interface ContactDetails {
+          |export interface ContactDetails {
           |  email: string | null;
           |  phoneNumber?: string | null;
           |  active?: boolean | null;
           |}
         """.trimMargin()
+          .lines()
+          .joinToString("\n") { it.ifBlank { "" } }
       )
   }
 }

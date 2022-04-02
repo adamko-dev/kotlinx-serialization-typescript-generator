@@ -11,14 +11,16 @@ class MapsTests {
   fun testExampleMapPrimitive01() {
     captureOutput("ExampleMapPrimitive01") {
       dev.adamko.kxstsgen.example.exampleMapPrimitive01.main()
-    }.joinToString("\n")
+    }.joinToString("\n") { it.ifBlank { "" } }
       .shouldBe(
         // language=TypeScript
         """
-          |interface Config {
+          |export interface Config {
           |  properties: { [key: string]: string };
           |}
         """.trimMargin()
+          .lines()
+          .joinToString("\n") { it.ifBlank { "" } }
       )
   }
 
@@ -26,11 +28,11 @@ class MapsTests {
   fun testExampleMapPrimitive02() {
     captureOutput("ExampleMapPrimitive02") {
       dev.adamko.kxstsgen.example.exampleMapPrimitive02.main()
-    }.joinToString("\n")
+    }.joinToString("\n") { it.ifBlank { "" } }
       .shouldBe(
         // language=TypeScript
         """
-          |interface Application {
+          |export interface Application {
           |  settings: { [key in SettingKeys]: string };
           |}
           |
@@ -39,6 +41,8 @@ class MapsTests {
           |  MAX_MEMORY = "MAX_MEMORY",
           |}
         """.trimMargin()
+          .lines()
+          .joinToString("\n") { it.ifBlank { "" } }
       )
   }
 
@@ -46,14 +50,16 @@ class MapsTests {
   fun testExampleMapPrimitive03() {
     captureOutput("ExampleMapPrimitive03") {
       dev.adamko.kxstsgen.example.exampleMapPrimitive03.main()
-    }.joinToString("\n")
+    }.joinToString("\n") { it.ifBlank { "" } }
       .shouldBe(
         // language=TypeScript
         """
-          |interface Config {
+          |export interface Config {
           |  properties: { [key: string | null]: string | null };
           |}
         """.trimMargin()
+          .lines()
+          .joinToString("\n") { it.ifBlank { "" } }
       )
   }
 
@@ -61,23 +67,25 @@ class MapsTests {
   fun testExampleMapComplex01() {
     captureOutput("ExampleMapComplex01") {
       dev.adamko.kxstsgen.example.exampleMapComplex01.main()
-    }.joinToString("\n")
+    }.joinToString("\n") { it.ifBlank { "" } }
       .shouldBe(
         // language=TypeScript
         """
-          |interface CanvasProperties {
+          |export interface CanvasProperties {
           |  colourNames: Map<Colour, string>;
           |}
           |
-          |interface Colour {
+          |export interface Colour {
           |  r: UByte;
           |  g: UByte;
           |  b: UByte;
           |  a: UByte;
           |}
           |
-          |type UByte = number;
+          |export type UByte = number;
         """.trimMargin()
+          .lines()
+          .joinToString("\n") { it.ifBlank { "" } }
       )
   }
 }

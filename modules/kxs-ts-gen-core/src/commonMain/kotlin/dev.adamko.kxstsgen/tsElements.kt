@@ -18,16 +18,19 @@ sealed interface TsElement
 sealed interface TsDeclaration : TsElement {
   val id: TsElementId
 
-  data class TsTypeAlias(
+  data class TsType(
     override val id: TsElementId,
-    val typeRef: TsTypeRef,
-  ) : TsDeclaration
+    val typeRefs: Set<TsTypeRef>,
+  ) : TsDeclaration {
+    constructor(id: TsElementId, typeRef: TsTypeRef, vararg typeRefs: TsTypeRef) :
+      this(id, typeRefs.toSet() + typeRef)
+  }
 
 
   data class TsInterface(
     override val id: TsElementId,
     val properties: Set<TsProperty>,
-    val polymorphism: TsPolymorphicDiscriminator,
+    val polymorphism: TsPolymorphism?,
   ) : TsDeclaration
 
 
@@ -87,7 +90,17 @@ sealed interface TsTypeRef {
 
   data class Literal(val element: TsLiteral, override val nullable: Boolean) : TsTypeRef
 
-  data class Named(val id: TsElementId, override val nullable: Boolean) : TsTypeRef
+  data class Declaration(
+    val id: TsElementId,
+    override val nullable: Boolean,
+  ) : TsTypeRef
+
+  /** A property within another declaration (e.g. an enum value, or type within a namespace) */
+  data class Property(
+    val id: TsElementId,
+    val declaration: Declaration,
+    override val nullable: Boolean,
+  ) : TsTypeRef
 
   object Unknown : TsTypeRef {
     val ref: Literal = Literal(TsLiteral.Primitive.TsUnknown, false)
@@ -114,16 +127,23 @@ sealed interface TsProperty {
 }
 
 
-// source: kxs & introspection
-sealed interface TsPolymorphicDiscriminator {
-  // source: introspection
-  data class Sealed(
-    // source: kxs
-    val discriminator: TsDeclaration.TsEnum,
-    // source: introspection
-    val children: Set<TsDeclaration.TsInterface> = setOf(),
-  ) : TsPolymorphicDiscriminator
+sealed interface TsPolymorphism {
 
-  // source: introspection
-  object Open : TsPolymorphicDiscriminator
+  val discriminatorName: String
+  val subclasses: Set<TsDeclaration.TsInterface>
+
+  data class Sealed(
+    override val discriminatorName: String,
+    override val subclasses: Set<TsDeclaration.TsInterface>,
+  ) : TsPolymorphism
+
+  data class Open(
+    override val discriminatorName: String,
+    override val subclasses: Set<TsDeclaration.TsInterface>,
+  ) : TsPolymorphism
+
+//  object None : TsPolymorphism {
+//    override val discriminatorName: Nothing = error("not implemented")
+//    override val subclasses: Nothing = error("not implemented")
+//  }
 }

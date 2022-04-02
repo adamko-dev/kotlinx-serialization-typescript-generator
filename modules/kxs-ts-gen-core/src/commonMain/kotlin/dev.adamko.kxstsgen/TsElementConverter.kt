@@ -14,6 +14,7 @@ fun interface TsElementConverter {
   operator fun invoke(
     context: KxsTsConvertorContext,
     descriptor: SerialDescriptor,
+    descriptorData: DescriptorData?,
   ): TsElement
 
   object Default : TsElementConverter {
@@ -21,13 +22,28 @@ fun interface TsElementConverter {
     override operator fun invoke(
       context: KxsTsConvertorContext,
       descriptor: SerialDescriptor,
+      descriptorData: DescriptorData?,
+    ): TsElement {
+      return convertMonomorphicDescriptor(context, descriptor)
+
+//      return when (descriptorData) {
+//        is DescriptorData.Polymorphic -> convertPolymorphicDescriptor(
+//          context,
+//          descriptorData,
+//        )
+//        null,
+//        is DescriptorData.Monomorphic -> setOf(convertMonomorphicDescriptor(context, descriptor))
+//      }
+
+    }
+
+
+    private fun convertMonomorphicDescriptor(
+      context: KxsTsConvertorContext,
+      descriptor: SerialDescriptor,
     ): TsElement {
       return when (descriptor.kind) {
         SerialKind.ENUM       -> convertEnum(context, descriptor)
-        SerialKind.CONTEXTUAL -> {
-          // TODO contextual
-          TsLiteral.Primitive.TsAny
-        }
 
         PrimitiveKind.BOOLEAN -> TsLiteral.Primitive.TsBoolean
 
@@ -45,13 +61,45 @@ fun interface TsElementConverter {
         StructureKind.MAP     -> convertMap(context, descriptor)
 
         StructureKind.CLASS,
-        StructureKind.OBJECT,
-        PolymorphicKind.SEALED,
-        PolymorphicKind.OPEN  -> when {
+        StructureKind.OBJECT  -> when {
           descriptor.isInline -> convertTypeAlias(context, descriptor)
-          else                -> convertInterface(context, descriptor)
+          else                -> convertInterface(context, descriptor, null)
         }
+
+        // TODO handle contextual
+        SerialKind.CONTEXTUAL -> TsLiteral.Primitive.TsAny
+
+        PolymorphicKind.SEALED,
+        PolymorphicKind.OPEN  -> convertPolymorphic(context, descriptor)
       }
+    }
+
+    private fun convertPolymorphic(
+      context: KxsTsConvertorContext,
+      descriptor: SerialDescriptor,
+    ): TsDeclaration {
+
+      val discriminatorIndex = descriptor.elementDescriptors
+        .indexOfFirst { it.kind == PrimitiveKind.STRING }
+      val discriminatorName = descriptor.getElementName(discriminatorIndex)
+
+      val subclasses = descriptor
+        .elementDescriptors
+        .first { it.kind == SerialKind.CONTEXTUAL }
+        .elementDescriptors
+
+      val subclassInterfaces = subclasses
+        .map { convertMonomorphicDescriptor(context, it) }
+        .filterIsInstance<TsDeclaration.TsInterface>()
+        .toSet()
+
+      val polymorphism = when (descriptor.kind) {
+        PolymorphicKind.SEALED -> TsPolymorphism.Sealed(discriminatorName, subclassInterfaces)
+        PolymorphicKind.OPEN   -> TsPolymorphism.Open(discriminatorName, subclassInterfaces)
+        else                   -> error("unexpected SerialKind ${descriptor.kind}") // TODO 'else' branch shouldn't be needed
+      }
+
+      return convertInterface(context, descriptor, polymorphism)
     }
 
 
@@ -62,14 +110,14 @@ fun interface TsElementConverter {
       val resultId = context.elementId(structDescriptor)
       val fieldDescriptor = structDescriptor.elementDescriptors.first()
       val fieldTypeRef = context.typeRef(fieldDescriptor)
-      return TsDeclaration.TsTypeAlias(resultId, fieldTypeRef)
-
+      return TsDeclaration.TsType(resultId, fieldTypeRef)
     }
 
 
     private fun convertInterface(
       context: KxsTsConvertorContext,
       structDescriptor: SerialDescriptor,
+      polymorphism: TsPolymorphism?,
     ): TsDeclaration {
       val resultId = context.elementId(structDescriptor)
 
@@ -81,7 +129,7 @@ fun interface TsElementConverter {
           else                                      -> TsProperty.Required(name, fieldTypeRef)
         }
       }.toSet()
-      return TsDeclaration.TsInterface(resultId, properties, TsPolymorphicDiscriminator.Open)
+      return TsDeclaration.TsInterface(resultId, properties, polymorphism)
     }
 
 

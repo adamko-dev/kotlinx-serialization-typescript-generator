@@ -32,16 +32,17 @@ class KxsTsProcessor(
   }
 
   fun process(): String {
-    val allDescriptorData = serializers.associate { serializer ->
-      serializer.descriptor to descriptorData.getValue(serializer)
-    }
+    val allDescriptorData: Map<SerialDescriptor, DescriptorData> =
+      serializers.associate { serializer ->
+        serializer.descriptor to descriptorData.getValue(serializer)
+      }
 
     val allSerialDescriptors: Set<SerialDescriptor> =
       serializerDescriptorsExtractor(allDescriptorData.values)
 
     val allTsElements: List<TsElement> =
       allSerialDescriptors.map { descriptor ->
-        TsElementConverter.Default(context, descriptor)
+        TsElementConverter.Default(context, descriptor, allDescriptorData[descriptor])
       }
 
     return allTsElements

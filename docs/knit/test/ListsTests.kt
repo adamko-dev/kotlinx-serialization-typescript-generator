@@ -11,16 +11,18 @@ class ListsTests {
   fun testExampleListPrimitive01() {
     captureOutput("ExampleListPrimitive01") {
       dev.adamko.kxstsgen.example.exampleListPrimitive01.main()
-    }.joinToString("\n")
+    }.joinToString("\n") { it.ifBlank { "" } }
       .shouldBe(
         // language=TypeScript
         """
-          |interface MyLists {
+          |export interface MyLists {
           |  strings: string[];
           |  ints: number[];
           |  longs: number[];
           |}
         """.trimMargin()
+          .lines()
+          .joinToString("\n") { it.ifBlank { "" } }
       )
   }
 }

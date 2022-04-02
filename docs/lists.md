@@ -36,7 +36,7 @@ fun main() {
 > You can get the full code [here](./knit/example/example-list-primitive-01.kt).
 
 ```typescript
-interface MyLists {
+export interface MyLists {
   strings: string[];
   ints: number[];
   longs: number[];

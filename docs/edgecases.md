@@ -43,11 +43,11 @@ fun main() {
 > You can get the full code [here](./knit/example/example-edgecase-recursive-references-01.kt).
 
 ```typescript
-interface A {
+export interface A {
   b: B;
 }
 
-interface B {
+export interface B {
   a: A;
 }
 ```
@@ -76,11 +76,11 @@ fun main() {
 > You can get the full code [here](./knit/example/example-edgecase-recursive-references-02.kt).
 
 ```typescript
-interface A {
+export interface A {
   list: B[];
 }
 
-interface B {
+export interface B {
   list: A[];
 }
 ```
@@ -109,11 +109,11 @@ fun main() {
 > You can get the full code [here](./knit/example/example-edgecase-recursive-references-03.kt).
 
 ```typescript
-interface A {
+export interface A {
   map: { [key: string]: B };
 }
 
-interface B {
+export interface B {
   map: { [key: string]: A };
 }
 ```

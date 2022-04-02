@@ -11,11 +11,11 @@ class PolymorphismTest {
   fun testExamplePolymorphicAbstractClassPrimitiveFields01() {
     captureOutput("ExamplePolymorphicAbstractClassPrimitiveFields01") {
       dev.adamko.kxstsgen.example.examplePolymorphicAbstractClassPrimitiveFields01.main()
-    }.joinToString("\n")
+    }.joinToString("\n") { it.ifBlank { "" } }
       .shouldBe(
         // language=TypeScript
         """
-          |interface SimpleTypes {
+          |export interface SimpleTypes {
           |  aString: string;
           |  anInt: number;
           |  aDouble: number;
@@ -23,6 +23,8 @@ class PolymorphismTest {
           |  privateMember: string;
           |}
         """.trimMargin()
+          .lines()
+          .joinToString("\n") { it.ifBlank { "" } }
       )
   }
 
@@ -30,14 +32,16 @@ class PolymorphismTest {
   fun testExamplePolymorphicStaticTypes01() {
     captureOutput("ExamplePolymorphicStaticTypes01") {
       dev.adamko.kxstsgen.example.examplePolymorphicStaticTypes01.main()
-    }.joinToString("\n")
+    }.joinToString("\n") { it.ifBlank { "" } }
       .shouldBe(
         // language=TypeScript
         """
-          |interface Project {
+          |export interface Project {
           |  name: string;
           |}
         """.trimMargin()
+          .lines()
+          .joinToString("\n") { it.ifBlank { "" } }
       )
   }
 
@@ -45,19 +49,21 @@ class PolymorphismTest {
   fun testExamplePolymorphicStaticTypes02() {
     captureOutput("ExamplePolymorphicStaticTypes02") {
       dev.adamko.kxstsgen.example.examplePolymorphicStaticTypes02.main()
-    }.joinToString("\n")
+    }.joinToString("\n") { it.ifBlank { "" } }
       .shouldBe(
         // language=TypeScript
         """
-          |interface Project {
+          |export interface Project {
           |  name: string;
           |}
           |
-          |interface OwnedProject extends Project {
+          |export interface OwnedProject extends Project {
           |  name: string;
           |  owner: string;
           |}
         """.trimMargin()
+          .lines()
+          .joinToString("\n") { it.ifBlank { "" } }
       )
   }
 
@@ -65,33 +71,33 @@ class PolymorphismTest {
   fun testExamplePolymorphicSealedClass01() {
     captureOutput("ExamplePolymorphicSealedClass01") {
       dev.adamko.kxstsgen.example.examplePolymorphicSealedClass01.main()
-    }.joinToString("\n")
+    }.joinToString("\n") { it.ifBlank { "" } }
       .shouldBe(
         // language=TypeScript
         """
-          |export type Project = Project.Owned | Project.Deprecated
+          |export type Project = Project.DeprecatedProject | Project.OProj;
           |
           |export namespace Project {
-          |
           |  export enum Type {
-          |    Owned = "owned-project",
-          |    Deprecated = "DeprecatedProject",
+          |    OProj = "OProj",
+          |    DeprecatedProject = "DeprecatedProject",
           |  }
           |
-          |  export interface Owned {
-          |    type: Type.Owned;
+          |  export interface OProj {
+          |    type: Type.OProj;
           |    name: string;
           |    owner: string;
           |  }
           |
-          |  export interface Deprecated {
-          |    type: Type.Deprecated;
+          |  export interface DeprecatedProject {
+          |    type: Type.DeprecatedProject;
           |    name: string;
           |    reason: string;
           |  }
-          |
           |}
         """.trimMargin()
+          .lines()
+          .joinToString("\n") { it.ifBlank { "" } }
       )
   }
 
@@ -99,7 +105,7 @@ class PolymorphismTest {
   fun testExamplePolymorphicSealedClass02() {
     captureOutput("ExamplePolymorphicSealedClass02") {
       dev.adamko.kxstsgen.example.examplePolymorphicSealedClass02.main()
-    }.joinToString("\n")
+    }.joinToString("\n") { it.ifBlank { "" } }
       .shouldBe(
         // language=TypeScript
         """
@@ -141,6 +147,8 @@ class PolymorphismTest {
           |
           |}
         """.trimMargin()
+          .lines()
+          .joinToString("\n") { it.ifBlank { "" } }
       )
   }
 
@@ -148,7 +156,7 @@ class PolymorphismTest {
   fun testExamplePolymorphicObjects01() {
     captureOutput("ExamplePolymorphicObjects01") {
       dev.adamko.kxstsgen.example.examplePolymorphicObjects01.main()
-    }.joinToString("\n")
+    }.joinToString("\n") { it.ifBlank { "" } }
       .shouldBe(
         // language=TypeScript
         """
@@ -157,17 +165,19 @@ class PolymorphismTest {
           |  TextResponse = "TextResponse",
           |}
           |
-          |type Response = EmptyResponse | TextResponse
+          |export type Response = EmptyResponse | TextResponse
           |
-          |interface EmptyResponse {
+          |export interface EmptyResponse {
           |  type: ResponseKind.EmptyResponse;
           |}
           |
-          |interface TextResponse {
+          |export interface TextResponse {
           |  type: ResponseKind.TextResponse;
           |  text: string;
           |}
         """.trimMargin()
+          .lines()
+          .joinToString("\n") { it.ifBlank { "" } }
       )
   }
 }

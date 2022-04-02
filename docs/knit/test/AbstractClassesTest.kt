@@ -11,7 +11,7 @@ class AbstractClassesTest {
   fun testExampleAbstractClassSingleField01() {
     captureOutput("ExampleAbstractClassSingleField01") {
       dev.adamko.kxstsgen.example.exampleAbstractClassSingleField01.main()
-    }.joinToString("\n")
+    }.joinToString("\n") { it.ifBlank { "" } }
       .shouldBe(
         // language=TypeScript
         """
@@ -19,6 +19,8 @@ class AbstractClassesTest {
           |  rgb: number;
           |}
         """.trimMargin()
+          .lines()
+          .joinToString("\n") { it.ifBlank { "" } }
       )
   }
 
@@ -26,11 +28,11 @@ class AbstractClassesTest {
   fun testExampleAbstractClassPrimitiveFields01() {
     captureOutput("ExampleAbstractClassPrimitiveFields01") {
       dev.adamko.kxstsgen.example.exampleAbstractClassPrimitiveFields01.main()
-    }.joinToString("\n")
+    }.joinToString("\n") { it.ifBlank { "" } }
       .shouldBe(
         // language=TypeScript
         """
-          |interface SimpleTypes {
+          |export interface SimpleTypes {
           |  aString: string;
           |  anInt: number;
           |  aDouble: number;
@@ -38,6 +40,8 @@ class AbstractClassesTest {
           |  privateMember: string;
           |}
         """.trimMargin()
+          .lines()
+          .joinToString("\n") { it.ifBlank { "" } }
       )
   }
 
@@ -45,14 +49,16 @@ class AbstractClassesTest {
   fun testExampleAbstractClassAbstractField01() {
     captureOutput("ExampleAbstractClassAbstractField01") {
       dev.adamko.kxstsgen.example.exampleAbstractClassAbstractField01.main()
-    }.joinToString("\n")
+    }.joinToString("\n") { it.ifBlank { "" } }
       .shouldBe(
         // language=TypeScript
         """
-          |interface Color {
+          |export interface Color {
           |  rgb: number;
           |}
         """.trimMargin()
+          .lines()
+          .joinToString("\n") { it.ifBlank { "" } }
       )
   }
 }

@@ -11,18 +11,20 @@ class EdgeCasesTest {
   fun testExampleEdgecaseRecursiveReferences01() {
     captureOutput("ExampleEdgecaseRecursiveReferences01") {
       dev.adamko.kxstsgen.example.exampleEdgecaseRecursiveReferences01.main()
-    }.joinToString("\n")
+    }.joinToString("\n") { it.ifBlank { "" } }
       .shouldBe(
         // language=TypeScript
         """
-          |interface A {
+          |export interface A {
           |  b: B;
           |}
           |
-          |interface B {
+          |export interface B {
           |  a: A;
           |}
         """.trimMargin()
+          .lines()
+          .joinToString("\n") { it.ifBlank { "" } }
       )
   }
 
@@ -30,18 +32,20 @@ class EdgeCasesTest {
   fun testExampleEdgecaseRecursiveReferences02() {
     captureOutput("ExampleEdgecaseRecursiveReferences02") {
       dev.adamko.kxstsgen.example.exampleEdgecaseRecursiveReferences02.main()
-    }.joinToString("\n")
+    }.joinToString("\n") { it.ifBlank { "" } }
       .shouldBe(
         // language=TypeScript
         """
-          |interface A {
+          |export interface A {
           |  list: B[];
           |}
           |
-          |interface B {
+          |export interface B {
           |  list: A[];
           |}
         """.trimMargin()
+          .lines()
+          .joinToString("\n") { it.ifBlank { "" } }
       )
   }
 
@@ -49,18 +53,20 @@ class EdgeCasesTest {
   fun testExampleEdgecaseRecursiveReferences03() {
     captureOutput("ExampleEdgecaseRecursiveReferences03") {
       dev.adamko.kxstsgen.example.exampleEdgecaseRecursiveReferences03.main()
-    }.joinToString("\n")
+    }.joinToString("\n") { it.ifBlank { "" } }
       .shouldBe(
         // language=TypeScript
         """
-          |interface A {
+          |export interface A {
           |  map: { [key: string]: B };
           |}
           |
-          |interface B {
+          |export interface B {
           |  map: { [key: string]: A };
           |}
         """.trimMargin()
+          .lines()
+          .joinToString("\n") { it.ifBlank { "" } }
       )
   }
 }

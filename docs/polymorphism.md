@@ -45,7 +45,7 @@ fun main() {
 > You can get the full code [here](./knit/example/example-polymorphic-abstract-class-primitive-fields-01.kt).
 
 ```typescript
-interface SimpleTypes {
+export interface SimpleTypes {
   aString: string;
   anInt: number;
   aDouble: number;
@@ -79,7 +79,7 @@ fun main() {
 Only the Project class properties are generated.
 
 ```typescript
-interface Project {
+export interface Project {
   name: string;
 }
 ```
@@ -112,11 +112,11 @@ fun main() {
 > You can get the full code [here](./knit/example/example-polymorphic-static-types-02.kt).
 
 ```typescript
-interface Project {
+export interface Project {
   name: string;
 }
 
-interface OwnedProject extends Project {
+export interface OwnedProject extends Project {
   name: string;
   owner: string;
 }
@@ -135,7 +135,7 @@ sealed class Project {
 }
 
 @Serializable
-@SerialName("owned-project")
+@SerialName("OProj")
 class OwnedProject(override val name: String, val owner: String) : Project()
 
 @Serializable
@@ -143,34 +143,32 @@ class DeprecatedProject(override val name: String, val reason: String) : Project
 
 fun main() {
   val tsGenerator = KxsTsGenerator()
-  println(tsGenerator.generate(OwnedProject.serializer()))
+  println(tsGenerator.generate(Project.serializer()))
 }
 ```
 
 > You can get the full code [here](./knit/example/example-polymorphic-sealed-class-01.kt).
 
 ```typescript
-export type Project = Project.Owned | Project.Deprecated
+export type Project = Project.DeprecatedProject | Project.OProj;
 
 export namespace Project {
-
   export enum Type {
-    Owned = "owned-project",
-    Deprecated = "DeprecatedProject",
+    OProj = "OProj",
+    DeprecatedProject = "DeprecatedProject",
   }
 
-  export interface Owned {
-    type: Type.Owned;
+  export interface OProj {
+    type: Type.OProj;
     name: string;
     owner: string;
   }
 
-  export interface Deprecated {
-    type: Type.Deprecated;
+  export interface DeprecatedProject {
+    type: Type.DeprecatedProject;
     name: string;
     reason: string;
   }
-
 }
 ```
 
@@ -289,13 +287,13 @@ export enum ResponseKind {
   TextResponse = "TextResponse",
 }
 
-type Response = EmptyResponse | TextResponse
+export type Response = EmptyResponse | TextResponse
 
-interface EmptyResponse {
+export interface EmptyResponse {
   type: ResponseKind.EmptyResponse;
 }
 
-interface TextResponse {
+export interface TextResponse {
   type: ResponseKind.TextResponse;
   text: string;
 }
@@ -331,9 +329,9 @@ fun main() {
 > You can get the full code [here](./knit/example/example-generics-01.kt).
 
 ```typescript
-type Double = number & { __kotlin_Double__: void }
+export type Double = number & { __kotlin_Double__: void }
 
-interface Box {
+export interface Box {
   value: Double
 }
 ```

@@ -39,7 +39,7 @@ fun main() {
 > You can get the full code [here](./knit/example/example-value-classes-01.kt).
 
 ```typescript
-type AuthToken = string;
+export type AuthToken = string;
 ```
 
 <!--- TEST -->
@@ -69,13 +69,13 @@ fun main() {
 > You can get the full code [here](./knit/example/example-value-classes-02.kt).
 
 ```typescript
-type UByte = number;
+export type UByte = number;
 
-type UShort = number;
+export type UShort = number;
 
-type UInt = number;
+export type UInt = number;
 
-type ULong = number;
+export type ULong = number;
 ```
 
 <!--- TEST -->
@@ -113,7 +113,7 @@ fun main() {
 > You can get the full code [here](./knit/example/example-value-classes-03.kt).
 
 ```typescript
-type ULong = number & { __ULong__: void };
+export type ULong = number & { __ULong__: void };
 ```
 
 <!--- TEST -->
@@ -138,9 +138,9 @@ fun main() {
 > You can get the full code [here](./knit/example/example-value-classes-04.kt).
 
 ```typescript
-type UserCount = UInt;
+export type UserCount = UInt;
 
-type UInt = number;
+export type UInt = number;
 ```
 
 <!--- TEST -->

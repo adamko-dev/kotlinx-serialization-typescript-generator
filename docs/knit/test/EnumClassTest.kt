@@ -11,7 +11,7 @@ class EnumClassTest {
   fun testExampleEnumClass01() {
     captureOutput("ExampleEnumClass01") {
       dev.adamko.kxstsgen.example.exampleEnumClass01.main()
-    }.joinToString("\n")
+    }.joinToString("\n") { it.ifBlank { "" } }
       .shouldBe(
         // language=TypeScript
         """
@@ -21,6 +21,8 @@ class EnumClassTest {
           |  Gamma = "Gamma",
           |}
         """.trimMargin()
+          .lines()
+          .joinToString("\n") { it.ifBlank { "" } }
       )
   }
 
@@ -28,7 +30,7 @@ class EnumClassTest {
   fun testExampleEnumClass02() {
     captureOutput("ExampleEnumClass02") {
       dev.adamko.kxstsgen.example.exampleEnumClass02.main()
-    }.joinToString("\n")
+    }.joinToString("\n") { it.ifBlank { "" } }
       .shouldBe(
         // language=TypeScript
         """
@@ -38,6 +40,8 @@ class EnumClassTest {
           |  Gamma = "Gamma",
           |}
         """.trimMargin()
+          .lines()
+          .joinToString("\n") { it.ifBlank { "" } }
       )
   }
 }

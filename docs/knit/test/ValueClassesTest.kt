@@ -11,12 +11,14 @@ class ValueClassesTest {
   fun testExampleValueClasses01() {
     captureOutput("ExampleValueClasses01") {
       dev.adamko.kxstsgen.example.exampleValueClasses01.main()
-    }.joinToString("\n")
+    }.joinToString("\n") { it.ifBlank { "" } }
       .shouldBe(
         // language=TypeScript
         """
-          |type AuthToken = string;
+          |export type AuthToken = string;
         """.trimMargin()
+          .lines()
+          .joinToString("\n") { it.ifBlank { "" } }
       )
   }
 
@@ -24,18 +26,20 @@ class ValueClassesTest {
   fun testExampleValueClasses02() {
     captureOutput("ExampleValueClasses02") {
       dev.adamko.kxstsgen.example.exampleValueClasses02.main()
-    }.joinToString("\n")
+    }.joinToString("\n") { it.ifBlank { "" } }
       .shouldBe(
         // language=TypeScript
         """
-          |type UByte = number;
+          |export type UByte = number;
           |
-          |type UShort = number;
+          |export type UShort = number;
           |
-          |type UInt = number;
+          |export type UInt = number;
           |
-          |type ULong = number;
+          |export type ULong = number;
         """.trimMargin()
+          .lines()
+          .joinToString("\n") { it.ifBlank { "" } }
       )
   }
 
@@ -43,12 +47,14 @@ class ValueClassesTest {
   fun testExampleValueClasses03() {
     captureOutput("ExampleValueClasses03") {
       dev.adamko.kxstsgen.example.exampleValueClasses03.main()
-    }.joinToString("\n")
+    }.joinToString("\n") { it.ifBlank { "" } }
       .shouldBe(
         // language=TypeScript
         """
-          |type ULong = number & { __ULong__: void };
+          |export type ULong = number & { __ULong__: void };
         """.trimMargin()
+          .lines()
+          .joinToString("\n") { it.ifBlank { "" } }
       )
   }
 
@@ -56,14 +62,16 @@ class ValueClassesTest {
   fun testExampleValueClasses04() {
     captureOutput("ExampleValueClasses04") {
       dev.adamko.kxstsgen.example.exampleValueClasses04.main()
-    }.joinToString("\n")
+    }.joinToString("\n") { it.ifBlank { "" } }
       .shouldBe(
         // language=TypeScript
         """
-          |type UserCount = UInt;
+          |export type UserCount = UInt;
           |
-          |type UInt = number;
+          |export type UInt = number;
         """.trimMargin()
+          .lines()
+          .joinToString("\n") { it.ifBlank { "" } }
       )
   }
 }

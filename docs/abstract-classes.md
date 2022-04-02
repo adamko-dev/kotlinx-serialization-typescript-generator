@@ -62,7 +62,7 @@ fun main() {
 > You can get the full code [here](./knit/example/example-abstract-class-primitive-fields-01.kt).
 
 ```typescript
-interface SimpleTypes {
+export interface SimpleTypes {
   aString: string;
   anInt: number;
   aDouble: number;
@@ -93,7 +93,7 @@ fun main() {
 > You can get the full code [here](./knit/example/example-abstract-class-abstract-field-01.kt).
 
 ```typescript
-interface Color {
+export interface Color {
   rgb: number;
 }
 ```

@@ -11,14 +11,16 @@ class BasicClassesTest {
   fun testExamplePlainClassSingleField01() {
     captureOutput("ExamplePlainClassSingleField01") {
       dev.adamko.kxstsgen.example.examplePlainClassSingleField01.main()
-    }.joinToString("\n")
+    }.joinToString("\n") { it.ifBlank { "" } }
       .shouldBe(
         // language=TypeScript
         """
-          |interface Color {
+          |export interface Color {
           |  rgb: number;
           |}
         """.trimMargin()
+          .lines()
+          .joinToString("\n") { it.ifBlank { "" } }
       )
   }
 
@@ -26,11 +28,11 @@ class BasicClassesTest {
   fun testExamplePlainClassPrimitiveFields01() {
     captureOutput("ExamplePlainClassPrimitiveFields01") {
       dev.adamko.kxstsgen.example.examplePlainClassPrimitiveFields01.main()
-    }.joinToString("\n")
+    }.joinToString("\n") { it.ifBlank { "" } }
       .shouldBe(
         // language=TypeScript
         """
-          |interface SimpleTypes {
+          |export interface SimpleTypes {
           |  aString: string;
           |  anInt: number;
           |  aDouble: number;
@@ -38,6 +40,8 @@ class BasicClassesTest {
           |  privateMember: string;
           |}
         """.trimMargin()
+          .lines()
+          .joinToString("\n") { it.ifBlank { "" } }
       )
   }
 
@@ -45,11 +49,11 @@ class BasicClassesTest {
   fun testExamplePlainDataClass01() {
     captureOutput("ExamplePlainDataClass01") {
       dev.adamko.kxstsgen.example.examplePlainDataClass01.main()
-    }.joinToString("\n")
+    }.joinToString("\n") { it.ifBlank { "" } }
       .shouldBe(
         // language=TypeScript
         """
-          |interface SomeDataClass {
+          |export interface SomeDataClass {
           |  aString: string;
           |  anInt: number;
           |  aDouble: number;
@@ -57,6 +61,8 @@ class BasicClassesTest {
           |  privateMember: string;
           |}
         """.trimMargin()
+          .lines()
+          .joinToString("\n") { it.ifBlank { "" } }
       )
   }
 
@@ -64,13 +70,15 @@ class BasicClassesTest {
   fun testExamplePlainClassPrimitiveFields02() {
     captureOutput("ExamplePlainClassPrimitiveFields02") {
       dev.adamko.kxstsgen.example.examplePlainClassPrimitiveFields02.main()
-    }.joinToString("\n")
+    }.joinToString("\n") { it.ifBlank { "" } }
       .shouldBe(
         // language=TypeScript
         """
-          |interface SimpleTypes {
+          |export interface SimpleTypes {
           |}
         """.trimMargin()
+          .lines()
+          .joinToString("\n") { it.ifBlank { "" } }
       )
   }
 }

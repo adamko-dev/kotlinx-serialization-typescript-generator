@@ -39,11 +39,10 @@ fun interface SerializerDescriptorsExtractor {
     ): Set<SerialDescriptor> {
       return allDescriptorData.flatMap { descriptorData ->
         when (descriptorData) {
-          is DescriptorData.Polymorphic -> descriptorData.subclasses // only yield subclasses
+          is DescriptorData.Polymorphic -> listOf(descriptorData.descriptor)
           is DescriptorData.Monomorphic -> listOf(descriptorData.descriptor)
         }
       }.flatMap { descriptor -> extractedDescriptors.getValue(descriptor) }
-        .distinct()
         .toSet()
     }
 
@@ -122,11 +121,21 @@ fun interface DescriptorDataProcessor {
             subclasses = config.polymorphicDescriptors.getValue(serializer.baseClass)
           )
 
-        is SealedClassSerializer<*> ->
+        is SealedClassSerializer<*> -> {
+
+          val subclasses = serializer.descriptor
+            .elementDescriptors
+            .toList()
+            .first { it.kind == SerialKind.CONTEXTUAL }
+            .elementDescriptors
+            .filter { it.kind == StructureKind.CLASS }
+            .toSet()
+
           DescriptorData.Polymorphic.Closed(
             descriptor = serializer.descriptor,
-            subclasses = extractSealedSubclassSerializers(serializer).map { it.descriptor }.toSet(),
+            subclasses = subclasses,
           )
+        }
 
         else                        ->
           DescriptorData.Monomorphic(serializer.descriptor)

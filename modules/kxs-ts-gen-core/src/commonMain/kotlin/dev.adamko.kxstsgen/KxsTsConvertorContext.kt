@@ -12,7 +12,7 @@ interface KxsTsConvertorContext {
 
   fun mapType(descriptor: SerialDescriptor): TsLiteral.TsMap.Type
 
-  fun element(descriptor: SerialDescriptor): TsElement
+//  fun element(descriptor: SerialDescriptor): TsElement
 
   class Default(
     elementIds: Map<SerialDescriptor, TsElementId> = mapOf(),
@@ -34,8 +34,8 @@ interface KxsTsConvertorContext {
     private val mapTypes: MutableMap<SerialDescriptor, TsLiteral.TsMap.Type>
       by MutableMapWithDefaultPut(mapTypes) { mapTypeConverter(it) }
 
-    private val convertedElements: MutableMap<SerialDescriptor, TsElement>
-      by MutableMapWithDefaultPut(convertedElements) { elementConverter(this, it) }
+//    private val convertedElements: MutableMap<SerialDescriptor, TsElement>
+//      by MutableMapWithDefaultPut(convertedElements) { elementConverter(this, it) }
 
     override fun elementId(descriptor: SerialDescriptor): TsElementId =
       elementIds.getValue(descriptor)
@@ -46,8 +46,8 @@ interface KxsTsConvertorContext {
     override fun mapType(descriptor: SerialDescriptor): TsLiteral.TsMap.Type =
       mapTypes.getValue(descriptor)
 
-    override fun element(descriptor: SerialDescriptor): TsElement =
-      convertedElements.getValue(descriptor)
+//    override fun element(descriptor: SerialDescriptor): TsElement =
+//      convertedElements.getValue(descriptor)
 
   }
 

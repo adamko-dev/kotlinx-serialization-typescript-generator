@@ -37,7 +37,7 @@ fun main() {
 > You can get the full code [here](./knit/example/example-map-primitive-01.kt).
 
 ```typescript
-interface Config {
+export interface Config {
   properties: { [key: string]: string };
 }
 ```
@@ -67,7 +67,7 @@ fun main() {
 > You can get the full code [here](./knit/example/example-map-primitive-02.kt).
 
 ```typescript
-interface Application {
+export interface Application {
   settings: { [key in SettingKeys]: string };
 }
 
@@ -96,7 +96,7 @@ fun main() {
 > You can get the full code [here](./knit/example/example-map-primitive-03.kt).
 
 ```typescript
-interface Config {
+export interface Config {
   properties: { [key: string | null]: string | null };
 }
 ```
@@ -128,18 +128,18 @@ fun main() {
 > You can get the full code [here](./knit/example/example-map-complex-01.kt).
 
 ```typescript
-interface CanvasProperties {
+export interface CanvasProperties {
   colourNames: Map<Colour, string>;
 }
 
-interface Colour {
+export interface Colour {
   r: UByte;
   g: UByte;
   b: UByte;
   a: UByte;
 }
 
-type UByte = number;
+export type UByte = number;
 ```
 
 <!--- TEST -->

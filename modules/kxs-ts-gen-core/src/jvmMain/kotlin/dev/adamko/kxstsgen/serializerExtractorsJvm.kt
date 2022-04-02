@@ -2,7 +2,8 @@
 package dev.adamko.kxstsgen
 
 import kotlin.reflect.KClass
-import kotlin.reflect.KProperty1
+import kotlin.reflect.*
+import kotlin.reflect.full.declaredMemberFunctions
 import kotlin.reflect.full.declaredMemberProperties
 import kotlin.reflect.full.functions
 import kotlin.reflect.jvm.isAccessible
@@ -43,10 +44,12 @@ actual fun <T : Any> extractContextualDescriptor(
 
 /** Access the private `.serializer()` function in [ContextualSerializer] */
 @Suppress("UNCHECKED_CAST")
-private val contextualSerializerAccessor: (SerializersModule) -> KSerializer<*> =
-  ContextualSerializer::class
-    .functions
+private val contextualSerializerAccessor: KFunction1<SerializersModule, KSerializer<*>> =
+  (ContextualSerializer::class
+    .declaredMemberFunctions
     .firstOrNull { it.name == "serializer" }
     ?.apply { isAccessible = true }
-    as? (SerializersModule) -> KSerializer<*>
+    as KFunction1<SerializersModule, KSerializer<*>>
+    )
     ?: error("Can't access ContextualSerializer.serializer()")
+//    as (SerializersModule) -> KSerializer<*>

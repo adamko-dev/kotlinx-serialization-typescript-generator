@@ -37,7 +37,7 @@ fun main() {
 > You can get the full code [here](./knit/example/example-default-values-single-field-01.kt).
 
 ```typescript
-interface Color {
+export interface Color {
   rgb?: number;
 }
 ```
@@ -67,7 +67,7 @@ Email has no default, so it is not marked as optional.
 Phone number and is nullable, and has a default, so i
 
 ```typescript
-interface ContactDetails {
+export interface ContactDetails {
   email: string | null;
   phoneNumber?: string | null;
   active?: boolean | null;

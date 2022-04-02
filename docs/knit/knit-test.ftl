@@ -21,6 +21,8 @@ class ${test.name} {
           |${line}
 </#list>
         """.trimMargin()
+          .lines()
+          .joinToString("\n") { it.ifBlank { "" } }
       )
 <#else>.also { lines ->
       check(${case.param})
