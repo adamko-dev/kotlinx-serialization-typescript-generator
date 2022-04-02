@@ -25,9 +25,16 @@ abstract class KxsTsSourceCodeGenerator(
   abstract fun generateNamespace(namespace: TsDeclaration.TsNamespace): String
   abstract fun generateType(element: TsDeclaration.TsType): String
 
-  abstract fun generateMapTypeReference(tsMap: TsLiteral.TsMap): String
+  abstract fun generateMapTypeReference(
+//    requestorId: TsElementId?,
+    tsMap: TsLiteral.TsMap,
+  ): String
+
   abstract fun generatePrimitive(primitive: TsLiteral.Primitive): String
-  abstract fun generateTypeReference(typeRef: TsTypeRef): String
+  abstract fun generateTypeReference(
+//    rootId: TsElementId?,
+    typeRef: TsTypeRef,
+  ): String
 
   open class Default(
     config: KxsTsConfig,
@@ -115,9 +122,11 @@ abstract class KxsTsSourceCodeGenerator(
       element: TsDeclaration.TsInterface,
       polymorphism: TsPolymorphism.Open,
     ): String {
+      val namespaceId = element.id
+      val namespaceRef = TsTypeRef.Declaration(namespaceId, null, false)
 
       val subInterfaceRefs = polymorphism.subclasses.map {
-        TsTypeRef.Declaration(it.id, false)
+        TsTypeRef.Declaration(it.id, namespaceRef, false)
       }.toSet()
 
       val discriminatorProperty = TsProperty.Required(
@@ -150,11 +159,12 @@ abstract class KxsTsSourceCodeGenerator(
       polymorphism: TsPolymorphism.Sealed,
     ): String {
       val namespaceId = element.id
-      val namespaceRef = TsTypeRef.Declaration(namespaceId, false)
+      val namespaceRef = TsTypeRef.Declaration(namespaceId, null, false)
 
-      val subInterfaceRefs: Map<TsTypeRef.Property, TsDeclaration.TsInterface> =
+      val subInterfaceRefs: Map<TsTypeRef.Declaration, TsDeclaration.TsInterface> =
         polymorphism.subclasses.associateBy { subclass ->
-          TsTypeRef.Property(subclass.id, namespaceRef, false)
+          val subclassId = TsElementId(namespaceId.toString() + "." + subclass.id.name)
+          TsTypeRef.Declaration(subclassId, namespaceRef, false)
         }
 
       val discriminatorEnum = TsDeclaration.TsEnum(
@@ -162,10 +172,10 @@ abstract class KxsTsSourceCodeGenerator(
         subInterfaceRefs.keys.map { it.id.name }.toSet(),
       )
 
-      val discriminatorEnumRef = TsTypeRef.Declaration(discriminatorEnum.id, false)
+      val discriminatorEnumRef = TsTypeRef.Declaration(discriminatorEnum.id, namespaceRef, false)
 
       val subInterfacesWithTypeProp = subInterfaceRefs.map { (subInterfaceRef, subclass) ->
-        val id = TsElementId(
+        val typePropId = TsElementId(
           """
             |${discriminatorEnum.id.name}.${subInterfaceRef.id.name}
           """.trimMargin()
@@ -173,7 +183,7 @@ abstract class KxsTsSourceCodeGenerator(
 
         val typeProp = TsProperty.Required(
           polymorphism.discriminatorName,
-          TsTypeRef.Property(id, discriminatorEnumRef, false),
+          TsTypeRef.Declaration(typePropId, discriminatorEnumRef, false),
         )
 
         subclass.copy(properties = setOf(typeProp) + subclass.properties)
@@ -233,18 +243,32 @@ abstract class KxsTsSourceCodeGenerator(
      * A type-reference, be it for the field of an interface, a type alias, or a generic type
      * constraint.
      */
-    override fun generateTypeReference(typeRef: TsTypeRef): String {
+    override fun generateTypeReference(
+//      rootId: TsElementId?,
+      typeRef: TsTypeRef,
+    ): String {
       val plainType: String = when (typeRef) {
         is TsTypeRef.Literal     -> when (typeRef.element) {
           is TsLiteral.Primitive -> generatePrimitive(typeRef.element)
+
           is TsLiteral.TsList    -> {
             val valueTypeRef = generateTypeReference(typeRef.element.valueTypeRef)
             "$valueTypeRef[]"
           }
+
           is TsLiteral.TsMap     -> generateMapTypeReference(typeRef.element)
         }
-        is TsTypeRef.Declaration -> typeRef.id.name
-        is TsTypeRef.Property    -> generateTypeReference(typeRef.declaration) + "." + typeRef.id.name
+
+        is TsTypeRef.Declaration -> {
+
+          if (typeRef.parent != null) {
+            val parentRef = generateTypeReference(typeRef.parent)
+            "${parentRef}.${typeRef.id.name}"
+          } else {
+            typeRef.id.name
+          }
+        }
+
         is TsTypeRef.Unknown     -> generateTypeReference(typeRef.ref)
       }
 
@@ -274,7 +298,10 @@ abstract class KxsTsSourceCodeGenerator(
     }
 
 
-    override fun generateMapTypeReference(tsMap: TsLiteral.TsMap): String {
+    override fun generateMapTypeReference(
+//      rootId: TsElementId?,
+      tsMap: TsLiteral.TsMap
+    ): String {
       val keyTypeRef = generateTypeReference(tsMap.keyTypeRef)
       val valueTypeRef = generateTypeReference(tsMap.valueTypeRef)
 

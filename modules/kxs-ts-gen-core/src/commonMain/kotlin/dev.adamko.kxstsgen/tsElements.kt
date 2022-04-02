@@ -9,6 +9,8 @@ value class TsElementId(private val id: String) {
     get() = id.substringBeforeLast(".")
   val name: String
     get() = id.substringAfterLast(".")
+
+  override fun toString(): String = id
 }
 
 
@@ -92,15 +94,16 @@ sealed interface TsTypeRef {
 
   data class Declaration(
     val id: TsElementId,
+    val parent: Declaration?,
     override val nullable: Boolean,
   ) : TsTypeRef
 
-  /** A property within another declaration (e.g. an enum value, or type within a namespace) */
-  data class Property(
-    val id: TsElementId,
-    val declaration: Declaration,
-    override val nullable: Boolean,
-  ) : TsTypeRef
+//  /** A property within another declaration (e.g. an enum value, or type within a namespace) */
+//  data class Property(
+//    val id: TsElementId,
+//    val declaration: Declaration,
+//    override val nullable: Boolean,
+//  ) : TsTypeRef
 
   object Unknown : TsTypeRef {
     val ref: Literal = Literal(TsLiteral.Primitive.TsUnknown, false)

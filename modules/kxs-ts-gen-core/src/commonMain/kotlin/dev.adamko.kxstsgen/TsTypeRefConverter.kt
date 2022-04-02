@@ -58,7 +58,7 @@ fun interface TsTypeRefConverter {
         StructureKind.CLASS,
         StructureKind.OBJECT -> {
           val id = context.elementId(descriptor)
-          TsTypeRef.Declaration(id, descriptor.isNullable)
+          TsTypeRef.Declaration(id, null, descriptor.isNullable)
         }
       }
     }

@@ -91,6 +91,7 @@ fun interface TsElementConverter {
       val subclassInterfaces = subclasses
         .map { convertMonomorphicDescriptor(context, it) }
         .filterIsInstance<TsDeclaration.TsInterface>()
+        .map { it.copy(id = TsElementId("${descriptor.serialName}.${it.id.name}")) }
         .toSet()
 
       val polymorphism = when (descriptor.kind) {
@@ -116,17 +117,17 @@ fun interface TsElementConverter {
 
     private fun convertInterface(
       context: KxsTsConvertorContext,
-      structDescriptor: SerialDescriptor,
+      descriptor: SerialDescriptor,
       polymorphism: TsPolymorphism?,
     ): TsDeclaration {
-      val resultId = context.elementId(structDescriptor)
+      val resultId = context.elementId(descriptor)
 
-      val properties = structDescriptor.elementDescriptors.mapIndexed { index, fieldDescriptor ->
-        val name = structDescriptor.getElementName(index)
+      val properties = descriptor.elementDescriptors.mapIndexed { index, fieldDescriptor ->
+        val name = descriptor.getElementName(index)
         val fieldTypeRef = context.typeRef(fieldDescriptor)
         when {
-          structDescriptor.isElementOptional(index) -> TsProperty.Optional(name, fieldTypeRef)
-          else                                      -> TsProperty.Required(name, fieldTypeRef)
+          descriptor.isElementOptional(index) -> TsProperty.Optional(name, fieldTypeRef)
+          else                                -> TsProperty.Required(name, fieldTypeRef)
         }
       }.toSet()
       return TsDeclaration.TsInterface(resultId, properties, polymorphism)
