@@ -5,13 +5,14 @@ package dev.adamko.kxstsgen.example.test
 import io.kotest.matchers.*
 import kotlinx.knit.test.*
 import org.junit.jupiter.api.Test
+import dev.adamko.kxstsgen.util.*
 
 class EnumClassTest {
   @Test
   fun testExampleEnumClass01() {
     captureOutput("ExampleEnumClass01") {
       dev.adamko.kxstsgen.example.exampleEnumClass01.main()
-    }.joinToString("\n") { it.ifBlank { "" } }
+    }.normalizeJoin()
       .shouldBe(
         // language=TypeScript
         """
@@ -21,8 +22,7 @@ class EnumClassTest {
           |  Gamma = "Gamma",
           |}
         """.trimMargin()
-          .lines()
-          .joinToString("\n") { it.ifBlank { "" } }
+          .normalize()
       )
   }
 
@@ -30,7 +30,7 @@ class EnumClassTest {
   fun testExampleEnumClass02() {
     captureOutput("ExampleEnumClass02") {
       dev.adamko.kxstsgen.example.exampleEnumClass02.main()
-    }.joinToString("\n") { it.ifBlank { "" } }
+    }.normalizeJoin()
       .shouldBe(
         // language=TypeScript
         """
@@ -40,8 +40,7 @@ class EnumClassTest {
           |  Gamma = "Gamma",
           |}
         """.trimMargin()
-          .lines()
-          .joinToString("\n") { it.ifBlank { "" } }
+          .normalize()
       )
   }
 }

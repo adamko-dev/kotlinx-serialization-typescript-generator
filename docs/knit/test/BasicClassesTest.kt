@@ -5,13 +5,14 @@ package dev.adamko.kxstsgen.example.test
 import io.kotest.matchers.*
 import kotlinx.knit.test.*
 import org.junit.jupiter.api.Test
+import dev.adamko.kxstsgen.util.*
 
 class BasicClassesTest {
   @Test
   fun testExamplePlainClassSingleField01() {
     captureOutput("ExamplePlainClassSingleField01") {
       dev.adamko.kxstsgen.example.examplePlainClassSingleField01.main()
-    }.joinToString("\n") { it.ifBlank { "" } }
+    }.normalizeJoin()
       .shouldBe(
         // language=TypeScript
         """
@@ -19,8 +20,7 @@ class BasicClassesTest {
           |  rgb: number;
           |}
         """.trimMargin()
-          .lines()
-          .joinToString("\n") { it.ifBlank { "" } }
+          .normalize()
       )
   }
 
@@ -28,7 +28,7 @@ class BasicClassesTest {
   fun testExamplePlainClassPrimitiveFields01() {
     captureOutput("ExamplePlainClassPrimitiveFields01") {
       dev.adamko.kxstsgen.example.examplePlainClassPrimitiveFields01.main()
-    }.joinToString("\n") { it.ifBlank { "" } }
+    }.normalizeJoin()
       .shouldBe(
         // language=TypeScript
         """
@@ -40,8 +40,7 @@ class BasicClassesTest {
           |  privateMember: string;
           |}
         """.trimMargin()
-          .lines()
-          .joinToString("\n") { it.ifBlank { "" } }
+          .normalize()
       )
   }
 
@@ -49,7 +48,7 @@ class BasicClassesTest {
   fun testExamplePlainDataClass01() {
     captureOutput("ExamplePlainDataClass01") {
       dev.adamko.kxstsgen.example.examplePlainDataClass01.main()
-    }.joinToString("\n") { it.ifBlank { "" } }
+    }.normalizeJoin()
       .shouldBe(
         // language=TypeScript
         """
@@ -61,8 +60,7 @@ class BasicClassesTest {
           |  privateMember: string;
           |}
         """.trimMargin()
-          .lines()
-          .joinToString("\n") { it.ifBlank { "" } }
+          .normalize()
       )
   }
 
@@ -70,15 +68,14 @@ class BasicClassesTest {
   fun testExamplePlainClassPrimitiveFields02() {
     captureOutput("ExamplePlainClassPrimitiveFields02") {
       dev.adamko.kxstsgen.example.examplePlainClassPrimitiveFields02.main()
-    }.joinToString("\n") { it.ifBlank { "" } }
+    }.normalizeJoin()
       .shouldBe(
         // language=TypeScript
         """
           |export interface SimpleTypes {
           |}
         """.trimMargin()
-          .lines()
-          .joinToString("\n") { it.ifBlank { "" } }
+          .normalize()
       )
   }
 }

@@ -5,20 +5,20 @@ package dev.adamko.kxstsgen.example.test
 import io.kotest.matchers.*
 import kotlinx.knit.test.*
 import org.junit.jupiter.api.Test
+import dev.adamko.kxstsgen.util.*
 
 class ValueClassesTest {
   @Test
   fun testExampleValueClasses01() {
     captureOutput("ExampleValueClasses01") {
       dev.adamko.kxstsgen.example.exampleValueClasses01.main()
-    }.joinToString("\n") { it.ifBlank { "" } }
+    }.normalizeJoin()
       .shouldBe(
         // language=TypeScript
         """
           |export type AuthToken = string;
         """.trimMargin()
-          .lines()
-          .joinToString("\n") { it.ifBlank { "" } }
+          .normalize()
       )
   }
 
@@ -26,7 +26,7 @@ class ValueClassesTest {
   fun testExampleValueClasses02() {
     captureOutput("ExampleValueClasses02") {
       dev.adamko.kxstsgen.example.exampleValueClasses02.main()
-    }.joinToString("\n") { it.ifBlank { "" } }
+    }.normalizeJoin()
       .shouldBe(
         // language=TypeScript
         """
@@ -38,8 +38,7 @@ class ValueClassesTest {
           |
           |export type ULong = number;
         """.trimMargin()
-          .lines()
-          .joinToString("\n") { it.ifBlank { "" } }
+          .normalize()
       )
   }
 
@@ -47,14 +46,13 @@ class ValueClassesTest {
   fun testExampleValueClasses03() {
     captureOutput("ExampleValueClasses03") {
       dev.adamko.kxstsgen.example.exampleValueClasses03.main()
-    }.joinToString("\n") { it.ifBlank { "" } }
+    }.normalizeJoin()
       .shouldBe(
         // language=TypeScript
         """
           |export type ULong = number & { __ULong__: void };
         """.trimMargin()
-          .lines()
-          .joinToString("\n") { it.ifBlank { "" } }
+          .normalize()
       )
   }
 
@@ -62,7 +60,7 @@ class ValueClassesTest {
   fun testExampleValueClasses04() {
     captureOutput("ExampleValueClasses04") {
       dev.adamko.kxstsgen.example.exampleValueClasses04.main()
-    }.joinToString("\n") { it.ifBlank { "" } }
+    }.normalizeJoin()
       .shouldBe(
         // language=TypeScript
         """
@@ -70,8 +68,7 @@ class ValueClassesTest {
           |
           |export type UInt = number;
         """.trimMargin()
-          .lines()
-          .joinToString("\n") { it.ifBlank { "" } }
+          .normalize()
       )
   }
 }

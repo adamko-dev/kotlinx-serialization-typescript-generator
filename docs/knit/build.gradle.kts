@@ -31,7 +31,11 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
 }
 
 sourceSets.test {
-  java.srcDirs("example", "test")
+  java.srcDirs(
+    "example",
+    "test",
+    "util",
+  )
 }
 
 knit {

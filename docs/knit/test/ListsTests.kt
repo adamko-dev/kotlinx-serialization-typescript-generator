@@ -5,13 +5,14 @@ package dev.adamko.kxstsgen.example.test
 import io.kotest.matchers.*
 import kotlinx.knit.test.*
 import org.junit.jupiter.api.Test
+import dev.adamko.kxstsgen.util.*
 
 class ListsTests {
   @Test
   fun testExampleListPrimitive01() {
     captureOutput("ExampleListPrimitive01") {
       dev.adamko.kxstsgen.example.exampleListPrimitive01.main()
-    }.joinToString("\n") { it.ifBlank { "" } }
+    }.normalizeJoin()
       .shouldBe(
         // language=TypeScript
         """
@@ -21,8 +22,7 @@ class ListsTests {
           |  longs: number[];
           |}
         """.trimMargin()
-          .lines()
-          .joinToString("\n") { it.ifBlank { "" } }
+          .normalize()
       )
   }
 }

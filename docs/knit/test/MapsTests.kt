@@ -5,13 +5,14 @@ package dev.adamko.kxstsgen.example.test
 import io.kotest.matchers.*
 import kotlinx.knit.test.*
 import org.junit.jupiter.api.Test
+import dev.adamko.kxstsgen.util.*
 
 class MapsTests {
   @Test
   fun testExampleMapPrimitive01() {
     captureOutput("ExampleMapPrimitive01") {
       dev.adamko.kxstsgen.example.exampleMapPrimitive01.main()
-    }.joinToString("\n") { it.ifBlank { "" } }
+    }.normalizeJoin()
       .shouldBe(
         // language=TypeScript
         """
@@ -19,8 +20,7 @@ class MapsTests {
           |  properties: { [key: string]: string };
           |}
         """.trimMargin()
-          .lines()
-          .joinToString("\n") { it.ifBlank { "" } }
+          .normalize()
       )
   }
 
@@ -28,7 +28,7 @@ class MapsTests {
   fun testExampleMapPrimitive02() {
     captureOutput("ExampleMapPrimitive02") {
       dev.adamko.kxstsgen.example.exampleMapPrimitive02.main()
-    }.joinToString("\n") { it.ifBlank { "" } }
+    }.normalizeJoin()
       .shouldBe(
         // language=TypeScript
         """
@@ -41,8 +41,7 @@ class MapsTests {
           |  MAX_MEMORY = "MAX_MEMORY",
           |}
         """.trimMargin()
-          .lines()
-          .joinToString("\n") { it.ifBlank { "" } }
+          .normalize()
       )
   }
 
@@ -50,7 +49,7 @@ class MapsTests {
   fun testExampleMapPrimitive03() {
     captureOutput("ExampleMapPrimitive03") {
       dev.adamko.kxstsgen.example.exampleMapPrimitive03.main()
-    }.joinToString("\n") { it.ifBlank { "" } }
+    }.normalizeJoin()
       .shouldBe(
         // language=TypeScript
         """
@@ -58,8 +57,7 @@ class MapsTests {
           |  properties: { [key: string | null]: string | null };
           |}
         """.trimMargin()
-          .lines()
-          .joinToString("\n") { it.ifBlank { "" } }
+          .normalize()
       )
   }
 
@@ -67,7 +65,7 @@ class MapsTests {
   fun testExampleMapComplex01() {
     captureOutput("ExampleMapComplex01") {
       dev.adamko.kxstsgen.example.exampleMapComplex01.main()
-    }.joinToString("\n") { it.ifBlank { "" } }
+    }.normalizeJoin()
       .shouldBe(
         // language=TypeScript
         """
@@ -84,8 +82,7 @@ class MapsTests {
           |
           |export type UByte = number;
         """.trimMargin()
-          .lines()
-          .joinToString("\n") { it.ifBlank { "" } }
+          .normalize()
       )
   }
 }

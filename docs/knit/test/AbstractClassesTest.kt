@@ -5,22 +5,23 @@ package dev.adamko.kxstsgen.example.test
 import io.kotest.matchers.*
 import kotlinx.knit.test.*
 import org.junit.jupiter.api.Test
+import dev.adamko.kxstsgen.util.*
 
 class AbstractClassesTest {
   @Test
   fun testExampleAbstractClassSingleField01() {
     captureOutput("ExampleAbstractClassSingleField01") {
       dev.adamko.kxstsgen.example.exampleAbstractClassSingleField01.main()
-    }.joinToString("\n") { it.ifBlank { "" } }
+    }.normalizeJoin()
       .shouldBe(
         // language=TypeScript
         """
-          |interface Color {
-          |  rgb: number;
-          |}
+          |export type Color = any;
+          |// interface Color {
+          |//   rgb: number;
+          |// }
         """.trimMargin()
-          .lines()
-          .joinToString("\n") { it.ifBlank { "" } }
+          .normalize()
       )
   }
 
@@ -28,20 +29,20 @@ class AbstractClassesTest {
   fun testExampleAbstractClassPrimitiveFields01() {
     captureOutput("ExampleAbstractClassPrimitiveFields01") {
       dev.adamko.kxstsgen.example.exampleAbstractClassPrimitiveFields01.main()
-    }.joinToString("\n") { it.ifBlank { "" } }
+    }.normalizeJoin()
       .shouldBe(
         // language=TypeScript
         """
-          |export interface SimpleTypes {
-          |  aString: string;
-          |  anInt: number;
-          |  aDouble: number;
-          |  bool: boolean;
-          |  privateMember: string;
-          |}
+          |export type SimpleTypes = any;
+          |// export interface SimpleTypes {
+          |//   aString: string;
+          |//   anInt: number;
+          |//   aDouble: number;
+          |//   bool: boolean;
+          |//   privateMember: string;
+          |// }
         """.trimMargin()
-          .lines()
-          .joinToString("\n") { it.ifBlank { "" } }
+          .normalize()
       )
   }
 
@@ -49,16 +50,16 @@ class AbstractClassesTest {
   fun testExampleAbstractClassAbstractField01() {
     captureOutput("ExampleAbstractClassAbstractField01") {
       dev.adamko.kxstsgen.example.exampleAbstractClassAbstractField01.main()
-    }.joinToString("\n") { it.ifBlank { "" } }
+    }.normalizeJoin()
       .shouldBe(
         // language=TypeScript
         """
-          |export interface Color {
-          |  rgb: number;
-          |}
+          |export type AbstractSimpleTypes = any;
+          |// export interface AbstractSimpleTypes {
+          |//   rgb: number;
+          |// }
         """.trimMargin()
-          .lines()
-          .joinToString("\n") { it.ifBlank { "" } }
+          .normalize()
       )
   }
 }

@@ -5,13 +5,14 @@ package dev.adamko.kxstsgen.example.test
 import io.kotest.matchers.*
 import kotlinx.knit.test.*
 import org.junit.jupiter.api.Test
+import dev.adamko.kxstsgen.util.*
 
 class DefaultValuesTest {
   @Test
   fun testExampleDefaultValuesSingleField01() {
     captureOutput("ExampleDefaultValuesSingleField01") {
       dev.adamko.kxstsgen.example.exampleDefaultValuesSingleField01.main()
-    }.joinToString("\n") { it.ifBlank { "" } }
+    }.normalizeJoin()
       .shouldBe(
         // language=TypeScript
         """
@@ -19,8 +20,7 @@ class DefaultValuesTest {
           |  rgb?: number;
           |}
         """.trimMargin()
-          .lines()
-          .joinToString("\n") { it.ifBlank { "" } }
+          .normalize()
       )
   }
 
@@ -28,7 +28,7 @@ class DefaultValuesTest {
   fun testExampleDefaultValuesPrimitiveFields01() {
     captureOutput("ExampleDefaultValuesPrimitiveFields01") {
       dev.adamko.kxstsgen.example.exampleDefaultValuesPrimitiveFields01.main()
-    }.joinToString("\n") { it.ifBlank { "" } }
+    }.normalizeJoin()
       .shouldBe(
         // language=TypeScript
         """
@@ -38,8 +38,7 @@ class DefaultValuesTest {
           |  active?: boolean | null;
           |}
         """.trimMargin()
-          .lines()
-          .joinToString("\n") { it.ifBlank { "" } }
+          .normalize()
       )
   }
 }

@@ -7,6 +7,7 @@ package ${test.package}
 import io.kotest.matchers.*
 import kotlinx.knit.test.*
 import org.junit.jupiter.api.Test
+import dev.adamko.kxstsgen.util.*
 
 class ${test.name} {
 <#list cases as case><#assign method = test["mode.${case.param}"]!"custom">
@@ -21,8 +22,7 @@ class ${test.name} {
           |${line}
 </#list>
         """.trimMargin()
-          .lines()
-          .joinToString("\n") { it.ifBlank { "" } }
+          .normalize()
       )
 <#else>.also { lines ->
       check(${case.param})

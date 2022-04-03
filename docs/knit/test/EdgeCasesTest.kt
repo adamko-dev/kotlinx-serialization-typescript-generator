@@ -5,13 +5,14 @@ package dev.adamko.kxstsgen.example.test
 import io.kotest.matchers.*
 import kotlinx.knit.test.*
 import org.junit.jupiter.api.Test
+import dev.adamko.kxstsgen.util.*
 
 class EdgeCasesTest {
   @Test
   fun testExampleEdgecaseRecursiveReferences01() {
     captureOutput("ExampleEdgecaseRecursiveReferences01") {
       dev.adamko.kxstsgen.example.exampleEdgecaseRecursiveReferences01.main()
-    }.joinToString("\n") { it.ifBlank { "" } }
+    }.normalizeJoin()
       .shouldBe(
         // language=TypeScript
         """
@@ -23,8 +24,7 @@ class EdgeCasesTest {
           |  a: A;
           |}
         """.trimMargin()
-          .lines()
-          .joinToString("\n") { it.ifBlank { "" } }
+          .normalize()
       )
   }
 
@@ -32,7 +32,7 @@ class EdgeCasesTest {
   fun testExampleEdgecaseRecursiveReferences02() {
     captureOutput("ExampleEdgecaseRecursiveReferences02") {
       dev.adamko.kxstsgen.example.exampleEdgecaseRecursiveReferences02.main()
-    }.joinToString("\n") { it.ifBlank { "" } }
+    }.normalizeJoin()
       .shouldBe(
         // language=TypeScript
         """
@@ -44,8 +44,7 @@ class EdgeCasesTest {
           |  list: A[];
           |}
         """.trimMargin()
-          .lines()
-          .joinToString("\n") { it.ifBlank { "" } }
+          .normalize()
       )
   }
 
@@ -53,7 +52,7 @@ class EdgeCasesTest {
   fun testExampleEdgecaseRecursiveReferences03() {
     captureOutput("ExampleEdgecaseRecursiveReferences03") {
       dev.adamko.kxstsgen.example.exampleEdgecaseRecursiveReferences03.main()
-    }.joinToString("\n") { it.ifBlank { "" } }
+    }.normalizeJoin()
       .shouldBe(
         // language=TypeScript
         """
@@ -65,8 +64,7 @@ class EdgeCasesTest {
           |  map: { [key: string]: A };
           |}
         """.trimMargin()
-          .lines()
-          .joinToString("\n") { it.ifBlank { "" } }
+          .normalize()
       )
   }
 }
