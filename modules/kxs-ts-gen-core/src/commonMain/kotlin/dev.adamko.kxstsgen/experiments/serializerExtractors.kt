@@ -1,7 +1,8 @@
 @file:OptIn(InternalSerializationApi::class)
 
-package dev.adamko.kxstsgen
+package dev.adamko.kxstsgen.experiments
 
+import dev.adamko.kxstsgen.KxsTsConfig
 import kotlinx.serialization.ContextualSerializer
 import kotlinx.serialization.DeserializationStrategy
 import kotlinx.serialization.InternalSerializationApi

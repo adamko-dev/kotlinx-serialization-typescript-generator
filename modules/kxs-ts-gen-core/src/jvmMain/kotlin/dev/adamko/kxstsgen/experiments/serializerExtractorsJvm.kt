@@ -1,5 +1,5 @@
 @file:OptIn(InternalSerializationApi::class) // TODO make GitHub issue
-package dev.adamko.kxstsgen
+package dev.adamko.kxstsgen.experiments
 
 import kotlin.reflect.KClass
 import kotlin.reflect.*

@@ -15,6 +15,7 @@ fun interface TsElementConverter {
     descriptor: SerialDescriptor,
   ): TsElement
 
+
   open class Default(
     val elementIdConverter: TsElementIdConverter,
     val mapTypeConverter: TsMapTypeConverter,
@@ -48,7 +49,6 @@ fun interface TsElementConverter {
           else                -> convertInterface(descriptor, null)
         }
 
-
         PolymorphicKind.SEALED -> convertPolymorphic(descriptor)
 
         // TODO handle contextual
@@ -61,6 +61,7 @@ fun interface TsElementConverter {
         }
       }
     }
+
 
     fun convertPolymorphic(
       descriptor: SerialDescriptor,

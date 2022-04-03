@@ -73,6 +73,5 @@ fun interface SerializerDescriptorsExtractor {
           .flatMap { it.elementDescriptors }
       }
     }
-
   }
 }
