@@ -1,39 +1,49 @@
+import buildsrc.config.publicationsFromMainHost
+
+
 plugins {
-  kotlin("multiplatform")
-  `java-library`
+  buildsrc.convention.`kotlin-multiplatform`
+  buildsrc.convention.`maven-publish`
   kotlin("plugin.serialization")
+//  id("org.jetbrains.reflekt")
 }
 
 val kotlinxSerializationVersion = "1.3.2"
 
 kotlin {
-  val hostOs = System.getProperty("os.name")
-  val isMingwX64 = hostOs.startsWith("Windows")
-  val nativeTarget = when {
-    hostOs == "Mac OS X" -> macosX64("native")
-    hostOs == "Linux"    -> linuxX64("native")
-    isMingwX64           -> mingwX64("native")
-    else                 -> throw GradleException("Host OS is not supported in Kotlin/Native.")
-  }
 
+//  js(IR) {
+//    binaries.executable()
+//    browser {
+//      commonWebpackConfig {
+//        cssSupport.enabled = true
+//      }
+//    }
+//  }
 
-  js(IR) {
-    binaries.executable()
-    browser {
-      commonWebpackConfig {
-        cssSupport.enabled = true
-      }
-    }
-  }
   jvm {
     compilations.all {
-      kotlinOptions.jvmTarget = "11"
+      kotlinOptions {
+        jvmTarget = "11"
+      }
     }
     withJava()
     testRuns["test"].executionTask.configure {
       useJUnitPlatform()
     }
   }
+
+//  publishing {
+//    publications {
+//      matching { it.name in publicationsFromMainHost() }.all {
+//        val targetPublication = this@all
+//        tasks.withType<AbstractPublishToMaven>()
+//          .matching { it.publication == targetPublication }
+//          .configureEach { onlyIf { findProperty("isMainHost") == "true" } }
+//      }
+//    }
+//  }
+
   sourceSets {
 
     all {
@@ -54,6 +64,7 @@ kotlin {
         )
         implementation("org.jetbrains.kotlinx:kotlinx-serialization-core")
         implementation("org.jetbrains.kotlinx:kotlinx-serialization-json")
+        implementation(kotlin("reflect"))
       }
     }
     val commonTest by getting {
@@ -61,11 +72,15 @@ kotlin {
         implementation(kotlin("test"))
       }
     }
-    val nativeMain by getting
-    val nativeTest by getting
-    val jsMain by getting
-    val jsTest by getting
-    val jvmMain by getting
-    val jvmTest by getting
+//    val nativeMain by getting
+//    val nativeTest by getting
+//    val jsMain by getting
+//    val jsTest by getting
+    val jvmMain by getting {
+      dependencies {
+        implementation(kotlin("reflect"))
+      }
+    }
+//    val jvmTest by getting
   }
 }

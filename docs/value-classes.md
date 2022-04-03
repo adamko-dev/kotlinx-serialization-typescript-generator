@@ -1,9 +1,25 @@
 <!--- TEST_NAME ValueClassesTest -->
 
+
+**Table of contents**
+
+<!--- TOC -->
+
+* [Introduction](#introduction)
+  * [Inline value classes](#inline-value-classes)
+  * [Brand typing](#brand-typing)
+  * [Nested value classes](#nested-value-classes)
+
+<!--- END -->
+
+
 <!--- INCLUDE .*\.kt
 import kotlinx.serialization.*
 import dev.adamko.kxstsgen.*
 -->
+
+## Introduction
+
 
 ### Inline value classes
 
@@ -16,14 +32,14 @@ value class AuthToken(private val token: String)
 
 fun main() {
   val tsGenerator = KxsTsGenerator()
-  println(tsGenerator.generate(AuthToken.serializer().descriptor))
+  println(tsGenerator.generate(AuthToken.serializer()))
 }
 ```
 
-> You can get the full code [here](./knit/example/example-value-classes-01.kt).
+> You can get the full code [here](./code/example/example-value-classes-01.kt).
 
 ```typescript
-type AuthToken = string;
+export type AuthToken = string;
 ```
 
 <!--- TEST -->
@@ -39,10 +55,10 @@ fun main() {
   val tsGenerator = KxsTsGenerator()
   println(
     tsGenerator.generate(
-      UByte.serializer().descriptor,
-      UShort.serializer().descriptor,
-      UInt.serializer().descriptor,
-      ULong.serializer().descriptor,
+      UByte.serializer(),
+      UShort.serializer(),
+      UInt.serializer(),
+      ULong.serializer(),
     )
   )
 }
@@ -50,22 +66,58 @@ fun main() {
 
 <!-- PREFIX -->
 
-> You can get the full code [here](./knit/example/example-value-classes-02.kt).
+> You can get the full code [here](./code/example/example-value-classes-02.kt).
 
 ```typescript
-type UByte = number;
+export type UByte = number;
 
-type UShort = number;
+export type UShort = number;
 
-type UInt = number;
+export type UInt = number;
 
-type ULong = number;
+export type ULong = number;
 ```
 
-(At present this is not very useful as Typescript will make no distinction between any of these
-numbers, even though they are distinct in Kotlin. 'Brand typing' might be introduced in the future.)
+<!--- TEST -->
+
+
+### Brand typing
+
+To make value classes a little more strict, we can use brand typing
+
+
+```kotlin
+import kotlinx.serialization.builtins.serializer
+import dev.adamko.kxstsgen.KxsTsConfig.TypeAliasTypingConfig.BrandTyping
+```
+
+<!-- IMPORT -->
+
+```kotlin
+
+fun main() {
+
+  val tsConfig = KxsTsConfig(typeAliasTyping = BrandTyping)
+
+  val tsGenerator = KxsTsGenerator(config = tsConfig)
+  println(
+    tsGenerator.generate(
+      ULong.serializer(),
+    )
+  )
+}
+```
+
+<!-- PREFIX -->
+
+> You can get the full code [here](./code/example/example-value-classes-03.kt).
+
+```typescript
+export type ULong = number & { __ULong__: void };
+```
 
 <!--- TEST -->
+
 
 ### Nested value classes
 
@@ -79,16 +131,16 @@ value class UserCount(private val count: UInt)
 
 fun main() {
   val tsGenerator = KxsTsGenerator()
-  println(tsGenerator.generate(UserCount.serializer().descriptor))
+  println(tsGenerator.generate(UserCount.serializer()))
 }
 ```
 
-> You can get the full code [here](./knit/example/example-value-classes-03.kt).
+> You can get the full code [here](./code/example/example-value-classes-04.kt).
 
 ```typescript
-type UInt = number;
+export type UserCount = UInt;
 
-type UserCount = UInt;
+export type UInt = number;
 ```
 
 <!--- TEST -->

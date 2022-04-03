@@ -1,10 +1,25 @@
 <!--- TEST_NAME EnumClassTest -->
 
+
+**Table of contents**
+
+<!--- TOC -->
+
+* [Introduction](#introduction)
+  * [Simple enum](#simple-enum)
+  * [Enum with properties](#enum-with-properties)
+
+<!--- END -->
+
+
+<!--- INCLUDE .*\.kt
+import kotlinx.serialization.*
+import dev.adamko.kxstsgen.*
+-->
+
 ## Introduction
 
-Lorem ipsum...
-
-### Plain class with a single field
+### Simple enum
 
 <!--- INCLUDE .*\.kt
 import kotlinx.serialization.*
@@ -21,14 +36,14 @@ enum class SomeType {
 
 fun main() {
   val tsGenerator = KxsTsGenerator()
-  println(tsGenerator.generate(SomeType.serializer().descriptor))
+  println(tsGenerator.generate(SomeType.serializer()))
 }
 ```
 
-> You can get the full code [here](./knit/example/example-enum-class-01.kt).
+> You can get the full code [here](./code/example/example-enum-class-01.kt).
 
 ```typescript
-enum SomeType {
+export enum SomeType {
   Alpha = "Alpha",
   Beta = "Beta",
   Gamma = "Gamma",
@@ -37,7 +52,9 @@ enum SomeType {
 
 <!--- TEST -->
 
-### Plain class with primitive fields
+### Enum with properties
+
+Because enums are static, fields aren't converted.
 
 ```kotlin
 @Serializable
@@ -51,14 +68,14 @@ enum class SomeType2(val coolName: String) {
 
 fun main() {
   val tsGenerator = KxsTsGenerator()
-  println(tsGenerator.generate(SomeType2.serializer().descriptor))
+  println(tsGenerator.generate(SomeType2.serializer()))
 }
 ```
 
-> You can get the full code [here](./knit/example/example-enum-class-02.kt).
+> You can get the full code [here](./code/example/example-enum-class-02.kt).
 
 ```typescript
-enum SomeType2 {
+export enum SomeType2 {
   Alpha = "Alpha",
   Beta = "Beta",
   Gamma = "Gamma",
