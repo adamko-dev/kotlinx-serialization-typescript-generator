@@ -16,8 +16,24 @@ class DefaultValuesTest {
       .shouldBe(
         // language=TypeScript
         """
-          |export interface Color {
+          |export interface Colour {
           |  rgb?: number;
+          |}
+        """.trimMargin()
+          .normalize()
+      )
+  }
+
+  @Test
+  fun testExampleDefaultValuesSingleField02() {
+    captureOutput("ExampleDefaultValuesSingleField02") {
+      dev.adamko.kxstsgen.example.exampleDefaultValuesSingleField02.main()
+    }.normalizeJoin()
+      .shouldBe(
+        // language=TypeScript
+        """
+          |export interface Colour {
+          |  rgb: number | null;
           |}
         """.trimMargin()
           .normalize()
@@ -33,9 +49,10 @@ class DefaultValuesTest {
         // language=TypeScript
         """
           |export interface ContactDetails {
+          |  name: string;
           |  email: string | null;
+          |  active?: boolean;
           |  phoneNumber?: string | null;
-          |  active?: boolean | null;
           |}
         """.trimMargin()
           .normalize()

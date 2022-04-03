@@ -6,6 +6,7 @@
 
 * [Introduction](#introduction)
   * [Default values](#default-values)
+  * [Nullable values](#nullable-values)
   * [Default and nullable](#default-and-nullable)
 
 <!--- END -->
@@ -18,6 +19,7 @@ import dev.adamko.kxstsgen.*
 
 ## Introduction
 
+Some properties of a class are optional, or nullable, or both.
 
 ### Default values
 
@@ -26,19 +28,44 @@ it will be marked as optional using the `?:` notation.
 
 ```kotlin
 @Serializable
-class Color(val rgb: Int = 12345)
+class Colour(val rgb: Int = 12345)
 
 fun main() {
   val tsGenerator = KxsTsGenerator()
-  println(tsGenerator.generate(Color.serializer()))
+  println(tsGenerator.generate(Colour.serializer()))
 }
 ```
 
 > You can get the full code [here](./knit/example/example-default-values-single-field-01.kt).
 
 ```typescript
-export interface Color {
+export interface Colour {
   rgb?: number;
+}
+```
+
+<!--- TEST -->
+
+### Nullable values
+
+Properties might be required, but the value can be nullable. In TypeScript that is represented with
+a type union that includes `null`.
+
+```kotlin
+@Serializable
+class Colour(val rgb: Int?) // 'rgb' is required, but the value can be null
+
+fun main() {
+  val tsGenerator = KxsTsGenerator()
+  println(tsGenerator.generate(Colour.serializer()))
+}
+```
+
+> You can get the full code [here](./knit/example/example-default-values-single-field-02.kt).
+
+```typescript
+export interface Colour {
+  rgb: number | null;
 }
 ```
 
@@ -46,12 +73,19 @@ export interface Color {
 
 ### Default and nullable
 
+A property can be both nullable and optional, which gives four possible options.
+
 ```kotlin
 @Serializable
 data class ContactDetails(
+  // nullable: ❌, optional: ❌
+  val name: String,
+  // nullable: ✅, optional: ❌
   val email: String?,
+  // nullable: ❌, optional: ✅
+  val active: Boolean = true,
+  // nullable: ✅, optional: ✅
   val phoneNumber: String? = null,
-  val active: Boolean? = true,
 )
 
 fun main() {
@@ -62,15 +96,12 @@ fun main() {
 
 > You can get the full code [here](./knit/example/example-default-values-primitive-fields-01.kt).
 
-Email has no default, so it is not marked as optional.
-
-Phone number and is nullable, and has a default, so i
-
 ```typescript
 export interface ContactDetails {
+  name: string;
   email: string | null;
+  active?: boolean;
   phoneNumber?: string | null;
-  active?: boolean | null;
 }
 ```
 

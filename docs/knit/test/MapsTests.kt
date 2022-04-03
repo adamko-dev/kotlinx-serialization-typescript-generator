@@ -85,4 +85,38 @@ class MapsTests {
           .normalize()
       )
   }
+
+  @Test
+  fun testExampleMapComplex02() {
+    captureOutput("ExampleMapComplex02") {
+      dev.adamko.kxstsgen.example.exampleMapComplex02.main()
+    }.normalizeJoin()
+      .shouldBe(
+        // language=TypeScript
+        """
+          |export interface CanvasProperties {
+          |  colourNames: Map<ColourMapKey, string>;
+          |}
+          |
+          |export type ColourMapKey = string;
+        """.trimMargin()
+          .normalize()
+      )
+  }
+
+  @Test
+  fun testExampleMapComplex03() {
+    captureOutput("ExampleMapComplex03") {
+      dev.adamko.kxstsgen.example.exampleMapComplex03.main()
+    }.normalizeJoin()
+      .shouldBe(
+        // language=TypeScript
+        """
+          |export interface CanvasProperties {
+          |  colourNames: { [key: string]: string };
+          |}
+        """.trimMargin()
+          .normalize()
+      )
+  }
 }

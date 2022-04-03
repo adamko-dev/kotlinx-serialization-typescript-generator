@@ -7,9 +7,14 @@ import dev.adamko.kxstsgen.*
 
 @Serializable
 data class ContactDetails(
+  // nullable: ❌, optional: ❌
+  val name: String,
+  // nullable: ✅, optional: ❌
   val email: String?,
+  // nullable: ❌, optional: ✅
+  val active: Boolean = true,
+  // nullable: ✅, optional: ✅
   val phoneNumber: String? = null,
-  val active: Boolean? = true,
 )
 
 fun main() {

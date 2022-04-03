@@ -129,7 +129,7 @@ export type Project = any;
 ### Sealed classes
 
 Sealed classes are the best way to generate TypeScript interface so far, because all subclasses are
-known at compile-time.
+defined in the `SerialDescriptor`.
 
 A sealed class will be converted as a
 [union enum, with enum member types](https://www.typescriptlang.org/docs/handbook/enums.html#union-enums-and-enum-member-types)
