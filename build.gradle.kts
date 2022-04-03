@@ -3,7 +3,7 @@ import buildsrc.config.excludeGeneratedGradleDsl
 plugins {
   base
   idea
-  id("me.qoomon.git-versioning") version "5.1.2"
+  id("me.qoomon.git-versioning") version "5.1.5"
   id("org.jetbrains.kotlinx.kover")
 }
 
