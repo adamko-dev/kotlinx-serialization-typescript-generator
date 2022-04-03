@@ -128,7 +128,14 @@ export type Project = any;
 
 ### Sealed classes
 
-https://www.typescriptlang.org/docs/handbook/enums.html#union-enums-and-enum-member-types
+Sealed classes are the best way to generate TypeScript interface so far, because all subclasses are
+known at compile-time.
+
+A sealed class will be converted as a
+[union enum, with enum member types](https://www.typescriptlang.org/docs/handbook/enums.html#union-enums-and-enum-member-types)
+.
+
+This has many benefits that closely match how sealed classes work in Kotlin.
 
 ```kotlin
 @Serializable
@@ -161,13 +168,13 @@ export namespace Project {
   }
 
   export interface OProj {
-    type: Type.OProj;
+    type: Project.Type.OProj;
     name: string;
     owner: string;
   }
 
   export interface DeprecatedProject {
-    type: Type.DeprecatedProject;
+    type: Project.Type.DeprecatedProject;
     name: string;
     reason: string;
   }
@@ -178,7 +185,10 @@ export namespace Project {
 
 ### Nested sealed classes
 
-[Union enums and enum member types](https://www.typescriptlang.org/docs/handbook/enums.html#union-enums-and-enum-member-types)
+Nested sealed classes are 'invisible' to Kotlinx Serialization. In this
+example, `sealed class Retriever` is ignored.
+
+For now, it's recommended to avoid nested sealed classes.
 
 ```kotlin
 @Serializable
@@ -217,43 +227,70 @@ fun main() {
 > You can get the full code [here](./knit/example/example-polymorphic-sealed-class-02.kt).
 
 ```typescript
-export type Dog = Dog.Mutt | Dog.Retriever
+export type Dog = Dog.Golden | Dog.Mutt | Dog.NovaScotia;
 
 export namespace Dog {
-
   export enum Type {
     Mutt = "Mutt",
+    Golden = "Golden",
+    NovaScotia = "NovaScotia",
   }
 
   export interface Mutt {
-    type: Type.Mutt;
+    type: Dog.Type.Mutt;
     name: string;
     loveable?: boolean;
   }
 
-  export type Retriever = Retriever.Golden | Retriever.NovaScotia
-
-  export namespace Retriever {
-
-    export enum Type {
-      Golden = "Golden",
-      NovaScotia = "NovaScotia",
-    }
-
-    export interface Golden {
-      type: Type.Golden;
-      name: string;
-      cute?: boolean;
-    }
-
-    export interface NovaScotia {
-      type: Type.NovaScotia;
-      name: string;
-      adorable?: boolean;
-    }
+  export interface Golden {
+    type: Dog.Type.Golden;
+    name: string;
+    colour: string;
+    cute?: boolean;
   }
 
+  export interface NovaScotia {
+    type: Dog.Type.NovaScotia;
+    name: string;
+    colour: string;
+    adorable?: boolean;
+  }
 }
+// Nested sealed classes don't work at the moment :(
+// export type Dog = Dog.Mutt | Dog.Retriever
+//
+// export namespace Dog {
+//   export enum Type {
+//     Mutt = "Mutt",
+//   }
+//
+//   export interface Mutt {
+//     type: Type.Mutt;
+//     name: string;
+//     loveable?: boolean;
+//   }
+//
+//   export type Retriever = Retriever.Golden | Retriever.NovaScotia
+//
+//   export namespace Retriever {
+//     export enum Type {
+//       Golden = "Golden",
+//       NovaScotia = "NovaScotia",
+//     }
+//
+//     export interface Golden {
+//       type: Type.Golden;
+//       name: string;
+//       cute?: boolean;
+//     }
+//
+//     export interface NovaScotia {
+//       type: Type.NovaScotia;
+//       name: string;
+//       adorable?: boolean;
+//     }
+//   }
+// }
 ```
 
 <!--- TEST -->
@@ -273,10 +310,7 @@ class TextResponse(val text: String) : Response()
 fun main() {
   val tsGenerator = KxsTsGenerator()
   println(
-    tsGenerator.generate(
-      EmptyResponse.serializer(),
-      TextResponse.serializer(),
-    )
+    tsGenerator.generate(Response.serializer())
   )
 }
 ```
@@ -284,20 +318,22 @@ fun main() {
 > You can get the full code [here](./knit/example/example-polymorphic-objects-01.kt).
 
 ```typescript
-export enum ResponseKind {
-  EmptyResponse = "EmptyResponse",
-  TextResponse = "TextResponse",
-}
+export type Response = Response.EmptyResponse | Response.TextResponse;
 
-export type Response = EmptyResponse | TextResponse
+export namespace Response {
+  export enum Type {
+    EmptyResponse = "EmptyResponse",
+    TextResponse = "TextResponse",
+  }
 
-export interface EmptyResponse {
-  type: ResponseKind.EmptyResponse;
-}
+  export interface EmptyResponse {
+    type: Response.Type.EmptyResponse;
+  }
 
-export interface TextResponse {
-  type: ResponseKind.TextResponse;
-  text: string;
+  export interface TextResponse {
+    type: Response.Type.TextResponse;
+    text: string;
+  }
 }
 ```
 

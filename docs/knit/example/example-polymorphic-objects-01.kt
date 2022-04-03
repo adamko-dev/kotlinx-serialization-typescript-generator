@@ -17,9 +17,6 @@ class TextResponse(val text: String) : Response()
 fun main() {
   val tsGenerator = KxsTsGenerator()
   println(
-    tsGenerator.generate(
-      EmptyResponse.serializer(),
-      TextResponse.serializer(),
-    )
+    tsGenerator.generate(Response.serializer())
   )
 }
