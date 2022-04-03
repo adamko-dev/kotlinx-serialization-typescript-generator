@@ -5,8 +5,7 @@ package dev.adamko.kxstsgen
  * Writes [TsElement]s as TypeScript source code.
  */
 abstract class KxsTsSourceCodeGenerator(
-  val config: KxsTsConfig,
-  val context: KxsTsConvertorContext,
+  val config: KxsTsConfig = KxsTsConfig(),
 ) {
 
   abstract fun groupElementsBy(element: TsElement): String?
@@ -32,8 +31,7 @@ abstract class KxsTsSourceCodeGenerator(
 
   open class Default(
     config: KxsTsConfig,
-    context: KxsTsConvertorContext,
-  ) : KxsTsSourceCodeGenerator(config, context) {
+  ) : KxsTsSourceCodeGenerator(config) {
 
 
     override fun groupElementsBy(element: TsElement): String {

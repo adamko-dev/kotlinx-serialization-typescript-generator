@@ -11,56 +11,77 @@ import kotlinx.serialization.descriptors.elementDescriptors
 
 fun interface TsTypeRefConverter {
 
-  operator fun invoke(context: KxsTsConvertorContext, descriptor: SerialDescriptor): TsTypeRef
+  operator fun invoke(descriptor: SerialDescriptor): TsTypeRef
 
-  object Default : TsTypeRefConverter {
-    override fun invoke(
-      context: KxsTsConvertorContext,
+
+  open class Default(
+    val elementIdConverter: TsElementIdConverter = TsElementIdConverter.Default,
+    val mapTypeConverter: TsMapTypeConverter = TsMapTypeConverter.Default,
+  ) : TsTypeRefConverter {
+
+    override operator fun invoke(
       descriptor: SerialDescriptor,
     ): TsTypeRef {
-      return when (descriptor.kind) {
-        is PrimitiveKind     -> {
-          val tsPrimitive = when (descriptor.kind as PrimitiveKind) {
-            PrimitiveKind.BOOLEAN -> TsLiteral.Primitive.TsBoolean
+      return when (val descriptorKind = descriptor.kind) {
+        is PrimitiveKind     -> primitiveTypeRef(descriptor, descriptorKind)
 
-            PrimitiveKind.BYTE,
-            PrimitiveKind.SHORT,
-            PrimitiveKind.INT,
-            PrimitiveKind.LONG,
-            PrimitiveKind.FLOAT,
-            PrimitiveKind.DOUBLE  -> TsLiteral.Primitive.TsNumber
-
-            PrimitiveKind.CHAR,
-            PrimitiveKind.STRING  -> TsLiteral.Primitive.TsString
-          }
-          TsTypeRef.Literal(tsPrimitive, descriptor.isNullable)
-        }
-
-        StructureKind.LIST   -> {
-          val elementDescriptor = descriptor.elementDescriptors.first()
-          val elementTypeRef = context.typeRef(elementDescriptor)
-          val listRef = TsLiteral.TsList(elementTypeRef)
-          TsTypeRef.Literal(listRef, descriptor.isNullable)
-        }
-        StructureKind.MAP    -> {
-          val (keyDescriptor, valueDescriptor) = descriptor.elementDescriptors.toList()
-          val keyTypeRef = context.typeRef(keyDescriptor)
-          val valueTypeRef = context.typeRef(valueDescriptor)
-          val type = context.mapType(keyDescriptor)
-          val map = TsLiteral.TsMap(keyTypeRef, valueTypeRef, type)
-          TsTypeRef.Literal(map, descriptor.isNullable)
-        }
+        StructureKind.LIST   -> listTypeRef(descriptor)
+        StructureKind.MAP    -> mapTypeRef(descriptor)
 
         SerialKind.CONTEXTUAL,
         PolymorphicKind.SEALED,
         PolymorphicKind.OPEN,
         SerialKind.ENUM,
         StructureKind.CLASS,
-        StructureKind.OBJECT -> {
-          val id = context.elementId(descriptor)
-          TsTypeRef.Declaration(id, null, descriptor.isNullable)
-        }
+        StructureKind.OBJECT -> declarationTypeRef(descriptor)
       }
     }
+
+    fun primitiveTypeRef(
+      descriptor: SerialDescriptor,
+      kind: PrimitiveKind,
+    ): TsTypeRef.Literal {
+      val tsPrimitive = when (kind) {
+        PrimitiveKind.BOOLEAN -> TsLiteral.Primitive.TsBoolean
+
+        PrimitiveKind.BYTE,
+        PrimitiveKind.SHORT,
+        PrimitiveKind.INT,
+        PrimitiveKind.LONG,
+        PrimitiveKind.FLOAT,
+        PrimitiveKind.DOUBLE  -> TsLiteral.Primitive.TsNumber
+
+        PrimitiveKind.CHAR,
+        PrimitiveKind.STRING  -> TsLiteral.Primitive.TsString
+      }
+      return TsTypeRef.Literal(tsPrimitive, descriptor.isNullable)
+    }
+
+
+    fun mapTypeRef(descriptor: SerialDescriptor): TsTypeRef.Literal {
+      val (keyDescriptor, valueDescriptor) = descriptor.elementDescriptors.toList()
+      val keyTypeRef = this(keyDescriptor)
+      val valueTypeRef = this(valueDescriptor)
+      val type = mapTypeConverter(keyDescriptor)
+      val map = TsLiteral.TsMap(keyTypeRef, valueTypeRef, type)
+      return TsTypeRef.Literal(map, descriptor.isNullable)
+    }
+
+
+    fun listTypeRef(descriptor: SerialDescriptor): TsTypeRef.Literal {
+      val elementDescriptor = descriptor.elementDescriptors.first()
+      val elementTypeRef = this(elementDescriptor)
+      val listRef = TsLiteral.TsList(elementTypeRef)
+      return TsTypeRef.Literal(listRef, descriptor.isNullable)
+    }
+
+
+    fun declarationTypeRef(
+      descriptor: SerialDescriptor
+    ): TsTypeRef.Declaration {
+      val id = elementIdConverter(descriptor)
+      return TsTypeRef.Declaration(id, null, descriptor.isNullable)
+    }
   }
+
 }

@@ -12,38 +12,20 @@ import kotlinx.serialization.descriptors.elementNames
 fun interface TsElementConverter {
 
   operator fun invoke(
-    context: KxsTsConvertorContext,
     descriptor: SerialDescriptor,
-    descriptorData: DescriptorData?,
   ): TsElement
 
-  object Default : TsElementConverter {
+  open class Default(
+    val elementIdConverter: TsElementIdConverter,
+    val mapTypeConverter: TsMapTypeConverter,
+    val typeRefConverter: TsTypeRefConverter,
+  ) : TsElementConverter {
 
     override operator fun invoke(
-      context: KxsTsConvertorContext,
-      descriptor: SerialDescriptor,
-      descriptorData: DescriptorData?,
-    ): TsElement {
-      return convertMonomorphicDescriptor(context, descriptor)
-
-//      return when (descriptorData) {
-//        is DescriptorData.Polymorphic -> convertPolymorphicDescriptor(
-//          context,
-//          descriptorData,
-//        )
-//        null,
-//        is DescriptorData.Monomorphic -> setOf(convertMonomorphicDescriptor(context, descriptor))
-//      }
-
-    }
-
-
-    private fun convertMonomorphicDescriptor(
-      context: KxsTsConvertorContext,
       descriptor: SerialDescriptor,
     ): TsElement {
       return when (descriptor.kind) {
-        SerialKind.ENUM        -> convertEnum(context, descriptor)
+        SerialKind.ENUM        -> convertEnum(descriptor)
 
         PrimitiveKind.BOOLEAN  -> TsLiteral.Primitive.TsBoolean
 
@@ -57,31 +39,30 @@ fun interface TsElementConverter {
         PrimitiveKind.FLOAT,
         PrimitiveKind.DOUBLE   -> TsLiteral.Primitive.TsNumber
 
-        StructureKind.LIST     -> convertList(context, descriptor)
-        StructureKind.MAP      -> convertMap(context, descriptor)
+        StructureKind.LIST     -> convertList(descriptor)
+        StructureKind.MAP      -> convertMap(descriptor)
 
         StructureKind.CLASS,
         StructureKind.OBJECT   -> when {
-          descriptor.isInline -> convertTypeAlias(context, descriptor)
-          else                -> convertInterface(context, descriptor, null)
+          descriptor.isInline -> convertTypeAlias(descriptor)
+          else                -> convertInterface(descriptor, null)
         }
 
 
-        PolymorphicKind.SEALED -> convertPolymorphic(context, descriptor)
+        PolymorphicKind.SEALED -> convertPolymorphic(descriptor)
 
         // TODO handle contextual
         // TODO handle polymorphic open
         SerialKind.CONTEXTUAL,
         PolymorphicKind.OPEN   -> {
-          val resultId = context.elementId(descriptor)
+          val resultId = elementIdConverter(descriptor)
           val fieldTypeRef = TsTypeRef.Literal(TsLiteral.Primitive.TsAny, false)
           TsDeclaration.TsTypeAlias(resultId, fieldTypeRef)
         }
       }
     }
 
-    private fun convertPolymorphic(
-      context: KxsTsConvertorContext,
+    fun convertPolymorphic(
       descriptor: SerialDescriptor,
     ): TsDeclaration {
 
@@ -95,7 +76,7 @@ fun interface TsElementConverter {
         .elementDescriptors
 
       val subclassInterfaces = subclasses
-        .map { convertMonomorphicDescriptor(context, it) }
+        .map { this(it) }
         .filterIsInstance<TsDeclaration.TsInterface>()
         .map { it.copy(id = TsElementId("${descriptor.serialName}.${it.id.name}")) }
         .toSet()
@@ -106,31 +87,29 @@ fun interface TsElementConverter {
         else                   -> error("Can't convert non-polymorphic SerialKind ${descriptor.kind} to polymorphic interface")
       }
 
-      return convertInterface(context, descriptor, polymorphism)
+      return convertInterface(descriptor, polymorphism)
     }
 
 
-    private fun convertTypeAlias(
-      context: KxsTsConvertorContext,
+    fun convertTypeAlias(
       structDescriptor: SerialDescriptor,
     ): TsDeclaration {
-      val resultId = context.elementId(structDescriptor)
+      val resultId = elementIdConverter(structDescriptor)
       val fieldDescriptor = structDescriptor.elementDescriptors.first()
-      val fieldTypeRef = context.typeRef(fieldDescriptor)
+      val fieldTypeRef = typeRefConverter(fieldDescriptor)
       return TsDeclaration.TsTypeAlias(resultId, fieldTypeRef)
     }
 
 
-    private fun convertInterface(
-      context: KxsTsConvertorContext,
+    fun convertInterface(
       descriptor: SerialDescriptor,
       polymorphism: TsPolymorphism?,
     ): TsDeclaration {
-      val resultId = context.elementId(descriptor)
+      val resultId = elementIdConverter(descriptor)
 
       val properties = descriptor.elementDescriptors.mapIndexed { index, fieldDescriptor ->
         val name = descriptor.getElementName(index)
-        val fieldTypeRef = context.typeRef(fieldDescriptor)
+        val fieldTypeRef = typeRefConverter(fieldDescriptor)
         when {
           descriptor.isElementOptional(index) -> TsProperty.Optional(name, fieldTypeRef)
           else                                -> TsProperty.Required(name, fieldTypeRef)
@@ -140,36 +119,33 @@ fun interface TsElementConverter {
     }
 
 
-    private fun convertEnum(
-      context: KxsTsConvertorContext,
+    fun convertEnum(
       enumDescriptor: SerialDescriptor,
     ): TsDeclaration.TsEnum {
-      val resultId = context.elementId(enumDescriptor)
+      val resultId = elementIdConverter(enumDescriptor)
       return TsDeclaration.TsEnum(resultId, enumDescriptor.elementNames.toSet())
     }
 
 
-    private fun convertList(
-      context: KxsTsConvertorContext,
+    fun convertList(
       listDescriptor: SerialDescriptor,
     ): TsLiteral.TsList {
       val elementDescriptor = listDescriptor.elementDescriptors.first()
-      val elementTypeRef = context.typeRef(elementDescriptor)
+      val elementTypeRef = typeRefConverter(elementDescriptor)
       return TsLiteral.TsList(elementTypeRef)
     }
 
 
-    private fun convertMap(
-      context: KxsTsConvertorContext,
+    fun convertMap(
       mapDescriptor: SerialDescriptor,
     ): TsLiteral.TsMap {
 
       val (keyDescriptor, valueDescriptor) = mapDescriptor.elementDescriptors.toList()
 
-      val keyTypeRef = context.typeRef(keyDescriptor)
-      val valueTypeRef = context.typeRef(valueDescriptor)
+      val keyTypeRef = typeRefConverter(keyDescriptor)
+      val valueTypeRef = typeRefConverter(valueDescriptor)
 
-      val type = context.mapType(keyDescriptor)
+      val type = mapTypeConverter(keyDescriptor)
 
       return TsLiteral.TsMap(keyTypeRef, valueTypeRef, type)
     }

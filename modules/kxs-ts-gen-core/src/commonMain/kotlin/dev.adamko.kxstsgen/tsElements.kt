@@ -125,7 +125,10 @@ sealed interface TsTypeRef {
   val nullable: Boolean
 
 
-  data class Literal(val element: TsLiteral, override val nullable: Boolean) : TsTypeRef
+  data class Literal(
+    val element: TsLiteral,
+    override val nullable: Boolean,
+    ) : TsTypeRef
 
 
   data class Declaration(

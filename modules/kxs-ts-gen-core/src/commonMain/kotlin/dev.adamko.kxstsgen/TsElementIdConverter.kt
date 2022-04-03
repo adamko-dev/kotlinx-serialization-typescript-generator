@@ -12,7 +12,7 @@ fun interface TsElementIdConverter {
   operator fun invoke(descriptor: SerialDescriptor): TsElementId
 
   object Default : TsElementIdConverter {
-    override fun invoke(descriptor: SerialDescriptor): TsElementId {
+    override operator fun invoke(descriptor: SerialDescriptor): TsElementId {
       val targetId = TsElementId(descriptor.serialName.removeSuffix("?"))
 
       return when (descriptor.kind) {

@@ -1,12 +1,8 @@
-@file:OptIn(InternalSerializationApi::class)
-
 package dev.adamko.kxstsgen
 
 import dev.adamko.kxstsgen.util.MutableMapWithDefaultPut
 import kotlinx.serialization.InternalSerializationApi
 import kotlinx.serialization.KSerializer
-import kotlinx.serialization.PolymorphicSerializer
-import kotlinx.serialization.SealedClassSerializer
 import kotlinx.serialization.descriptors.PolymorphicKind
 import kotlinx.serialization.descriptors.PrimitiveKind
 import kotlinx.serialization.descriptors.SerialDescriptor
@@ -21,27 +17,18 @@ import kotlinx.serialization.descriptors.elementDescriptors
 fun interface SerializerDescriptorsExtractor {
 
   operator fun invoke(
-    allDescriptorData: Iterable<DescriptorData>,
+    serializer: KSerializer<*>
   ): Set<SerialDescriptor>
 
 
-  object Default : SerializerDescriptorsExtractor {
+  object Default  : SerializerDescriptorsExtractor {
 
     override operator fun invoke(
-      allDescriptorData: Iterable<DescriptorData>,
+      serializer: KSerializer<*>
     ): Set<SerialDescriptor> {
-      return allDescriptorData.flatMap { descriptorData ->
-        when (descriptorData) {
-          is DescriptorData.Polymorphic -> listOf(descriptorData.descriptor)
-          is DescriptorData.Monomorphic -> listOf(descriptorData.descriptor)
-        }
-      }.flatMap { descriptor -> extractedDescriptors.getValue(descriptor) }
-        .toSet()
+      return extractDescriptors(serializer.descriptor)
     }
 
-    private val extractedDescriptors by MutableMapWithDefaultPut<SerialDescriptor, Sequence<SerialDescriptor>> { descriptor ->
-      extractDescriptors(descriptor).asSequence()
-    }
 
     private tailrec fun extractDescriptors(
       current: SerialDescriptor? = null,
@@ -56,6 +43,7 @@ fun interface SerializerDescriptorsExtractor {
         extractDescriptors(queue.removeFirstOrNull(), queue, extracted + current)
       }
     }
+
 
     private val elementDescriptors by MutableMapWithDefaultPut<SerialDescriptor, Iterable<SerialDescriptor>> { descriptor ->
       when (descriptor.kind) {
@@ -87,77 +75,4 @@ fun interface SerializerDescriptorsExtractor {
     }
 
   }
-}
-
-
-/** Create [DescriptorData] */
-fun interface DescriptorDataProcessor {
-  operator fun invoke(
-    context: KxsTsConvertorContext,
-    config: KxsTsConfig,
-    serializer: KSerializer<*>,
-  ): DescriptorData
-
-  object Default : DescriptorDataProcessor {
-    override fun invoke(
-      context: KxsTsConvertorContext,
-      config: KxsTsConfig,
-      serializer: KSerializer<*>,
-    ): DescriptorData {
-      return when (serializer) {
-        is PolymorphicSerializer<*> ->
-          DescriptorData.Polymorphic.Open(
-            descriptor = serializer.descriptor,
-            subclasses = config.polymorphicDescriptors.getValue(serializer.baseClass)
-          )
-
-        is SealedClassSerializer<*> -> {
-
-          val subclasses = serializer.descriptor
-            .elementDescriptors
-            .toList()
-            .first { it.kind == SerialKind.CONTEXTUAL }
-            .elementDescriptors
-            .filter { it.kind == StructureKind.CLASS }
-            .toSet()
-
-          DescriptorData.Polymorphic.Closed(
-            descriptor = serializer.descriptor,
-            subclasses = subclasses,
-          )
-        }
-
-        else                        ->
-          DescriptorData.Monomorphic(serializer.descriptor)
-      }
-    }
-  }
-}
-
-
-sealed class DescriptorData {
-  abstract val descriptor: SerialDescriptor
-
-  data class Monomorphic(
-    override val descriptor: SerialDescriptor,
-  ) : DescriptorData()
-
-  sealed class Polymorphic : DescriptorData() {
-
-    abstract val subclasses: Set<SerialDescriptor>
-
-    data class Closed(
-      override val descriptor: SerialDescriptor,
-      override val subclasses: Set<SerialDescriptor>,
-    ) : Polymorphic()
-
-    data class Open(
-      override val descriptor: SerialDescriptor,
-      override val subclasses: Set<SerialDescriptor>,
-    ) : Polymorphic()
-
-  }
-
-  override fun hashCode(): Int = descriptor.hashCode()
-  override fun equals(other: Any?): Boolean = (descriptor == other)
 }
