@@ -52,10 +52,10 @@ class KxsTsProcessor(
           .filterIsInstance<TsDeclaration>()
           .map { element -> sourceCodeGenerator.generateDeclaration(element) }
           .filter { it.isNotBlank() }
-          .joinToString(config.structureSeparator)
+          .joinToString(config.declarationSeparator)
       }
       .values// TODO  create namespaces
-      .joinToString(config.structureSeparator)
+      .joinToString(config.declarationSeparator)
   }
 
 

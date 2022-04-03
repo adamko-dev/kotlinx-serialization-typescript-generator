@@ -53,7 +53,7 @@ abstract class KxsTsSourceCodeGenerator(
       val namespaceContent =
         namespace
           .members
-          .joinToString(config.structureSeparator) { declaration ->
+          .joinToString(config.declarationSeparator) { declaration ->
             generateDeclaration(declaration)
           }
 

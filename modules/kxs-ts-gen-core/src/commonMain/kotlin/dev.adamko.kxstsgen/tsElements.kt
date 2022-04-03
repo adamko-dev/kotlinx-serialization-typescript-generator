@@ -178,6 +178,7 @@ sealed interface TsPolymorphism {
 
 
   /** Note: [Open] is not implemented correctly */
+  @UnimplementedKxTsGenApi
   data class Open(
     override val discriminatorName: String,
     override val subclasses: Set<TsDeclaration.TsInterface>,

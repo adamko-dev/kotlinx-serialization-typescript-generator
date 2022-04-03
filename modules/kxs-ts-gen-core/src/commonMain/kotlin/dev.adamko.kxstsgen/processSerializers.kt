@@ -15,13 +15,6 @@ import kotlinx.serialization.descriptors.StructureKind
 import kotlinx.serialization.descriptors.elementDescriptors
 
 
-//  private val polymorphicDescriptorData: MutableMap<SerialDescriptor, PolymorphicDescriptorData?>
-//    by MapWithPutDefault { descriptor ->
-//      polymorphicSerializerData.entries.firstOrNull { (serializer, _) ->
-//        serializer.descriptor == descriptor
-//      }?.value
-//    }
-
 /**
  * Recursively extract all descriptors from a serializer and its elements.
  */
