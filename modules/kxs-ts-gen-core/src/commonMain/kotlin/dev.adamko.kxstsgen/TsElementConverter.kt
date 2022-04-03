@@ -43,34 +43,40 @@ fun interface TsElementConverter {
       descriptor: SerialDescriptor,
     ): TsElement {
       return when (descriptor.kind) {
-        SerialKind.ENUM       -> convertEnum(context, descriptor)
+        SerialKind.ENUM        -> convertEnum(context, descriptor)
 
-        PrimitiveKind.BOOLEAN -> TsLiteral.Primitive.TsBoolean
+        PrimitiveKind.BOOLEAN  -> TsLiteral.Primitive.TsBoolean
 
         PrimitiveKind.CHAR,
-        PrimitiveKind.STRING  -> TsLiteral.Primitive.TsString
+        PrimitiveKind.STRING   -> TsLiteral.Primitive.TsString
 
         PrimitiveKind.BYTE,
         PrimitiveKind.SHORT,
         PrimitiveKind.INT,
         PrimitiveKind.LONG,
         PrimitiveKind.FLOAT,
-        PrimitiveKind.DOUBLE  -> TsLiteral.Primitive.TsNumber
+        PrimitiveKind.DOUBLE   -> TsLiteral.Primitive.TsNumber
 
-        StructureKind.LIST    -> convertList(context, descriptor)
-        StructureKind.MAP     -> convertMap(context, descriptor)
+        StructureKind.LIST     -> convertList(context, descriptor)
+        StructureKind.MAP      -> convertMap(context, descriptor)
 
         StructureKind.CLASS,
-        StructureKind.OBJECT  -> when {
+        StructureKind.OBJECT   -> when {
           descriptor.isInline -> convertTypeAlias(context, descriptor)
           else                -> convertInterface(context, descriptor, null)
         }
 
-        // TODO handle contextual
-        SerialKind.CONTEXTUAL -> TsLiteral.Primitive.TsAny
 
-        PolymorphicKind.SEALED,
-        PolymorphicKind.OPEN  -> convertPolymorphic(context, descriptor)
+        PolymorphicKind.SEALED -> convertPolymorphic(context, descriptor)
+
+        // TODO handle contextual
+        // TODO handle polymorphic open
+        SerialKind.CONTEXTUAL,
+        PolymorphicKind.OPEN   -> {
+          val resultId = context.elementId(descriptor)
+          val fieldTypeRef = TsTypeRef.Literal(TsLiteral.Primitive.TsAny, false)
+          TsDeclaration.TsType(resultId, fieldTypeRef)
+        }
       }
     }
 
@@ -97,7 +103,7 @@ fun interface TsElementConverter {
       val polymorphism = when (descriptor.kind) {
         PolymorphicKind.SEALED -> TsPolymorphism.Sealed(discriminatorName, subclassInterfaces)
         PolymorphicKind.OPEN   -> TsPolymorphism.Open(discriminatorName, subclassInterfaces)
-        else                   -> error("unexpected SerialKind ${descriptor.kind}") // TODO 'else' branch shouldn't be needed
+        else                   -> error("Can't convert non-polymorphic SerialKind ${descriptor.kind} to polymorphic interface")
       }
 
       return convertInterface(context, descriptor, polymorphism)

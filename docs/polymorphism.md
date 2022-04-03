@@ -45,13 +45,14 @@ fun main() {
 > You can get the full code [here](./knit/example/example-polymorphic-abstract-class-primitive-fields-01.kt).
 
 ```typescript
-export interface SimpleTypes {
-  aString: string;
-  anInt: number;
-  aDouble: number;
-  bool: boolean;
-  privateMember: string;
-}
+export type SimpleTypes = any;
+// export interface SimpleTypes {
+//   aString: string;
+//   anInt: number;
+//   aDouble: number;
+//   bool: boolean;
+//   privateMember: string;
+// }
 ```
 
 <!--- TEST -->
@@ -112,14 +113,15 @@ fun main() {
 > You can get the full code [here](./knit/example/example-polymorphic-static-types-02.kt).
 
 ```typescript
-export interface Project {
-  name: string;
-}
-
-export interface OwnedProject extends Project {
-  name: string;
-  owner: string;
-}
+export type Project = any;
+// export interface Project {
+//   name: string;
+// }
+//
+// export interface OwnedProject extends Project {
+//   name: string;
+//   owner: string;
+// }
 ```
 
 <!--- TEST -->
