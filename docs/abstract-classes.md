@@ -34,9 +34,10 @@ fun main() {
 > You can get the full code [here](./knit/example/example-abstract-class-single-field-01.kt).
 
 ```typescript
-interface Color {
-  rgb: number;
-}
+export type Color = any;
+// interface Color {
+//   rgb: number;
+// }
 ```
 
 <!--- TEST -->
@@ -62,13 +63,14 @@ fun main() {
 > You can get the full code [here](./knit/example/example-abstract-class-primitive-fields-01.kt).
 
 ```typescript
-export interface SimpleTypes {
-  aString: string;
-  anInt: number;
-  aDouble: number;
-  bool: boolean;
-  privateMember: string;
-}
+export type SimpleTypes = any;
+// export interface SimpleTypes {
+//   aString: string;
+//   anInt: number;
+//   aDouble: number;
+//   bool: boolean;
+//   privateMember: string;
+// }
 ```
 
 <!--- TEST -->
@@ -93,9 +95,10 @@ fun main() {
 > You can get the full code [here](./knit/example/example-abstract-class-abstract-field-01.kt).
 
 ```typescript
-export interface Color {
-  rgb: number;
-}
+export type AbstractSimpleTypes = any;
+// export interface AbstractSimpleTypes {
+//   rgb: number;
+// }
 ```
 
 <!--- TEST -->
