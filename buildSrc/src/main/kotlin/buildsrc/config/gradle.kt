@@ -27,36 +27,3 @@ fun IdeaModule.excludeGeneratedGradleDsl(layout: ProjectLayout) {
     )
   )
 }
-
-
-/**
- * `kotlin-js` adds a directory in the root-dir for the Yarn lock.
- * That's a bit annoying. It's a little neater if it's in the
- * gradle dir, next to the version-catalog.
- */
-fun Project.relocateKotlinJsStore() {
-
-  afterEvaluate {
-    rootProject.extensions.findByType<YarnRootExtension>()?.apply {
-      lockFileDirectory = project.rootDir.resolve("gradle/kotlin-js-store")
-    }
-  }
-
-}
-
-fun KotlinTargetContainerWithPresetFunctions.currentHostTarget(
-  targetName: String = "native",
-  configure: KotlinNativeTargetWithHostTests.() -> Unit,
-): KotlinNativeTargetWithHostTests {
-  val hostOs = System.getProperty("os.name")
-  val isMingwX64 = hostOs.startsWith("Windows")
-  val hostTarget = when {
-    hostOs == "Mac OS X" -> macosX64(targetName)
-    hostOs == "Linux"    -> linuxX64(targetName)
-    isMingwX64           -> mingwX64(targetName)
-    else                 -> throw GradleException("Preset for host OS '$hostOs' is undefined")
-  }
-  println("Current host target ${hostTarget.targetName}/${hostTarget.preset?.name}")
-  hostTarget.configure()
-  return hostTarget
-}
