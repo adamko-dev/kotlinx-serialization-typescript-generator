@@ -24,12 +24,12 @@ fun RepositoryHandler.jitpack() {
 }
 
 
-fun RepositoryHandler.myMavenLocal(enabled: Boolean = true) {
+fun RepositoryHandler.myMavenLocal(enabled: Boolean = false) {
   if (enabled) {
     logger.lifecycle("Maven local is enabled")
     mavenLocal {
       content {
-        includeGroup("org.jetbrains.reflekt")
+//        includeGroup("org.jetbrains.reflekt")
       }
     }
   }

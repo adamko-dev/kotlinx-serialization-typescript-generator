@@ -36,9 +36,9 @@ dependencies {
   implementation("org.jetbrains.kotlinx:kotlinx-knit:${Versions.kotlinxKnit}")
   implementation("org.jetbrains.kotlinx:kover:${Versions.kotlinxKover}")
 
-  implementation("org.jetbrains.reflekt:gradle-plugin:1.6.10-1-SNAPSHOT") {
-    isChanging = true
-  }
+//  implementation("org.jetbrains.reflekt:gradle-plugin:1.6.10-1-SNAPSHOT") {
+//    isChanging = true
+//  }
 }
 
 
