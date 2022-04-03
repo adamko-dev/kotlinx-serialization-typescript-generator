@@ -1,7 +1,6 @@
 package dev.adamko.kxstsgen
 
 import dev.adamko.kxstsgen.util.MutableMapWithDefaultPut
-import kotlinx.serialization.InternalSerializationApi
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.descriptors.PolymorphicKind
 import kotlinx.serialization.descriptors.PrimitiveKind
@@ -21,7 +20,7 @@ fun interface SerializerDescriptorsExtractor {
   ): Set<SerialDescriptor>
 
 
-  object Default  : SerializerDescriptorsExtractor {
+  object Default : SerializerDescriptorsExtractor {
 
     override operator fun invoke(
       serializer: KSerializer<*>

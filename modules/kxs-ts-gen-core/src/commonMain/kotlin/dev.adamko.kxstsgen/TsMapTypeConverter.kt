@@ -1,6 +1,5 @@
 package dev.adamko.kxstsgen
 
-
 import kotlinx.serialization.descriptors.PolymorphicKind
 import kotlinx.serialization.descriptors.PrimitiveKind
 import kotlinx.serialization.descriptors.SerialDescriptor

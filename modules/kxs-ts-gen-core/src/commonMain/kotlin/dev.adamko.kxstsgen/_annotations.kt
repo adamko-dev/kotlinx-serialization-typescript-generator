@@ -1,5 +1,6 @@
 package dev.adamko.kxstsgen
 
+
 @Target(
   AnnotationTarget.CLASS,
   AnnotationTarget.PROPERTY,
