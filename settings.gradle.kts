@@ -1,4 +1,4 @@
-rootProject.name = "kxs-typescript-generator"
+rootProject.name = "kotlinx-serialization-typescript-generator"
 
 apply(from = "./buildSrc/repositories.settings.gradle.kts")
 

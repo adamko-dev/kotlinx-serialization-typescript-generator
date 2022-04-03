@@ -8,7 +8,7 @@ plugins {
 }
 
 
-project.group = "dev.adamko"
+project.group = "dev.adamko.kxtsgen"
 project.version = "0.0.0-SNAPSHOT"
 gitVersioning.apply {
   refs {
