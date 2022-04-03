@@ -1,3 +1,5 @@
+[![](https://jitpack.io/v/adamko-dev/kotlinx-serialization-typescript-generator.svg)](https://jitpack.io/#adamko-dev/kotlinx-serialization-typescript-generator)
+
 # Kotlinx Serialization TypeScript Generator
 
 Create TypeScript interfaces from Kotlinx Serialization classes.
