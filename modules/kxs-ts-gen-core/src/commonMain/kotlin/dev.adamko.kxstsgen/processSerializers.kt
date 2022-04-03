@@ -40,24 +40,21 @@ fun interface SerializerDescriptorsExtractor {
     }
 
     private val extractedDescriptors by MutableMapWithDefaultPut<SerialDescriptor, Sequence<SerialDescriptor>> { descriptor ->
-      sequence {
-        val seen = mutableSetOf<SerialDescriptor>()
-        val deque = ArrayDeque<SerialDescriptor>()
-        deque.addLast(descriptor)
+      extractDescriptors(descriptor).asSequence()
+    }
 
-        while (deque.isNotEmpty()) {
-          val next = deque.removeFirst()
-
-          val nextElementDescriptors = elementDescriptors.getValue(next)
-
-          nextElementDescriptors
-            .filter { it !in seen }
-            .forEach { deque.addLast(it) }
-
-          seen.add(next)
-          yield(next)
-        }
-      }.distinct()
+    private tailrec fun extractDescriptors(
+      current: SerialDescriptor? = null,
+      queue: ArrayDeque<SerialDescriptor> = ArrayDeque(),
+      extracted: Set<SerialDescriptor> = emptySet(),
+    ): Set<SerialDescriptor> {
+      return if (current == null) {
+        extracted
+      } else {
+        val currentDescriptors = elementDescriptors.getValue(current)
+        queue.addAll(currentDescriptors - extracted)
+        extractDescriptors(queue.removeFirstOrNull(), queue, extracted + current)
+      }
     }
 
     private val elementDescriptors by MutableMapWithDefaultPut<SerialDescriptor, Iterable<SerialDescriptor>> { descriptor ->
