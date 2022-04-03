@@ -268,8 +268,6 @@ abstract class KxsTsSourceCodeGenerator(
             typeRef.id.name
           }
         }
-
-        is TsTypeRef.Unknown     -> generateTypeReference(typeRef.ref)
       }
 
       return buildString {

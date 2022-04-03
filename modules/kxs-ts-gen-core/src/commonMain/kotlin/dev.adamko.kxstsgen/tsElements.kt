@@ -98,18 +98,6 @@ sealed interface TsTypeRef {
     override val nullable: Boolean,
   ) : TsTypeRef
 
-//  /** A property within another declaration (e.g. an enum value, or type within a namespace) */
-//  data class Property(
-//    val id: TsElementId,
-//    val declaration: Declaration,
-//    override val nullable: Boolean,
-//  ) : TsTypeRef
-
-  object Unknown : TsTypeRef {
-    val ref: Literal = Literal(TsLiteral.Primitive.TsUnknown, false)
-    override val nullable: Boolean by ref::nullable
-  }
-
 }
 
 
