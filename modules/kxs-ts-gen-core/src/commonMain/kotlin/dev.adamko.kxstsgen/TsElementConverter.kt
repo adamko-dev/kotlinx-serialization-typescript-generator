@@ -75,7 +75,7 @@ fun interface TsElementConverter {
         PolymorphicKind.OPEN   -> {
           val resultId = context.elementId(descriptor)
           val fieldTypeRef = TsTypeRef.Literal(TsLiteral.Primitive.TsAny, false)
-          TsDeclaration.TsType(resultId, fieldTypeRef)
+          TsDeclaration.TsTypeAlias(resultId, fieldTypeRef)
         }
       }
     }
@@ -117,7 +117,7 @@ fun interface TsElementConverter {
       val resultId = context.elementId(structDescriptor)
       val fieldDescriptor = structDescriptor.elementDescriptors.first()
       val fieldTypeRef = context.typeRef(fieldDescriptor)
-      return TsDeclaration.TsType(resultId, fieldTypeRef)
+      return TsDeclaration.TsTypeAlias(resultId, fieldTypeRef)
     }
 
 

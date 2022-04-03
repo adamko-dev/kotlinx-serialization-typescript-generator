@@ -16,25 +16,19 @@ abstract class KxsTsSourceCodeGenerator(
       is TsDeclaration.TsEnum      -> generateEnum(element)
       is TsDeclaration.TsInterface -> generateInterface(element)
       is TsDeclaration.TsNamespace -> generateNamespace(element)
-      is TsDeclaration.TsType      -> generateType(element)
+      is TsDeclaration.TsTypeAlias -> generateType(element)
     }
   }
 
   abstract fun generateEnum(enum: TsDeclaration.TsEnum): String
   abstract fun generateInterface(element: TsDeclaration.TsInterface): String
   abstract fun generateNamespace(namespace: TsDeclaration.TsNamespace): String
-  abstract fun generateType(element: TsDeclaration.TsType): String
+  abstract fun generateType(element: TsDeclaration.TsTypeAlias): String
 
-  abstract fun generateMapTypeReference(
-//    requestorId: TsElementId?,
-    tsMap: TsLiteral.TsMap,
-  ): String
+  abstract fun generateMapTypeReference(tsMap: TsLiteral.TsMap): String
 
   abstract fun generatePrimitive(primitive: TsLiteral.Primitive): String
-  abstract fun generateTypeReference(
-//    rootId: TsElementId?,
-    typeRef: TsTypeRef,
-  ): String
+  abstract fun generateTypeReference(typeRef: TsTypeRef): String
 
   open class Default(
     config: KxsTsConfig,
@@ -118,6 +112,8 @@ abstract class KxsTsSourceCodeGenerator(
       }
     }
 
+
+    // note: this isn't used because at present poly-open descriptors are converted to 'any'
     private fun generatePolyOpen(
       element: TsDeclaration.TsInterface,
       polymorphism: TsPolymorphism.Open,
@@ -144,7 +140,7 @@ abstract class KxsTsSourceCodeGenerator(
         subInterfaces,
       )
 
-      val subInterfaceTypeUnion = TsDeclaration.TsType(
+      val subInterfaceTypeUnion = TsDeclaration.TsTypeAlias(
         element.id,
         subInterfaceRefs
       )
@@ -154,6 +150,14 @@ abstract class KxsTsSourceCodeGenerator(
       }
     }
 
+    /**
+     * Generate a 'sealed class' equivalent.
+     *
+     * * type union of all subclasses
+     * * a namespace with contains
+     *   * a 'Type' enum
+     *   * subclasses, each with an additional 'Type' property that has a literal 'Type' enum value
+     */
     private fun generatePolyClosed(
       element: TsDeclaration.TsInterface,
       polymorphism: TsPolymorphism.Sealed,
@@ -189,7 +193,7 @@ abstract class KxsTsSourceCodeGenerator(
         subclass.copy(properties = setOf(typeProp) + subclass.properties)
       }
 
-      val subInterfaceTypeUnion = TsDeclaration.TsType(
+      val subInterfaceTypeUnion = TsDeclaration.TsTypeAlias(
         element.id,
         subInterfaceRefs.keys
       )
@@ -208,7 +212,7 @@ abstract class KxsTsSourceCodeGenerator(
     }
 
 
-    override fun generateType(element: TsDeclaration.TsType): String {
+    override fun generateType(element: TsDeclaration.TsTypeAlias): String {
       val aliases =
         element.typeRefs
           .map { generateTypeReference(it) }
