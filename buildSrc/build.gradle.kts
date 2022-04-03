@@ -10,11 +10,12 @@ plugins {
 
 object Versions {
   const val jvmTarget = "11"
-  const val kotlinTarget = "1.6"
   const val kotlin = "1.6.10"
-  const val ksp = "1.6.10-1.0.2"
-  const val kotlinxSerializationVersion = "1.3.2"
+  const val kotlinTarget = "1.6"
   const val kotlinxKnit = "0.3.0"
+  const val kotlinxKover = "0.5.0"
+  const val kotlinxSerialization = "1.3.2"
+  const val ksp = "1.6.10-1.0.4"
 
   const val kotest = "5.1.0"
 }
@@ -28,11 +29,16 @@ dependencies {
 
   implementation("com.google.devtools.ksp:com.google.devtools.ksp.gradle.plugin:${Versions.ksp}")
 
-  implementation(platform("org.jetbrains.kotlinx:kotlinx-serialization-bom:${Versions.kotlinxSerializationVersion}"))
+  implementation(platform("org.jetbrains.kotlinx:kotlinx-serialization-bom:${Versions.kotlinxSerialization}"))
 
   implementation("io.kotest:kotest-framework-multiplatform-plugin-gradle:${Versions.kotest}")
 
   implementation("org.jetbrains.kotlinx:kotlinx-knit:${Versions.kotlinxKnit}")
+  implementation("org.jetbrains.kotlinx:kover:${Versions.kotlinxKover}")
+
+//  implementation("org.jetbrains.reflekt:gradle-plugin:1.6.10-1-SNAPSHOT") {
+//    isChanging = true
+//  }
 }
 
 

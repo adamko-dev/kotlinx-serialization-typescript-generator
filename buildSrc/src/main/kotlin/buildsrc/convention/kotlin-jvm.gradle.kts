@@ -2,7 +2,6 @@ package buildsrc.convention
 
 import org.gradle.kotlin.dsl.`java-library`
 import org.gradle.kotlin.dsl.dependencies
-import org.gradle.kotlin.dsl.jacoco
 import org.gradle.kotlin.dsl.kotlin
 import org.gradle.kotlin.dsl.withType
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
@@ -11,11 +10,10 @@ plugins {
   id("buildsrc.convention.subproject")
   kotlin("jvm")
   `java-library`
-  jacoco
 }
 
 dependencies {
-  testImplementation(platform("io.kotest:kotest-bom:5.1.0"))
+  testImplementation(platform("io.kotest:kotest-bom:5.2.1"))
   testImplementation("io.kotest:kotest-runner-junit5")
   testImplementation("io.kotest:kotest-assertions-core")
   testImplementation("io.kotest:kotest-property")
@@ -33,7 +31,7 @@ java {
   withSourcesJar()
 }
 
-tasks.withType<KotlinCompile>().configureEach {
+tasks.withType<KotlinCompile> {
   kotlinOptions {
     jvmTarget = "11"
     apiVersion = "1.6"
@@ -53,5 +51,4 @@ tasks.compileTestKotlin {
 
 tasks.test {
   useJUnitPlatform()
-  finalizedBy(tasks.jacocoTestReport)
 }
