@@ -7,6 +7,8 @@ plugins {
 //  id("org.jetbrains.reflekt")
 }
 
+description = "Experimental alternative to Kotlinx Serialization. Currently unused."
+
 val kspVersion = "1.6.10-1.0.4"
 val kotlinCompileTestingVersion = "1.4.7"
 val kotlinxSerializationVersion = "1.3.2" // TODO put dependencies in libs.version.toml
