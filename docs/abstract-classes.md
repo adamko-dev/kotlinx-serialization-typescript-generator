@@ -31,7 +31,7 @@ fun main() {
 }
 ```
 
-> You can get the full code [here](./knit/example/example-abstract-class-single-field-01.kt).
+> You can get the full code [here](./code/example/example-abstract-class-single-field-01.kt).
 
 ```typescript
 export type Color = any;
@@ -60,7 +60,7 @@ fun main() {
 }
 ```
 
-> You can get the full code [here](./knit/example/example-abstract-class-primitive-fields-01.kt).
+> You can get the full code [here](./code/example/example-abstract-class-primitive-fields-01.kt).
 
 ```typescript
 export type SimpleTypes = any;
@@ -92,7 +92,7 @@ fun main() {
 }
 ```
 
-> You can get the full code [here](./knit/example/example-abstract-class-abstract-field-01.kt).
+> You can get the full code [here](./code/example/example-abstract-class-abstract-field-01.kt).
 
 ```typescript
 export type AbstractSimpleTypes = any;

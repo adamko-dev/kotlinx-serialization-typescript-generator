@@ -42,7 +42,7 @@ fun main() {
 }
 ```
 
-> You can get the full code [here](./knit/example/example-polymorphic-abstract-class-primitive-fields-01.kt).
+> You can get the full code [here](./code/example/example-polymorphic-abstract-class-primitive-fields-01.kt).
 
 ```typescript
 export type SimpleTypes = any;
@@ -75,7 +75,7 @@ fun main() {
 }
 ```
 
-> You can get the full code [here](./knit/example/example-polymorphic-static-types-01.kt).
+> You can get the full code [here](./code/example/example-polymorphic-static-types-01.kt).
 
 Only the Project class properties are generated.
 
@@ -110,7 +110,7 @@ fun main() {
 }
 ```
 
-> You can get the full code [here](./knit/example/example-polymorphic-static-types-02.kt).
+> You can get the full code [here](./code/example/example-polymorphic-static-types-02.kt).
 
 ```typescript
 export type Project = any;
@@ -156,7 +156,7 @@ fun main() {
 }
 ```
 
-> You can get the full code [here](./knit/example/example-polymorphic-sealed-class-01.kt).
+> You can get the full code [here](./code/example/example-polymorphic-sealed-class-01.kt).
 
 ```typescript
 export type Project = Project.DeprecatedProject | Project.OProj;
@@ -224,7 +224,7 @@ fun main() {
 }
 ```
 
-> You can get the full code [here](./knit/example/example-polymorphic-sealed-class-02.kt).
+> You can get the full code [here](./code/example/example-polymorphic-sealed-class-02.kt).
 
 ```typescript
 export type Dog = Dog.Golden | Dog.Mutt | Dog.NovaScotia;
@@ -315,7 +315,7 @@ fun main() {
 }
 ```
 
-> You can get the full code [here](./knit/example/example-polymorphic-objects-01.kt).
+> You can get the full code [here](./code/example/example-polymorphic-objects-01.kt).
 
 ```typescript
 export type Response = Response.EmptyResponse | Response.TextResponse;
@@ -364,7 +364,7 @@ fun main() {
 }
 ```
 
-> You can get the full code [here](./knit/example/example-generics-01.kt).
+> You can get the full code [here](./code/example/example-generics-01.kt).
 
 ```typescript
 export type Double = number & { __kotlin_Double__: void }

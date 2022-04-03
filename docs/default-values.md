@@ -36,7 +36,7 @@ fun main() {
 }
 ```
 
-> You can get the full code [here](./knit/example/example-default-values-single-field-01.kt).
+> You can get the full code [here](./code/example/example-default-values-single-field-01.kt).
 
 ```typescript
 export interface Colour {
@@ -61,7 +61,7 @@ fun main() {
 }
 ```
 
-> You can get the full code [here](./knit/example/example-default-values-single-field-02.kt).
+> You can get the full code [here](./code/example/example-default-values-single-field-02.kt).
 
 ```typescript
 export interface Colour {
@@ -94,7 +94,7 @@ fun main() {
 }
 ```
 
-> You can get the full code [here](./knit/example/example-default-values-primitive-fields-01.kt).
+> You can get the full code [here](./code/example/example-default-values-primitive-fields-01.kt).
 
 ```typescript
 export interface ContactDetails {

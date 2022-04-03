@@ -36,7 +36,7 @@ fun main() {
 }
 ```
 
-> You can get the full code [here](./knit/example/example-value-classes-01.kt).
+> You can get the full code [here](./code/example/example-value-classes-01.kt).
 
 ```typescript
 export type AuthToken = string;
@@ -66,7 +66,7 @@ fun main() {
 
 <!-- PREFIX -->
 
-> You can get the full code [here](./knit/example/example-value-classes-02.kt).
+> You can get the full code [here](./code/example/example-value-classes-02.kt).
 
 ```typescript
 export type UByte = number;
@@ -110,7 +110,7 @@ fun main() {
 
 <!-- PREFIX -->
 
-> You can get the full code [here](./knit/example/example-value-classes-03.kt).
+> You can get the full code [here](./code/example/example-value-classes-03.kt).
 
 ```typescript
 export type ULong = number & { __ULong__: void };
@@ -135,7 +135,7 @@ fun main() {
 }
 ```
 
-> You can get the full code [here](./knit/example/example-value-classes-04.kt).
+> You can get the full code [here](./code/example/example-value-classes-04.kt).
 
 ```typescript
 export type UserCount = UInt;

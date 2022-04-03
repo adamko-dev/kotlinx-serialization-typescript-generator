@@ -1,5 +1,6 @@
 plugins {
   buildsrc.convention.`kotlin-multiplatform`
+  buildsrc.convention.`maven-publish`
   kotlin("plugin.serialization")
 //  id("org.jetbrains.reflekt")
 }

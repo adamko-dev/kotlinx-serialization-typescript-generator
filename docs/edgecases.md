@@ -40,7 +40,7 @@ fun main() {
 }
 ```
 
-> You can get the full code [here](./knit/example/example-edgecase-recursive-references-01.kt).
+> You can get the full code [here](./code/example/example-edgecase-recursive-references-01.kt).
 
 ```typescript
 export interface A {
@@ -73,7 +73,7 @@ fun main() {
 }
 ```
 
-> You can get the full code [here](./knit/example/example-edgecase-recursive-references-02.kt).
+> You can get the full code [here](./code/example/example-edgecase-recursive-references-02.kt).
 
 ```typescript
 export interface A {
@@ -106,7 +106,7 @@ fun main() {
 }
 ```
 
-> You can get the full code [here](./knit/example/example-edgecase-recursive-references-03.kt).
+> You can get the full code [here](./code/example/example-edgecase-recursive-references-03.kt).
 
 ```typescript
 export interface A {

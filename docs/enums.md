@@ -40,7 +40,7 @@ fun main() {
 }
 ```
 
-> You can get the full code [here](./knit/example/example-enum-class-01.kt).
+> You can get the full code [here](./code/example/example-enum-class-01.kt).
 
 ```typescript
 export enum SomeType {
@@ -72,7 +72,7 @@ fun main() {
 }
 ```
 
-> You can get the full code [here](./knit/example/example-enum-class-02.kt).
+> You can get the full code [here](./code/example/example-enum-class-02.kt).
 
 ```typescript
 export enum SomeType2 {

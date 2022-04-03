@@ -33,7 +33,7 @@ fun main() {
 }
 ```
 
-> You can get the full code [here](./knit/example/example-list-primitive-01.kt).
+> You can get the full code [here](./code/example/example-list-primitive-01.kt).
 
 ```typescript
 export interface MyLists {

@@ -37,7 +37,7 @@ fun main() {
 }
 ```
 
-> You can get the full code [here](./knit/example/example-map-primitive-01.kt).
+> You can get the full code [here](./code/example/example-map-primitive-01.kt).
 
 ```typescript
 export interface Config {
@@ -67,7 +67,7 @@ fun main() {
 }
 ```
 
-> You can get the full code [here](./knit/example/example-map-primitive-02.kt).
+> You can get the full code [here](./code/example/example-map-primitive-02.kt).
 
 ```typescript
 export interface Application {
@@ -96,7 +96,7 @@ fun main() {
 }
 ```
 
-> You can get the full code [here](./knit/example/example-map-primitive-03.kt).
+> You can get the full code [here](./code/example/example-map-primitive-03.kt).
 
 ```typescript
 export interface Config {
@@ -145,7 +145,7 @@ fun main() {
 }
 ```
 
-> You can get the full code [here](./knit/example/example-map-complex-01.kt).
+> You can get the full code [here](./code/example/example-map-complex-01.kt).
 
 ```typescript
 export interface CanvasProperties {
@@ -219,7 +219,7 @@ fun main() {
 }
 ```
 
-> You can get the full code [here](./knit/example/example-map-complex-02.kt).
+> You can get the full code [here](./code/example/example-map-complex-02.kt).
 
 ```typescript
 export interface CanvasProperties {
@@ -293,7 +293,7 @@ fun main() {
 }
 ```
 
-> You can get the full code [here](./knit/example/example-map-complex-03.kt).
+> You can get the full code [here](./code/example/example-map-complex-03.kt).
 
 ```typescript
 export interface CanvasProperties {
