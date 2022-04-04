@@ -1,7 +1,5 @@
-package dev.adamko.kxstsgen
+package dev.adamko.kxstsgen.core
 
-import dev.adamko.kxstsgen.TsProperty.Optional
-import dev.adamko.kxstsgen.TsProperty.Required
 import kotlin.jvm.JvmInline
 import kotlinx.serialization.descriptors.SerialDescriptor
 
@@ -143,7 +141,8 @@ sealed interface TsTypeRef {
 /**
  * A property within an [interface][TsDeclaration.TsInterface]
  *
- *  In  property may be [Required] or [Optional]. See the TypeScript docs:
+ *  In  property may be [required][TsProperty.Required] or [optional][TsProperty.Optional].
+ *  See the TypeScript docs:
  *  ['Optional Properties'](https://www.typescriptlang.org/docs/handbook/2/objects.html#optional-properties)
  */
 sealed interface TsProperty {

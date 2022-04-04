@@ -1,4 +1,4 @@
-package dev.adamko.kxstsgen.util
+package dev.adamko.kxstsgen.core.util
 
 import kotlin.jvm.JvmName
 import kotlin.properties.ReadWriteProperty

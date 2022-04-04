@@ -1,5 +1,12 @@
 package dev.adamko.kxstsgen
 
+import dev.adamko.kxstsgen.core.KxsTsSourceCodeGenerator
+import dev.adamko.kxstsgen.core.SerializerDescriptorsExtractor
+import dev.adamko.kxstsgen.core.TsDeclaration
+import dev.adamko.kxstsgen.core.TsElementConverter
+import dev.adamko.kxstsgen.core.TsElementIdConverter
+import dev.adamko.kxstsgen.core.TsMapTypeConverter
+import dev.adamko.kxstsgen.core.TsTypeRefConverter
 import kotlinx.serialization.KSerializer
 
 

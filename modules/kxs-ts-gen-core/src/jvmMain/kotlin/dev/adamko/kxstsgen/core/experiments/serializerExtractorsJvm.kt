@@ -1,11 +1,10 @@
 @file:OptIn(InternalSerializationApi::class) // TODO make GitHub issue
-package dev.adamko.kxstsgen.experiments
+package dev.adamko.kxstsgen.core.experiments
 
 import kotlin.reflect.KClass
 import kotlin.reflect.*
 import kotlin.reflect.full.declaredMemberFunctions
 import kotlin.reflect.full.declaredMemberProperties
-import kotlin.reflect.full.functions
 import kotlin.reflect.jvm.isAccessible
 import kotlinx.serialization.ContextualSerializer
 import kotlinx.serialization.InternalSerializationApi

@@ -1,6 +1,6 @@
-package dev.adamko.kxstsgen
+package dev.adamko.kxstsgen.core
 
-import dev.adamko.kxstsgen.util.MutableMapWithDefaultPut
+import dev.adamko.kxstsgen.core.util.MutableMapWithDefaultPut
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.descriptors.PolymorphicKind
 import kotlinx.serialization.descriptors.PrimitiveKind
