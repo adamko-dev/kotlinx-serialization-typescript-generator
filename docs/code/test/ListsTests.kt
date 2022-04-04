@@ -25,4 +25,47 @@ class ListsTests {
           .normalize()
       )
   }
+
+  @Test
+  fun testExampleListObjects01() {
+    captureOutput("ExampleListObjects01") {
+      dev.adamko.kxstsgen.example.exampleListObjects01.main()
+    }.normalizeJoin()
+      .shouldBe(
+        // language=TypeScript
+        """
+          |export interface MyLists {
+          |  colours: Colour[];
+          |  colourGroups: Colour[][];
+          |  colourGroupGroups: Colour[][][];
+          |}
+          |
+          |export interface Colour {
+          |  rgb: string;
+          |}
+        """.trimMargin()
+          .normalize()
+      )
+  }
+
+  @Test
+  fun testExampleListObjects02() {
+    captureOutput("ExampleListObjects02") {
+      dev.adamko.kxstsgen.example.exampleListObjects02.main()
+    }.normalizeJoin()
+      .shouldBe(
+        // language=TypeScript
+        """
+          |export interface MyLists {
+          |  listOfMaps: { [key: string]: number }[];
+          |  listOfColourMaps: { [key: string]: Colour }[];
+          |}
+          |
+          |export interface Colour {
+          |  rgb: string;
+          |}
+        """.trimMargin()
+          .normalize()
+      )
+  }
 }

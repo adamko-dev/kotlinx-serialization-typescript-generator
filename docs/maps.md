@@ -7,6 +7,8 @@
 * [Introduction](#introduction)
   * [Primitive maps](#primitive-maps)
   * [Enum keys](#enum-keys)
+  * [Maps with Collections](#maps-with-collections)
+  * [Maps with value classes](#maps-with-value-classes)
   * [Nullable keys and values](#nullable-keys-and-values)
   * [Maps with complex keys](#maps-with-complex-keys)
     * [ES6 Map](#es6-map)
@@ -82,6 +84,60 @@ export enum SettingKeys {
 
 <!--- TEST -->
 
+### Maps with Collections
+
+```kotlin
+@Serializable
+class MapsWithLists(
+  val mapOfLists: Map<String, List<String>>
+)
+
+fun main() {
+  val tsGenerator = KxsTsGenerator()
+  println(tsGenerator.generate(MapsWithLists.serializer()))
+}
+```
+
+> You can get the full code [here](./code/example/example-map-primitive-03.kt).
+
+```typescript
+export interface MapsWithLists {
+  mapOfLists: { [key: string]: string[] };
+}
+```
+
+<!--- TEST -->
+
+### Maps with value classes
+
+```kotlin
+@Serializable
+@JvmInline
+value class Data(val content: String)
+
+@Serializable
+class MyDataClass(
+  val mapOfLists: Map<String, Data>
+)
+
+fun main() {
+  val tsGenerator = KxsTsGenerator()
+  println(tsGenerator.generate(MyDataClass.serializer()))
+}
+```
+
+> You can get the full code [here](./code/example/example-map-primitive-04.kt).
+
+```typescript
+export interface MyDataClass {
+  mapOfLists: { [key: string]: Data };
+}
+
+export type Data = string;
+```
+
+<!--- TEST -->
+
 ### Nullable keys and values
 
 ```kotlin
@@ -96,7 +152,7 @@ fun main() {
 }
 ```
 
-> You can get the full code [here](./code/example/example-map-primitive-03.kt).
+> You can get the full code [here](./code/example/example-map-primitive-05.kt).
 
 ```typescript
 export interface Config {
