@@ -6,20 +6,29 @@ Create TypeScript interfaces from Kotlinx Serialization classes.
 
 ```kotlin
 @Serializable
-data class PlayerDetails(
-  val name: String,
-  val health: Float,
+class MyClass(
+  val aString: String,
+  var anInt: Int,
+  val aDouble: Double,
+  val bool: Boolean,
+  private val privateMember: String,
 )
 
-println(
-  KxsTsGenerator().generate(Color.serializer())
-)
+fun main() {
+  val tsGenerator = KxsTsGenerator()
+  println(tsGenerator.generate(MyClass.serializer()))
+}
 ```
 
+Generated TypeScript interface:
+
 ```typescript
-interface PlayerDetails {
-  name: string;
-  health: number;
+export interface MyClass {
+  aString: string;
+  anInt: number;
+  aDouble: number;
+  bool: boolean;
+  privateMember: string;
 }
 ```
 
