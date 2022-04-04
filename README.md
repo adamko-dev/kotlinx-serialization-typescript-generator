@@ -35,25 +35,18 @@ export interface MyClass {
 }
 ```
 
-The aim is to create TypeScript interfaces that can accurately produce Kotlinx Serialization
-compatible JSON.
-
-The Kotlinx Serialization API should be used to generate TypeScript. The
+Only Kotlinx Serialization 
 [`SerialDescriptor`s](https://kotlin.github.io/kotlinx.serialization/kotlinx-serialization-core/kotlinx.serialization.descriptors/-serial-descriptor/index.html)
-are flexible and comprehensive enough to allow for accurate TypeScript code, without any deviation.
-
-The aim is to create TypeScript interfaces that can accurately produce Kotlinx Serialization
-compatible JSON.
-
-The Kotlinx Serialization API should be used to generate TypeScript. The
-[`SerialDescriptor`s](https://kotlin.github.io/kotlinx.serialization/kotlinx-serialization-core/kotlinx.serialization.descriptors/-serial-descriptor/index.html)
-are flexible and comprehensive enough to allow for accurate TypeScript code, without any deviation.
+are used to generate TypeScript. They are flexible and comprehensive enough to allow for accurate TypeScript code, without any deviation.
 
 See [the docs](./docs) for working examples.
 
 ## Status
 
 This is a proof-of-concept.
+
+The aim is to create TypeScript interfaces that can accurately produce Kotlinx Serialization
+compatible JSON.
 
 |                                       | Status                                                          | Notes                                                                                                          |
 |---------------------------------------|-----------------------------------------------------------------|:---------------------------------------------------------------------------------------------------------------|
