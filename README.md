@@ -6,22 +6,38 @@ Create TypeScript interfaces from Kotlinx Serialization classes.
 
 ```kotlin
 @Serializable
-data class PlayerDetails(
-  val name: String,
-  val health: Float,
+class MyClass(
+  val aString: String,
+  var anInt: Int,
+  val aDouble: Double,
+  val bool: Boolean,
+  private val privateMember: String,
 )
 
-println(
-  KxsTsGenerator().generate(Color.serializer())
-)
-```
-
-```typescript
-interface PlayerDetails {
-  name: string;
-  health: number;
+fun main() {
+  val tsGenerator = KxsTsGenerator()
+  println(tsGenerator.generate(MyClass.serializer()))
 }
 ```
+
+Generated TypeScript interface:
+
+```typescript
+export interface MyClass {
+  aString: string;
+  anInt: number;
+  aDouble: number;
+  bool: boolean;
+  privateMember: string;
+}
+```
+
+The aim is to create TypeScript interfaces that can accurately produce Kotlinx Serialization
+compatible JSON.
+
+The Kotlinx Serialization API should be used to generate TypeScript. The
+[`SerialDescriptor`s](https://kotlin.github.io/kotlinx.serialization/kotlinx-serialization-core/kotlinx.serialization.descriptors/-serial-descriptor/index.html)
+are flexible and comprehensive enough to allow for accurate TypeScript code, without any deviation.
 
 The aim is to create TypeScript interfaces that can accurately produce Kotlinx Serialization
 compatible JSON.
