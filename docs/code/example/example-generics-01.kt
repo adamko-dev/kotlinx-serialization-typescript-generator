@@ -8,7 +8,7 @@ import dev.adamko.kxstsgen.*
 import kotlinx.serialization.builtins.serializer
 
 @Serializable
-class Box<T>(
+class Box<T : Number>(
   val value: T,
 )
 

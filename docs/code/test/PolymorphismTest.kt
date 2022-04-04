@@ -206,4 +206,34 @@ class PolymorphismTest {
           .normalize()
       )
   }
+
+  @Test
+  fun testExampleGenerics01() {
+    captureOutput("ExampleGenerics01") {
+      dev.adamko.kxstsgen.example.exampleGenerics01.main()
+    }.normalizeJoin()
+      .shouldBe(
+        // language=TypeScript
+        """
+          |export interface Box {
+          |  value: number;
+          |}
+        """.trimMargin()
+          .normalize()
+      )
+  }
+
+  @Test
+  fun testExampleJsonPolymorphic01() {
+    captureOutput("ExampleJsonPolymorphic01") {
+      dev.adamko.kxstsgen.example.exampleJsonPolymorphic01.main()
+    }.normalizeJoin()
+      .shouldBe(
+        // language=TypeScript
+        """
+          |export type Project = any;
+        """.trimMargin()
+          .normalize()
+      )
+  }
 }

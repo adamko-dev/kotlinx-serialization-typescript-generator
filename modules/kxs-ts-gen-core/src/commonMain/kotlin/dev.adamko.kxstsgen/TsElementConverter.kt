@@ -67,6 +67,13 @@ fun interface TsElementConverter {
       descriptor: SerialDescriptor,
     ): TsDeclaration {
 
+      if (descriptor.elementsCount == 0) {
+        return TsDeclaration.TsTypeAlias(
+          elementIdConverter(descriptor),
+          TsTypeRef.Literal(TsLiteral.Primitive.TsAny, false)
+        )
+      }
+
       val discriminatorIndex = descriptor.elementDescriptors
         .indexOfFirst { it.kind == PrimitiveKind.STRING }
       val discriminatorName = descriptor.getElementName(discriminatorIndex)

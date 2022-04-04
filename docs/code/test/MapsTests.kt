@@ -53,6 +53,40 @@ class MapsTests {
       .shouldBe(
         // language=TypeScript
         """
+          |export interface MapsWithLists {
+          |  mapOfLists: { [key: string]: string[] };
+          |}
+        """.trimMargin()
+          .normalize()
+      )
+  }
+
+  @Test
+  fun testExampleMapPrimitive04() {
+    captureOutput("ExampleMapPrimitive04") {
+      dev.adamko.kxstsgen.example.exampleMapPrimitive04.main()
+    }.normalizeJoin()
+      .shouldBe(
+        // language=TypeScript
+        """
+          |export interface MyDataClass {
+          |  mapOfLists: { [key: string]: Data };
+          |}
+          |
+          |export type Data = string;
+        """.trimMargin()
+          .normalize()
+      )
+  }
+
+  @Test
+  fun testExampleMapPrimitive05() {
+    captureOutput("ExampleMapPrimitive05") {
+      dev.adamko.kxstsgen.example.exampleMapPrimitive05.main()
+    }.normalizeJoin()
+      .shouldBe(
+        // language=TypeScript
+        """
           |export interface Config {
           |  properties: { [key: string | null]: string | null };
           |}

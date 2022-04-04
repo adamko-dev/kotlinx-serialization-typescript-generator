@@ -1,16 +1,20 @@
 // This file was automatically generated from maps.md by Knit tool. Do not edit.
 @file:Suppress("PackageDirectoryMismatch", "unused")
-package dev.adamko.kxstsgen.example.exampleMapPrimitive03
+package dev.adamko.kxstsgen.example.exampleMapPrimitive04
 
 import kotlinx.serialization.*
 import dev.adamko.kxstsgen.*
 
 @Serializable
-class MapsWithLists(
-  val mapOfLists: Map<String, List<String>>
+@JvmInline
+value class Data(val content: String)
+
+@Serializable
+class MyDataClass(
+  val mapOfLists: Map<String, Data>
 )
 
 fun main() {
   val tsGenerator = KxsTsGenerator()
-  println(tsGenerator.generate(MapsWithLists.serializer()))
+  println(tsGenerator.generate(MyDataClass.serializer()))
 }
