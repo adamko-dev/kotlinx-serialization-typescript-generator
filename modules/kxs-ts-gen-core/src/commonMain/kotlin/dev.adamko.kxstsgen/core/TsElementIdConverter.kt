@@ -1,4 +1,4 @@
-package dev.adamko.kxstsgen
+package dev.adamko.kxstsgen.core
 
 import kotlinx.serialization.descriptors.SerialDescriptor
 

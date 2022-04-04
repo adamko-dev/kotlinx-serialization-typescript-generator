@@ -1,4 +1,6 @@
-package dev.adamko.kxstsgen
+package dev.adamko.kxstsgen.core
+
+import dev.adamko.kxstsgen.KxsTsConfig
 
 
 /**
