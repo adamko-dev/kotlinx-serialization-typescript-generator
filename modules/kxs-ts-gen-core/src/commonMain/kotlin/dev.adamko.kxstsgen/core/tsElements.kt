@@ -48,6 +48,15 @@ sealed interface TsDeclaration : TsElement {
   }
 
 
+  data class TsTuple(
+    override val id: TsElementId,
+    val typeRefs: List<TsTypeRef>,
+  ) : TsDeclaration {
+    constructor(id: TsElementId, typeRef: TsTypeRef, vararg typeRefs: TsTypeRef) :
+      this(id, listOf(typeRef) + typeRefs.toList())
+  }
+
+
   data class TsInterface(
     override val id: TsElementId,
     val properties: Set<TsProperty>,

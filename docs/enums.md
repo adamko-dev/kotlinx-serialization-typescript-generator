@@ -21,11 +21,6 @@ import dev.adamko.kxstsgen.*
 
 ### Simple enum
 
-<!--- INCLUDE .*\.kt
-import kotlinx.serialization.*
-import dev.adamko.kxstsgen.*
--->
-
 ```kotlin
 @Serializable
 enum class SomeType {

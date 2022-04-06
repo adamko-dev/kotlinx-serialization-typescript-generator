@@ -5,7 +5,7 @@ package dev.adamko.kxstsgen.core
   AnnotationTarget.CLASS,
   AnnotationTarget.PROPERTY,
   AnnotationTarget.FUNCTION,
-  AnnotationTarget.TYPEALIAS
+  AnnotationTarget.TYPEALIAS,
 )
 @RequiresOptIn(level = RequiresOptIn.Level.WARNING)
 @MustBeDocumented

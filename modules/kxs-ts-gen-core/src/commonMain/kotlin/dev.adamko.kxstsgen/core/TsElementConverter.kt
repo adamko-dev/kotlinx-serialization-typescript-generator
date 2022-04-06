@@ -1,5 +1,6 @@
 package dev.adamko.kxstsgen.core
 
+import dev.adamko.kxstsgen.TsExport
 import kotlinx.serialization.descriptors.PolymorphicKind
 import kotlinx.serialization.descriptors.PrimitiveKind
 import kotlinx.serialization.descriptors.SerialDescriptor
@@ -25,6 +26,16 @@ fun interface TsElementConverter {
     override operator fun invoke(
       descriptor: SerialDescriptor,
     ): Set<TsElement> {
+
+      descriptor.annotations
+        .filterIsInstance<TsExport>()
+        .map { it.format }
+        .firstOrNull { format ->
+          return when (format) {
+            TsExport.Format.TUPLE -> setOf(convertTuple(descriptor))
+          }
+        }
+
       return when (descriptor.kind) {
         SerialKind.ENUM        -> setOf(convertEnum(descriptor))
 
@@ -157,18 +168,27 @@ fun interface TsElementConverter {
     open fun convertInterface(
       descriptor: SerialDescriptor,
     ): TsDeclaration {
+        val resultId = elementIdConverter(descriptor)
+
+        val properties = descriptor.elementDescriptors.mapIndexed { index, fieldDescriptor ->
+          val name = descriptor.getElementName(index)
+          val fieldTypeRef = typeRefConverter(fieldDescriptor)
+          when {
+            descriptor.isElementOptional(index) -> TsProperty.Optional(name, fieldTypeRef)
+            else                                -> TsProperty.Required(name, fieldTypeRef)
+          }
+        }.toSet()
+
+        return TsDeclaration.TsInterface(resultId, properties)
+    }
+
+
+    open fun convertTuple(
+      descriptor: SerialDescriptor,
+    ): TsDeclaration.TsTuple {
       val resultId = elementIdConverter(descriptor)
-
-      val properties = descriptor.elementDescriptors.mapIndexed { index, fieldDescriptor ->
-        val name = descriptor.getElementName(index)
-        val fieldTypeRef = typeRefConverter(fieldDescriptor)
-        when {
-          descriptor.isElementOptional(index) -> TsProperty.Optional(name, fieldTypeRef)
-          else                                -> TsProperty.Required(name, fieldTypeRef)
-        }
-      }.toSet()
-
-      return TsDeclaration.TsInterface(resultId, properties)
+      val typeRefs = descriptor.elementDescriptors.map{typeRefConverter(it)}
+      return TsDeclaration.TsTuple(resultId, typeRefs)
     }
 
 

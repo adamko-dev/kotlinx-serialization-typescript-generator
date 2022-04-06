@@ -4,8 +4,6 @@ package dev.adamko.kxstsgen.example.exampleEnumClass02
 
 import kotlinx.serialization.*
 import dev.adamko.kxstsgen.*
-import kotlinx.serialization.*
-import dev.adamko.kxstsgen.*
 
 @Serializable
 enum class SomeType2(val coolName: String) {

@@ -18,6 +18,7 @@ abstract class KxsTsSourceCodeGenerator(
       is TsDeclaration.TsInterface -> generateInterface(element)
       is TsDeclaration.TsNamespace -> generateNamespace(element)
       is TsDeclaration.TsTypeAlias -> generateType(element)
+      is TsDeclaration.TsTuple     -> generateTuple(element)
     }
   }
 
@@ -25,6 +26,7 @@ abstract class KxsTsSourceCodeGenerator(
   abstract fun generateInterface(element: TsDeclaration.TsInterface): String
   abstract fun generateNamespace(namespace: TsDeclaration.TsNamespace): String
   abstract fun generateType(element: TsDeclaration.TsTypeAlias): String
+  abstract fun generateTuple(element: TsDeclaration.TsTuple): String
 
   abstract fun generateMapTypeReference(tsMap: TsLiteral.TsMap): String
 
@@ -146,6 +148,16 @@ abstract class KxsTsSourceCodeGenerator(
           """.trimMargin()
         }
       }
+    }
+
+    override fun generateTuple(element: TsDeclaration.TsTuple): String {
+      val types = element.typeRefs
+        .map { generateTypeReference(it) }
+        .joinToString(separator = ", ", prefix = "[", postfix = "]")
+
+      return """
+        |export type ${element.id.name} = $types;
+      """.trimMargin()
     }
 
 
