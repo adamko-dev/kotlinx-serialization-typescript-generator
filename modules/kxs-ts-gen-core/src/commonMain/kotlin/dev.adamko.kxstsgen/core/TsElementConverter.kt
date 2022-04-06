@@ -13,7 +13,7 @@ fun interface TsElementConverter {
 
   operator fun invoke(
     descriptor: SerialDescriptor,
-  ): TsElement
+  ): Set<TsElement>
 
 
   open class Default(
@@ -24,78 +24,123 @@ fun interface TsElementConverter {
 
     override operator fun invoke(
       descriptor: SerialDescriptor,
-    ): TsElement {
+    ): Set<TsElement> {
       return when (descriptor.kind) {
-        SerialKind.ENUM        -> convertEnum(descriptor)
+        SerialKind.ENUM        -> setOf(convertEnum(descriptor))
 
-        PrimitiveKind.BOOLEAN  -> TsLiteral.Primitive.TsBoolean
+        PrimitiveKind.BOOLEAN  -> setOf(TsLiteral.Primitive.TsBoolean)
 
         PrimitiveKind.CHAR,
-        PrimitiveKind.STRING   -> TsLiteral.Primitive.TsString
+        PrimitiveKind.STRING   -> setOf(TsLiteral.Primitive.TsString)
 
         PrimitiveKind.BYTE,
         PrimitiveKind.SHORT,
         PrimitiveKind.INT,
         PrimitiveKind.LONG,
         PrimitiveKind.FLOAT,
-        PrimitiveKind.DOUBLE   -> TsLiteral.Primitive.TsNumber
+        PrimitiveKind.DOUBLE   -> setOf(TsLiteral.Primitive.TsNumber)
 
-        StructureKind.LIST     -> convertList(descriptor)
-        StructureKind.MAP      -> convertMap(descriptor)
+        StructureKind.LIST     -> setOf(convertList(descriptor))
+        StructureKind.MAP      -> setOf(convertMap(descriptor))
 
         StructureKind.CLASS,
-        StructureKind.OBJECT   -> when {
-          descriptor.isInline -> convertTypeAlias(descriptor)
-          else                -> convertInterface(descriptor, null)
-        }
+        StructureKind.OBJECT   -> setOf(
+          when {
+            descriptor.isInline -> convertTypeAlias(descriptor)
+            else                -> convertInterface(descriptor)
+          }
+        )
 
-        PolymorphicKind.SEALED -> convertPolymorphic(descriptor)
+        PolymorphicKind.SEALED -> convertDiscriminatedInterface(descriptor)
 
         // TODO handle contextual
         // TODO handle polymorphic open
         SerialKind.CONTEXTUAL,
-        PolymorphicKind.OPEN   -> {
-          val resultId = elementIdConverter(descriptor)
-          val fieldTypeRef = TsTypeRef.Literal(TsLiteral.Primitive.TsAny, false)
-          TsDeclaration.TsTypeAlias(resultId, fieldTypeRef)
-        }
+        PolymorphicKind.OPEN   -> setOf(createTypeAliasAny(descriptor))
       }
     }
 
 
-    fun convertPolymorphic(
+    /**
+     * Handle sealed-polymorphic descriptors.
+     *
+     * Generate
+     *
+     * 1. a namespace that contains
+     *   a. a 'type' enum, for each subclass
+     *   b. the subclasses, as [TsDeclaration.TsInterface], with an additional 'type' field
+     * 2. a type union of all subclasses
+     */
+    open fun convertDiscriminatedInterface(
       descriptor: SerialDescriptor,
-    ): TsDeclaration {
+    ): Set<TsDeclaration> {
+      // namespace details
+      val namespaceId = elementIdConverter(descriptor)
+      val namespaceRef = TsTypeRef.Declaration(namespaceId, null, false)
 
-      if (descriptor.elementsCount == 0) {
-        return TsDeclaration.TsTypeAlias(
-          elementIdConverter(descriptor),
-          TsTypeRef.Literal(TsLiteral.Primitive.TsAny, false)
-        )
-      }
-
+      // discriminator name
       val discriminatorIndex = descriptor.elementDescriptors
         .indexOfFirst { it.kind == PrimitiveKind.STRING }
-      val discriminatorName = descriptor.getElementName(discriminatorIndex)
+      val discriminatorName = descriptor.elementNames.elementAtOrNull(discriminatorIndex)
 
-      val subclasses = descriptor
+      // subclasses details
+      val subclassInterfaces = descriptor
         .elementDescriptors
-        .first { it.kind == SerialKind.CONTEXTUAL }
-        .elementDescriptors
+        .firstOrNull { it.kind == SerialKind.CONTEXTUAL }
+        ?.elementDescriptors
+        ?.flatMap { this(it) }
+        ?.filterIsInstance<TsDeclaration.TsInterface>()
+        ?.map { it.copy(id = TsElementId("${descriptor.serialName}.${it.id.name}")) }
+        ?.toSet()
+        ?: emptySet()
 
-      val subclassInterfaces = subclasses
-        .map { this(it) }
-        .filterIsInstance<TsDeclaration.TsInterface>()
-        .map { it.copy(id = TsElementId("${descriptor.serialName}.${it.id.name}")) }
-        .toSet()
+      val subInterfaceRefs: Map<TsTypeRef.Declaration, TsDeclaration.TsInterface> =
+        subclassInterfaces.associateBy { subclass ->
+          val subclassId = TsElementId(namespaceId.toString() + "." + subclass.id.name)
+          TsTypeRef.Declaration(subclassId, namespaceRef, false)
+        }
 
-      val polymorphism = when (descriptor.kind) {
-        PolymorphicKind.SEALED -> TsPolymorphism.Sealed(discriminatorName, subclassInterfaces)
-        PolymorphicKind.OPEN   -> TsPolymorphism.Open(discriminatorName, subclassInterfaces)
-        else                   -> error("Can't convert non-polymorphic SerialKind ${descriptor.kind} to polymorphic interface")
+      // verify a discriminated interface can be created
+      if (subInterfaceRefs.isEmpty() || discriminatorName.isNullOrBlank()) {
+        return setOf(createTypeAliasAny(descriptor))
+      } else {
+        // discriminator enum
+        val discriminatorEnum = TsDeclaration.TsEnum(
+          TsElementId("${namespaceId.namespace}.${discriminatorName.replaceFirstChar { it.uppercaseChar() }}"),
+          subInterfaceRefs.keys.map { it.id.name }.toSet(),
+        )
+        val discriminatorEnumRef = TsTypeRef.Declaration(discriminatorEnum.id, namespaceRef, false)
+
+        // add discriminator property to subclasses
+        val subInterfacesWithTypeProp = subInterfaceRefs.map { (subInterfaceRef, subclass) ->
+
+          val literalTypeRef = TsTypeRef.Declaration(
+            TsElementId("${discriminatorEnum.id.name}.${subInterfaceRef.id.name}"),
+            discriminatorEnumRef,
+            false,
+          )
+
+          val literalTypeProperty = TsProperty.Required(discriminatorName, literalTypeRef)
+
+          subclass.copy(properties = setOf(literalTypeProperty) + subclass.properties)
+        }
+
+        // create type union and namespace
+        val subInterfaceTypeUnion = TsDeclaration.TsTypeAlias(
+          namespaceId,
+          subInterfaceRefs.keys
+        )
+
+        val namespace = TsDeclaration.TsNamespace(
+          namespaceId,
+          buildSet {
+            add(discriminatorEnum)
+            addAll(subInterfacesWithTypeProp)
+          }
+        )
+
+        return setOf(subInterfaceTypeUnion, namespace)
       }
-
-      return convertInterface(descriptor, polymorphism)
     }
 
 
@@ -111,7 +156,6 @@ fun interface TsElementConverter {
 
     fun convertInterface(
       descriptor: SerialDescriptor,
-      polymorphism: TsPolymorphism?,
     ): TsDeclaration {
       val resultId = elementIdConverter(descriptor)
 
@@ -123,7 +167,8 @@ fun interface TsElementConverter {
           else                                -> TsProperty.Required(name, fieldTypeRef)
         }
       }.toSet()
-      return TsDeclaration.TsInterface(resultId, properties, polymorphism)
+
+      return TsDeclaration.TsInterface(resultId, properties)
     }
 
 
@@ -156,6 +201,15 @@ fun interface TsElementConverter {
       val type = mapTypeConverter(keyDescriptor)
 
       return TsLiteral.TsMap(keyTypeRef, valueTypeRef, type)
+    }
+
+
+    open fun createTypeAliasAny(
+      descriptor: SerialDescriptor,
+    ): TsDeclaration.TsTypeAlias {
+      val resultId = elementIdConverter(descriptor)
+      val fieldTypeRef = TsTypeRef.Literal(TsLiteral.Primitive.TsAny, false)
+      return TsDeclaration.TsTypeAlias(resultId, fieldTypeRef)
     }
   }
 }

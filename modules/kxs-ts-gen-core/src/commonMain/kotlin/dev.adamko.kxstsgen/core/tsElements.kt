@@ -51,7 +51,6 @@ sealed interface TsDeclaration : TsElement {
   data class TsInterface(
     override val id: TsElementId,
     val properties: Set<TsProperty>,
-    val polymorphism: TsPolymorphism?,
   ) : TsDeclaration
 
 
@@ -160,29 +159,4 @@ sealed interface TsProperty {
     override val name: String,
     override val typeRef: TsTypeRef,
   ) : TsProperty
-}
-
-
-/**
- * Meta-data about the polymorphism of a [TsDeclaration.TsInterface].
- */
-sealed interface TsPolymorphism {
-
-  /** The name of the field used to discriminate between [subclasses]. */
-  val discriminatorName: String
-  val subclasses: Set<TsDeclaration.TsInterface>
-
-
-  data class Sealed(
-    override val discriminatorName: String,
-    override val subclasses: Set<TsDeclaration.TsInterface>,
-  ) : TsPolymorphism
-
-
-  /** Note: [Open] is not implemented correctly */
-  @UnimplementedKxTsGenApi
-  data class Open(
-    override val discriminatorName: String,
-    override val subclasses: Set<TsDeclaration.TsInterface>,
-  ) : TsPolymorphism
 }
