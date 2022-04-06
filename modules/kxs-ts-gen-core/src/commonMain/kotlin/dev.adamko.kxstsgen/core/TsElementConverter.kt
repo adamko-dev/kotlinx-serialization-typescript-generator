@@ -144,7 +144,7 @@ fun interface TsElementConverter {
     }
 
 
-    fun convertTypeAlias(
+    open fun convertTypeAlias(
       structDescriptor: SerialDescriptor,
     ): TsDeclaration {
       val resultId = elementIdConverter(structDescriptor)
@@ -154,7 +154,7 @@ fun interface TsElementConverter {
     }
 
 
-    fun convertInterface(
+    open fun convertInterface(
       descriptor: SerialDescriptor,
     ): TsDeclaration {
       val resultId = elementIdConverter(descriptor)
@@ -172,7 +172,7 @@ fun interface TsElementConverter {
     }
 
 
-    fun convertEnum(
+    open fun convertEnum(
       enumDescriptor: SerialDescriptor,
     ): TsDeclaration.TsEnum {
       val resultId = elementIdConverter(enumDescriptor)
@@ -180,7 +180,7 @@ fun interface TsElementConverter {
     }
 
 
-    fun convertList(
+    open fun convertList(
       listDescriptor: SerialDescriptor,
     ): TsLiteral.TsList {
       val elementDescriptor = listDescriptor.elementDescriptors.first()
@@ -189,7 +189,7 @@ fun interface TsElementConverter {
     }
 
 
-    fun convertMap(
+    open fun convertMap(
       mapDescriptor: SerialDescriptor,
     ): TsLiteral.TsMap {
 

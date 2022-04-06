@@ -1,5 +1,6 @@
 package dev.adamko.kxstsgen
 
+import dev.adamko.kxstsgen.core.TsDeclaration
 import dev.adamko.kxstsgen.core.UnimplementedKxTsGenApi
 import dev.adamko.kxstsgen.core.util.MutableMapWithDefaultPut
 import kotlin.jvm.JvmInline
