@@ -151,12 +151,12 @@ abstract class KxsTsSourceCodeGenerator(
     }
 
     override fun generateTuple(element: TsDeclaration.TsTuple): String {
-      val types = element.typeRefs
-        .map { generateTypeReference(it) }
-        .joinToString(separator = ", ", prefix = "[", postfix = "]")
+      val types = element.typeRefs.joinToString(separator = ", ") {
+        generateTypeReference(it)
+      }
 
       return """
-        |export type ${element.id.name} = $types;
+        |export type ${element.id.name} = [$types];
       """.trimMargin()
     }
 
