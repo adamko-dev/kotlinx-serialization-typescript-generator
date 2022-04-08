@@ -1,15 +1,14 @@
-<!--- TEST_NAME TsExportFormatTest -->
+<!--- TEST_NAME TuplesTest -->
 
 
 **Table of contents**
 
 <!--- TOC -->
 
-* [Introduction](#introduction)
-  * [Tuples](#tuples)
-    * [Tuple example](#tuple-example)
-    * [Optional elements in tuples](#optional-elements-in-tuples)
-    * [Properties all the same type](#properties-all-the-same-type)
+* [Tuples](#tuples)
+  * [Tuple example](#tuple-example)
+  * [Optional elements in tuples](#optional-elements-in-tuples)
+  * [Properties all the same type](#properties-all-the-same-type)
     * [Tuples as interface properties](#tuples-as-interface-properties)
 
 <!--- END -->
@@ -21,20 +20,18 @@ import dev.adamko.kxstsgen.core.experiments.TupleSerializer
 import kotlinx.serialization.*
 -->
 
-## Introduction
-
-### Tuples
+## Tuples
 
 In TypeScript, tuples are a compact format for data structures. They're like fixed-length arrays
 that only contain the type. This is especially useful when using JSON, as including property names
 means the messages are much larger.
 
 Tuples are a bit difficult to create in Kotlinx Serialization, but KxTsGen includes
-[TupleSerializer](../modules/kxs-ts-gen-core/src/commonMain/kotlin/dev/adamko/kxstsgen)
+[TupleSerializer](../modules/kxs-ts-gen-core/src/commonMain/kotlin/dev/adamko/kxstsgen/core/experiments/tuple.kt)
 which can help. It requires a name, an ordered list of elements, and a constructor for
 deserializing.
 
-#### Tuple example
+### Tuple example
 
 Let's say we have a class, `SimpleTypes`, that we want to serializer. We need to create a bespoke
 tuple serializer for it, so override the plugin-generated serializer.
@@ -80,7 +77,7 @@ fun main() {
 }
 ```
 
-> You can get the full code [here](./code/example/example-format-tuple-01.kt).
+> You can get the full code [here](./code/example/example-tuple-01.kt).
 
 ```typescript
 export type SimpleTypes = [string, number, number | null, boolean, string];
@@ -88,7 +85,7 @@ export type SimpleTypes = [string, number, number | null, boolean, string];
 
 <!--- TEST -->
 
-#### Optional elements in tuples
+### Optional elements in tuples
 
 `TupleSerializer` does not consider whether a field is optional. This is intentional, partly because
 it's quite complicated to set up already, and more options won't help! Also, tuples require that
@@ -132,7 +129,7 @@ fun main() {
 }
 ```
 
-> You can get the full code [here](./code/example/example-format-tuple-02.kt).
+> You can get the full code [here](./code/example/example-tuple-02.kt).
 
 ```typescript
 export type OptionalFields = [string, string, string | null, string | null];
@@ -140,7 +137,7 @@ export type OptionalFields = [string, string, string | null, string | null];
 
 <!--- TEST -->
 
-#### Properties all the same type
+### Properties all the same type
 
 ```kotlin
 @Serializable(with = Coordinates.Serializer::class)
@@ -173,7 +170,7 @@ fun main() {
 }
 ```
 
-> You can get the full code [here](./code/example/example-format-tuple-03.kt).
+> You can get the full code [here](./code/example/example-tuple-03.kt).
 
 ```typescript
 export type Coordinates = [number, number, number];
@@ -184,7 +181,7 @@ export type Coordinates = [number, number, number];
 #### Tuples as interface properties
 
 ```kotlin
-import dev.adamko.kxstsgen.example.exampleFormatTuple03.Coordinates
+import dev.adamko.kxstsgen.example.exampleTuple03.Coordinates
 
 @Serializable
 class GameLocations(
@@ -199,7 +196,7 @@ fun main() {
 }
 ```
 
-> You can get the full code [here](./code/example/example-format-tuple-04.kt).
+> You can get the full code [here](./code/example/example-tuple-04.kt).
 
 ```typescript
 export interface GameLocations {

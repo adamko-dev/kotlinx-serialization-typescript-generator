@@ -1,4 +1,4 @@
-// This file was automatically generated from export-formats.md by Knit tool. Do not edit.
+// This file was automatically generated from tuples.md by Knit tool. Do not edit.
 @file:Suppress("JSUnusedLocalSymbols")
 package dev.adamko.kxstsgen.example.test
 
@@ -7,11 +7,11 @@ import kotlinx.knit.test.*
 import org.junit.jupiter.api.Test
 import dev.adamko.kxstsgen.util.*
 
-class TsExportFormatTest {
+class TuplesTest {
   @Test
-  fun testExampleFormatTuple01() {
-    captureOutput("ExampleFormatTuple01") {
-      dev.adamko.kxstsgen.example.exampleFormatTuple01.main()
+  fun testExampleTuple01() {
+    captureOutput("ExampleTuple01") {
+      dev.adamko.kxstsgen.example.exampleTuple01.main()
     }.normalizeJoin()
       .shouldBe(
         // language=TypeScript
@@ -23,9 +23,9 @@ class TsExportFormatTest {
   }
 
   @Test
-  fun testExampleFormatTuple02() {
-    captureOutput("ExampleFormatTuple02") {
-      dev.adamko.kxstsgen.example.exampleFormatTuple02.main()
+  fun testExampleTuple02() {
+    captureOutput("ExampleTuple02") {
+      dev.adamko.kxstsgen.example.exampleTuple02.main()
     }.normalizeJoin()
       .shouldBe(
         // language=TypeScript
@@ -37,9 +37,9 @@ class TsExportFormatTest {
   }
 
   @Test
-  fun testExampleFormatTuple03() {
-    captureOutput("ExampleFormatTuple03") {
-      dev.adamko.kxstsgen.example.exampleFormatTuple03.main()
+  fun testExampleTuple03() {
+    captureOutput("ExampleTuple03") {
+      dev.adamko.kxstsgen.example.exampleTuple03.main()
     }.normalizeJoin()
       .shouldBe(
         // language=TypeScript
@@ -51,9 +51,9 @@ class TsExportFormatTest {
   }
 
   @Test
-  fun testExampleFormatTuple04() {
-    captureOutput("ExampleFormatTuple04") {
-      dev.adamko.kxstsgen.example.exampleFormatTuple04.main()
+  fun testExampleTuple04() {
+    captureOutput("ExampleTuple04") {
+      dev.adamko.kxstsgen.example.exampleTuple04.main()
     }.normalizeJoin()
       .shouldBe(
         // language=TypeScript

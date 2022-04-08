@@ -1,6 +1,6 @@
-// This file was automatically generated from export-formats.md by Knit tool. Do not edit.
+// This file was automatically generated from tuples.md by Knit tool. Do not edit.
 @file:Suppress("PackageDirectoryMismatch", "unused")
-package dev.adamko.kxstsgen.example.exampleFormatTuple03
+package dev.adamko.kxstsgen.example.exampleTuple03
 
 import dev.adamko.kxstsgen.*
 import dev.adamko.kxstsgen.core.experiments.TupleSerializer
