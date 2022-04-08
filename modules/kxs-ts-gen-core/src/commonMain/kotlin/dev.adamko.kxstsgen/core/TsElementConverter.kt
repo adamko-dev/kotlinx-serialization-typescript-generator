@@ -1,6 +1,5 @@
 package dev.adamko.kxstsgen.core
 
-import dev.adamko.kxstsgen.TsExport
 import kotlinx.serialization.descriptors.PolymorphicKind
 import kotlinx.serialization.descriptors.PrimitiveKind
 import kotlinx.serialization.descriptors.SerialDescriptor
@@ -26,16 +25,6 @@ fun interface TsElementConverter {
     override operator fun invoke(
       descriptor: SerialDescriptor,
     ): Set<TsElement> {
-
-      descriptor.annotations
-        .filterIsInstance<TsExport>()
-        .map { it.format }
-        .firstOrNull { format ->
-          return when (format) {
-            TsExport.Format.TUPLE -> setOf(convertTuple(descriptor))
-          }
-        }
-
       return when (descriptor.kind) {
         SerialKind.ENUM        -> setOf(convertEnum(descriptor))
 
@@ -51,7 +40,13 @@ fun interface TsElementConverter {
         PrimitiveKind.FLOAT,
         PrimitiveKind.DOUBLE   -> setOf(TsLiteral.Primitive.TsNumber)
 
-        StructureKind.LIST     -> setOf(convertList(descriptor))
+        StructureKind.LIST     -> setOf(
+          when {
+            descriptor.elementDescriptors.count() > 1 -> convertTuple(descriptor)
+            else                                      -> convertList(descriptor)
+          }
+        )
+
         StructureKind.MAP      -> setOf(convertMap(descriptor))
 
         StructureKind.CLASS,
@@ -131,7 +126,7 @@ fun interface TsElementConverter {
             false,
           )
 
-          val literalTypeProperty = TsProperty.Required(discriminatorName, literalTypeRef)
+          val literalTypeProperty = TsProperty.Named(discriminatorName, false, literalTypeRef)
 
           subclass.copy(properties = setOf(literalTypeProperty) + subclass.properties)
         }
@@ -168,18 +163,16 @@ fun interface TsElementConverter {
     open fun convertInterface(
       descriptor: SerialDescriptor,
     ): TsDeclaration {
-        val resultId = elementIdConverter(descriptor)
+      val resultId = elementIdConverter(descriptor)
 
-        val properties = descriptor.elementDescriptors.mapIndexed { index, fieldDescriptor ->
-          val name = descriptor.getElementName(index)
-          val fieldTypeRef = typeRefConverter(fieldDescriptor)
-          when {
-            descriptor.isElementOptional(index) -> TsProperty.Optional(name, fieldTypeRef)
-            else                                -> TsProperty.Required(name, fieldTypeRef)
-          }
-        }.toSet()
+      val properties = descriptor.elementDescriptors.mapIndexed { index, fieldDescriptor ->
+        val name = descriptor.getElementName(index)
+        val fieldTypeRef = typeRefConverter(fieldDescriptor)
+        val optional = descriptor.isElementOptional(index)
+        TsProperty.Named(name, optional, fieldTypeRef)
+      }.toSet()
 
-        return TsDeclaration.TsInterface(resultId, properties)
+      return TsDeclaration.TsInterface(resultId, properties)
     }
 
 
@@ -187,8 +180,14 @@ fun interface TsElementConverter {
       descriptor: SerialDescriptor,
     ): TsDeclaration.TsTuple {
       val resultId = elementIdConverter(descriptor)
-      val typeRefs = descriptor.elementDescriptors.map{typeRefConverter(it)}
-      return TsDeclaration.TsTuple(resultId, typeRefs)
+
+      val properties = descriptor.elementDescriptors.mapIndexed { index, fieldDescriptor ->
+        val fieldTypeRef = typeRefConverter(fieldDescriptor)
+        val optional = descriptor.isElementOptional(index)
+        TsProperty.Unnamed(optional, fieldTypeRef)
+      }
+
+      return TsDeclaration.TsTuple(resultId, properties)
     }
 
 

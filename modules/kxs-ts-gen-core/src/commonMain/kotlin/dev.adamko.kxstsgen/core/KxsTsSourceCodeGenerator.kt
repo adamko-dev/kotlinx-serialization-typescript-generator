@@ -26,7 +26,7 @@ abstract class KxsTsSourceCodeGenerator(
   abstract fun generateInterface(element: TsDeclaration.TsInterface): String
   abstract fun generateNamespace(namespace: TsDeclaration.TsNamespace): String
   abstract fun generateType(element: TsDeclaration.TsTypeAlias): String
-  abstract fun generateTuple(element: TsDeclaration.TsTuple): String
+  abstract fun generateTuple(tuple: TsDeclaration.TsTuple): String
 
   abstract fun generateMapTypeReference(tsMap: TsLiteral.TsMap): String
 
@@ -109,12 +109,9 @@ abstract class KxsTsSourceCodeGenerator(
      * ```
      */
     open fun generateInterfaceProperty(
-      property: TsProperty
+      property: TsProperty.Named
     ): String {
-      val separator = when (property) {
-        is TsProperty.Optional -> "?: "
-        is TsProperty.Required -> ": "
-      }
+      val separator = if (property.optional) "?: " else ": "
       val propertyType = generateTypeReference(property.typeRef)
       return "${property.name}${separator}${propertyType};"
     }
@@ -150,13 +147,15 @@ abstract class KxsTsSourceCodeGenerator(
       }
     }
 
-    override fun generateTuple(element: TsDeclaration.TsTuple): String {
-      val types = element.typeRefs.joinToString(separator = ", ") {
-        generateTypeReference(it)
+    override fun generateTuple(tuple: TsDeclaration.TsTuple): String {
+
+      val types = tuple.elements.joinToString(separator = ", ") {
+        val optionalMarker = if (it.optional) "?" else ""
+        generateTypeReference(it.typeRef) + optionalMarker
       }
 
       return """
-        |export type ${element.id.name} = [$types];
+        |export type ${tuple.id.name} = [$types];
       """.trimMargin()
     }
 

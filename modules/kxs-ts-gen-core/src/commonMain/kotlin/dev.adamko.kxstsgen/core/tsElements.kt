@@ -48,18 +48,16 @@ sealed interface TsDeclaration : TsElement {
   }
 
 
+  /**  A [tuple type](https://www.typescriptlang.org/docs/handbook/2/objects.html#tuple-types). */
   data class TsTuple(
     override val id: TsElementId,
-    val typeRefs: List<TsTypeRef>,
-  ) : TsDeclaration {
-    constructor(id: TsElementId, typeRef: TsTypeRef, vararg typeRefs: TsTypeRef) :
-      this(id, listOf(typeRef) + typeRefs.toList())
-  }
+    val elements: List<TsProperty.Unnamed>,
+  ) : TsDeclaration
 
 
   data class TsInterface(
     override val id: TsElementId,
-    val properties: Set<TsProperty>,
+    val properties: Set<TsProperty.Named>,
   ) : TsDeclaration
 
 
@@ -128,6 +126,12 @@ sealed interface TsLiteral : TsElement {
  * This helps prevent circular dependencies causing a lock.
  */
 sealed interface TsTypeRef {
+
+  /**
+   * Defines whether this reference may 'unset', and set to `null`.
+   *
+   * Nullability is different to optionality, which is determined by [TsProperty.optional].
+   */
   val nullable: Boolean
 
 
@@ -148,24 +152,28 @@ sealed interface TsTypeRef {
 
 /**
  * A property within an [interface][TsDeclaration.TsInterface]
- *
- *  In  property may be [required][TsProperty.Required] or [optional][TsProperty.Optional].
- *  See the TypeScript docs:
- *  ['Optional Properties'](https://www.typescriptlang.org/docs/handbook/2/objects.html#optional-properties)
+ * or [tuple][TsDeclaration.TsTuple].
  */
 sealed interface TsProperty {
-  val name: String
   val typeRef: TsTypeRef
+  /**
+   * A property may be required or optional. See the TypeScript docs:
+   * ['Optional Properties'](https://www.typescriptlang.org/docs/handbook/2/objects.html#optional-properties)
+   *
+   * Optionality is different to nullability, which is defined by [TsTypeRef.nullable].
+   */
+  val optional: Boolean
 
 
-  data class Required(
-    override val name: String,
+  data class Named(
+    val name: String,
+    override val optional: Boolean,
     override val typeRef: TsTypeRef,
   ) : TsProperty
 
 
-  data class Optional(
-    override val name: String,
+  data class Unnamed(
+    override val optional: Boolean,
     override val typeRef: TsTypeRef,
   ) : TsProperty
 }
