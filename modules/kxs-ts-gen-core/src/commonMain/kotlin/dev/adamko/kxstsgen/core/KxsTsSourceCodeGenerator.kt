@@ -18,6 +18,7 @@ abstract class KxsTsSourceCodeGenerator(
       is TsDeclaration.TsInterface -> generateInterface(element)
       is TsDeclaration.TsNamespace -> generateNamespace(element)
       is TsDeclaration.TsTypeAlias -> generateType(element)
+      is TsDeclaration.TsTuple     -> generateTuple(element)
     }
   }
 
@@ -25,6 +26,7 @@ abstract class KxsTsSourceCodeGenerator(
   abstract fun generateInterface(element: TsDeclaration.TsInterface): String
   abstract fun generateNamespace(namespace: TsDeclaration.TsNamespace): String
   abstract fun generateType(element: TsDeclaration.TsTypeAlias): String
+  abstract fun generateTuple(tuple: TsDeclaration.TsTuple): String
 
   abstract fun generateMapTypeReference(tsMap: TsLiteral.TsMap): String
 
@@ -84,131 +86,34 @@ abstract class KxsTsSourceCodeGenerator(
 
     override fun generateInterface(element: TsDeclaration.TsInterface): String {
 
-      return when (element.polymorphism) {
-        is TsPolymorphism.Sealed -> generatePolyClosed(element, element.polymorphism)
-        is TsPolymorphism.Open   -> generatePolyOpen(element, element.polymorphism)
-        null                     -> {
-          val properties = element
-            .properties
-            .joinToString(separator = "\n") { property ->
-              val separator = when (property) {
-                is TsProperty.Optional -> "?: "
-                is TsProperty.Required -> ": "
-              }
-              val propertyType = generateTypeReference(property.typeRef)
-              // generate `  name: Type;`
-              // or       `  name:? Type;`
-              "${property.name}${separator}${propertyType};"
-            }
+      val properties = element.properties
+        .joinToString(separator = "\n") { generateInterfaceProperty(it) }
 
-          buildString {
-            appendLine("export interface ${element.id.name} {")
-            if (properties.isNotBlank()) {
-              appendLine(properties.prependIndent(config.indent))
-            }
-            append("}")
-          }
+      return buildString {
+        appendLine("export interface ${element.id.name} {")
+        if (properties.isNotBlank()) {
+          appendLine(properties.prependIndent(config.indent))
         }
-      }
-    }
-
-
-    // note: this isn't used because at present poly-open descriptors are converted to 'any'
-    private fun generatePolyOpen(
-      element: TsDeclaration.TsInterface,
-      polymorphism: TsPolymorphism.Open,
-    ): String {
-      val namespaceId = element.id
-      val namespaceRef = TsTypeRef.Declaration(namespaceId, null, false)
-
-      val subInterfaceRefs = polymorphism.subclasses.map {
-        TsTypeRef.Declaration(it.id, namespaceRef, false)
-      }.toSet()
-
-      val discriminatorProperty = TsProperty.Required(
-        polymorphism.discriminatorName,
-        TsTypeRef.Literal(TsLiteral.Primitive.TsString, false),
-      )
-
-      val subInterfaces = polymorphism
-        .subclasses
-        .map { it.copy(properties = it.properties + discriminatorProperty) }
-        .toSet()
-
-      val namespace = TsDeclaration.TsNamespace(
-        element.id,
-        subInterfaces,
-      )
-
-      val subInterfaceTypeUnion = TsDeclaration.TsTypeAlias(
-        element.id,
-        subInterfaceRefs
-      )
-
-      return listOf(subInterfaceTypeUnion, namespace).joinToString("\n\n") {
-        generateDeclaration(it)
+        append("}")
       }
     }
 
     /**
-     * Generate a 'sealed class' equivalent.
-     *
-     * * type union of all subclasses
-     * * a namespace with contains
-     *   * a 'Type' enum
-     *   * subclasses, each with an additional 'Type' property that has a literal 'Type' enum value
+     * Generate
+     * ```typescript
+     * name: Type;
+     * ```
+     * or
+     * ```typescript
+     * name:? Type;
+     * ```
      */
-    private fun generatePolyClosed(
-      element: TsDeclaration.TsInterface,
-      polymorphism: TsPolymorphism.Sealed,
+    open fun generateInterfaceProperty(
+      property: TsProperty.Named
     ): String {
-      val namespaceId = element.id
-      val namespaceRef = TsTypeRef.Declaration(namespaceId, null, false)
-
-      val subInterfaceRefs: Map<TsTypeRef.Declaration, TsDeclaration.TsInterface> =
-        polymorphism.subclasses.associateBy { subclass ->
-          val subclassId = TsElementId(namespaceId.toString() + "." + subclass.id.name)
-          TsTypeRef.Declaration(subclassId, namespaceRef, false)
-        }
-
-      val discriminatorEnum = TsDeclaration.TsEnum(
-        TsElementId("${element.id.namespace}.${polymorphism.discriminatorName.replaceFirstChar { it.uppercaseChar() }}"),
-        subInterfaceRefs.keys.map { it.id.name }.toSet(),
-      )
-
-      val discriminatorEnumRef = TsTypeRef.Declaration(discriminatorEnum.id, namespaceRef, false)
-
-      val subInterfacesWithTypeProp = subInterfaceRefs.map { (subInterfaceRef, subclass) ->
-        val typePropId = TsElementId(
-          """
-            |${discriminatorEnum.id.name}.${subInterfaceRef.id.name}
-          """.trimMargin()
-        )
-
-        val typeProp = TsProperty.Required(
-          polymorphism.discriminatorName,
-          TsTypeRef.Declaration(typePropId, discriminatorEnumRef, false),
-        )
-
-        subclass.copy(properties = setOf(typeProp) + subclass.properties)
-      }
-
-      val subInterfaceTypeUnion = TsDeclaration.TsTypeAlias(
-        element.id,
-        subInterfaceRefs.keys
-      )
-
-      val namespace = TsDeclaration.TsNamespace(
-        namespaceId,
-        buildSet {
-          add(discriminatorEnum)
-          addAll(subInterfacesWithTypeProp)
-        }
-      )
-
-      return listOf(subInterfaceTypeUnion, namespace).joinToString("\n\n") {
-        generateDeclaration(it)
-      }
+      val separator = if (property.optional) "?: " else ": "
+      val propertyType = generateTypeReference(property.typeRef)
+      return "${property.name}${separator}${propertyType};"
     }
 
 
@@ -242,13 +147,24 @@ abstract class KxsTsSourceCodeGenerator(
       }
     }
 
+    override fun generateTuple(tuple: TsDeclaration.TsTuple): String {
+
+      val types = tuple.elements.joinToString(separator = ", ") {
+        val optionalMarker = if (it.optional) "?" else ""
+        generateTypeReference(it.typeRef) + optionalMarker
+      }
+
+      return """
+        |export type ${tuple.id.name} = [$types];
+      """.trimMargin()
+    }
+
 
     /**
      * A type-reference, be it for the field of an interface, a type alias, or a generic type
      * constraint.
      */
     override fun generateTypeReference(
-//      rootId: TsElementId?,
       typeRef: TsTypeRef,
     ): String {
       val plainType: String = when (typeRef) {
@@ -301,7 +217,6 @@ abstract class KxsTsSourceCodeGenerator(
 
 
     override fun generateMapTypeReference(
-//      rootId: TsElementId?,
       tsMap: TsLiteral.TsMap
     ): String {
       val keyTypeRef = generateTypeReference(tsMap.keyTypeRef)

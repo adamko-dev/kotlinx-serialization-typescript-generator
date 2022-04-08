@@ -24,7 +24,10 @@ fun interface TsTypeRefConverter {
       return when (val descriptorKind = descriptor.kind) {
         is PrimitiveKind     -> primitiveTypeRef(descriptor, descriptorKind)
 
-        StructureKind.LIST   -> listTypeRef(descriptor)
+        StructureKind.LIST   -> when {
+          descriptor.elementDescriptors.count() > 1 -> declarationTypeRef(descriptor)
+          else                                      -> listTypeRef(descriptor)
+        }
         StructureKind.MAP    -> mapTypeRef(descriptor)
 
         SerialKind.CONTEXTUAL,
