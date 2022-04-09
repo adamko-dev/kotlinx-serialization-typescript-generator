@@ -8,15 +8,15 @@ import kotlinx.serialization.builtins.serializer
 
 class SerializerDescriptorsExtractorTest : FunSpec({
 
-  test("given parent class, expect subclass property descriptor extracted") {
+  test("Example1: given parent class, expect subclass property descriptor extracted") {
 
     val expected = listOf(
-      Parent.serializer().descriptor,
-      Nested.serializer().descriptor,
+      Example1.Parent.serializer().descriptor,
+      Example1.Nested.serializer().descriptor,
       String.serializer().descriptor,
     )
 
-    val actual = SerializerDescriptorsExtractor.Default(Parent.serializer())
+    val actual = SerializerDescriptorsExtractor.Default(Example1.Parent.serializer())
 
     withClue(
       """
@@ -26,16 +26,55 @@ class SerializerDescriptorsExtractorTest : FunSpec({
     ) {
       actual shouldContainExactlyInAnyOrder expected
     }
+  }
 
+  test("Example2: given parent class, expect subclass property descriptor extracted") {
+
+    val expected = listOf(
+      Example2.Parent.serializer().descriptor,
+      Example2.Nested.serializer().descriptor,
+      String.serializer().descriptor,
+    )
+
+    val actual = SerializerDescriptorsExtractor.Default(Example2.Parent.serializer())
+
+    withClue(
+      """
+        expected: ${expected.map { it.serialName }.sorted().joinToString()}
+        actual:   ${actual.map { it.serialName }.sorted().joinToString()}
+      """.trimIndent()
+    ) {
+      actual shouldContainExactlyInAnyOrder expected
+    }
   }
 
 })
 
-@Serializable
-class Nested(val x: String)
 
-@Serializable
-private sealed class Parent
+@Suppress("unused")
+private object Example1 {
+  @Serializable
+  class Nested(val x: String)
 
-@Serializable
-private class SubClass(val n: Nested) : Parent()
+  @Serializable
+  sealed class Parent
+
+  @Serializable
+  class SubClass(val n: Nested) : Parent()
+}
+
+
+@Suppress("unused")
+private object Example2 {
+  @Serializable
+  class Nested(val x: String)
+
+  @Serializable
+  sealed class Parent
+
+  @Serializable
+  sealed class SealedSub : Parent()
+
+  @Serializable
+  class SubClass1(val n: Nested) : SealedSub()
+}
