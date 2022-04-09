@@ -38,14 +38,18 @@ sealed interface TsDeclaration : TsElement {
   val id: TsElementId
 
 
-  /** A named reference to one or more other types. */
+  /** A named reference to another type. */
   data class TsTypeAlias(
     override val id: TsElementId,
+    val typeRef: TsTypeRef,
+  ) : TsDeclaration
+
+
+  /** A named reference to one or more other types. */
+  data class TsTypeUnion(
+    override val id: TsElementId,
     val typeRefs: Set<TsTypeRef>,
-  ) : TsDeclaration {
-    constructor(id: TsElementId, typeRef: TsTypeRef, vararg typeRefs: TsTypeRef) :
-      this(id, typeRefs.toSet() + typeRef)
-  }
+  ) : TsDeclaration
 
 
   /**  A [tuple type](https://www.typescriptlang.org/docs/handbook/2/objects.html#tuple-types). */

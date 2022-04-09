@@ -17,7 +17,8 @@ abstract class KxsTsSourceCodeGenerator(
       is TsDeclaration.TsEnum      -> generateEnum(element)
       is TsDeclaration.TsInterface -> generateInterface(element)
       is TsDeclaration.TsNamespace -> generateNamespace(element)
-      is TsDeclaration.TsTypeAlias -> generateType(element)
+      is TsDeclaration.TsTypeUnion -> generateTypeUnion(element)
+      is TsDeclaration.TsTypeAlias -> generateTypeAlias(element)
       is TsDeclaration.TsTuple     -> generateTuple(element)
     }
   }
@@ -25,7 +26,8 @@ abstract class KxsTsSourceCodeGenerator(
   abstract fun generateEnum(enum: TsDeclaration.TsEnum): String
   abstract fun generateInterface(element: TsDeclaration.TsInterface): String
   abstract fun generateNamespace(namespace: TsDeclaration.TsNamespace): String
-  abstract fun generateType(element: TsDeclaration.TsTypeAlias): String
+  abstract fun generateTypeAlias(element: TsDeclaration.TsTypeAlias): String
+  abstract fun generateTypeUnion(element: TsDeclaration.TsTypeUnion): String
   abstract fun generateTuple(tuple: TsDeclaration.TsTuple): String
 
   abstract fun generateMapTypeReference(tsMap: TsLiteral.TsMap): String
@@ -117,17 +119,13 @@ abstract class KxsTsSourceCodeGenerator(
     }
 
 
-    override fun generateType(element: TsDeclaration.TsTypeAlias): String {
-      val aliases =
-        element.typeRefs
-          .map { generateTypeReference(it) }
-          .sorted()
-          .joinToString(" | ")
+    override fun generateTypeAlias(element: TsDeclaration.TsTypeAlias): String {
+      val aliasedRef = generateTypeReference(element.typeRef)
 
       return when (config.typeAliasTyping) {
         KxsTsConfig.TypeAliasTypingConfig.None        ->
           """
-            |export type ${element.id.name} = ${aliases};
+            |export type ${element.id.name} = ${aliasedRef};
           """.trimMargin()
         KxsTsConfig.TypeAliasTypingConfig.BrandTyping -> {
 
@@ -141,11 +139,30 @@ abstract class KxsTsSourceCodeGenerator(
             }.joinToString("")
 
           """
-            |export type ${element.id.name} = $aliases & { __${brandType}__: void };
+            |export type ${element.id.name} = $aliasedRef & { __${brandType}__: void };
           """.trimMargin()
         }
       }
     }
+
+    override fun generateTypeUnion(element: TsDeclaration.TsTypeUnion): String {
+      return if (element.typeRefs.isEmpty()) {
+        """
+          |export type ${element.id.name} = ${generatePrimitive(TsLiteral.Primitive.TsUnknown)};
+        """.trimMargin()
+      } else {
+        val aliases = element.typeRefs
+          .map { "${config.indent}| ${generateTypeReference(it)}" }
+          .sorted()
+          .joinToString("\n")
+
+        """
+          ¦export type ${element.id.name} =
+          ¦$aliases;
+        """.trimMargin("¦")
+      }
+    }
+
 
     override fun generateTuple(tuple: TsDeclaration.TsTuple): String {
 
