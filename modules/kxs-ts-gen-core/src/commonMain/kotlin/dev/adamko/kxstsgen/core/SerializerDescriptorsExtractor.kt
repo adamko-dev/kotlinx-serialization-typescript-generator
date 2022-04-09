@@ -66,10 +66,12 @@ fun interface SerializerDescriptorsExtractor {
         StructureKind.OBJECT  -> descriptor.elementDescriptors
 
         PolymorphicKind.SEALED,
-        PolymorphicKind.OPEN  -> descriptor
-          .elementDescriptors
-          .filter { it.kind is PolymorphicKind }
-          .flatMap { it.elementDescriptors }
+        PolymorphicKind.OPEN  -> {
+          descriptor
+            .elementDescriptors
+            .flatMap { it.elementDescriptors }
+            .flatMap { it.elementDescriptors }
+        }
       }
     }
   }
