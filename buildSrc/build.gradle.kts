@@ -16,6 +16,7 @@ object Versions {
   const val kotlinxKover = "0.5.0"
   const val kotlinxSerialization = "1.3.2"
   const val ksp = "1.6.10-1.0.4"
+  const val gradleNodePlugin = "3.2.1"
 
   const val kotest = "5.2.3"
 }
@@ -36,9 +37,7 @@ dependencies {
   implementation("org.jetbrains.kotlinx:kotlinx-knit:${Versions.kotlinxKnit}")
   implementation("org.jetbrains.kotlinx:kover:${Versions.kotlinxKover}")
 
-//  implementation("org.jetbrains.reflekt:gradle-plugin:1.6.10-1-SNAPSHOT") {
-//    isChanging = true
-//  }
+  implementation("com.github.node-gradle:gradle-node-plugin:${Versions.gradleNodePlugin}")
 }
 
 

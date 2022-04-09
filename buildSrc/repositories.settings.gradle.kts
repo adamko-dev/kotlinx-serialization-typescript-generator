@@ -6,6 +6,20 @@ dependencyResolutionManagement {
     mavenCentral()
     jitpack()
     gradlePluginPortal()
+
+    // Declare the Node.js download repository
+    ivy("https://nodejs.org/dist/") {
+      name = "Node Distributions at $url"
+      patternLayout { artifact("v[revision]/[artifact](-v[revision]-[classifier]).[ext]") }
+      metadataSources { artifact() }
+      content { includeModule("org.nodejs", "node") }
+    }
+    ivy("https://github.com/yarnpkg/yarn/releases/download") {
+      name = "Yarn Distributions at $url"
+      patternLayout { artifact("v[revision]/[artifact](-v[revision]).[ext]") }
+      metadataSources { artifact() }
+      content { includeModule("com.yarnpkg", "yarn") }
+    }
   }
 
   pluginManagement {
