@@ -8,7 +8,7 @@
   * [Plain class with a single field](#plain-class-with-a-single-field)
   * [Plain class with primitive fields](#plain-class-with-primitive-fields)
   * [Data class with primitive fields](#data-class-with-primitive-fields)
-  * [Ignoring fields with `@Transitive`](#ignoring-fields-with-@transitive)
+  * [Ignoring transitive fields](#ignoring-transitive-fields)
 
 <!--- END -->
 
@@ -107,7 +107,7 @@ export interface SomeDataClass {
 
 <!--- TEST -->
 
-### Ignoring fields with `@Transitive`
+### Ignoring transitive fields
 
 Just like in Kotlinx.Serialization,
 [fields can be ignored](https://github.com/Kotlin/kotlinx.serialization/blob/master/docs/basic-serialization.md#transient-properties)
