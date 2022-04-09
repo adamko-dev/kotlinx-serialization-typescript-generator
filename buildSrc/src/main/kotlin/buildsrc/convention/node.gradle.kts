@@ -24,6 +24,6 @@ tasks.withType<Test> {
   inputs.dir(npmInstallDir)
 
   doFirst {
-    environment("NPM_DIR", npmInstallDir.get())
+    environment("NPM_INSTALL_DIR", npmInstallDir.get())
   }
 }

@@ -2,38 +2,47 @@
 @file:Suppress("JSUnusedLocalSymbols")
 package dev.adamko.kxstsgen.example.test
 
+import dev.adamko.kxstsgen.util.*
+import io.kotest.assertions.*
 import io.kotest.matchers.*
+import io.kotest.matchers.string.*
 import kotlinx.knit.test.*
 import org.junit.jupiter.api.Test
-import dev.adamko.kxstsgen.util.*
 
 class ListsTests {
   @Test
   fun testExampleListPrimitive01() {
-    captureOutput("ExampleListPrimitive01") {
+    val actual = captureOutput("ExampleListPrimitive01") {
       dev.adamko.kxstsgen.example.exampleListPrimitive01.main()
     }.normalizeJoin()
-      .shouldBe(
-        // language=TypeScript
-        """
+
+    actual.shouldBe(
+      // language=TypeScript
+      """
           |export interface MyLists {
           |  strings: string[];
           |  ints: number[];
           |  longs: number[];
           |}
-        """.trimMargin()
-          .normalize()
-      )
+      """.trimMargin()
+      .normalize()
+    )
+
+    typescriptCompile(actual).asClue { tscOutput ->
+      tscOutput.shouldNotBeEmpty()
+      tscOutput shouldNotContain "error"
+    }
   }
 
   @Test
   fun testExampleListObjects01() {
-    captureOutput("ExampleListObjects01") {
+    val actual = captureOutput("ExampleListObjects01") {
       dev.adamko.kxstsgen.example.exampleListObjects01.main()
     }.normalizeJoin()
-      .shouldBe(
-        // language=TypeScript
-        """
+
+    actual.shouldBe(
+      // language=TypeScript
+      """
           |export interface MyLists {
           |  colours: Colour[];
           |  colourGroups: Colour[][];
@@ -43,19 +52,25 @@ class ListsTests {
           |export interface Colour {
           |  rgb: string;
           |}
-        """.trimMargin()
-          .normalize()
-      )
+      """.trimMargin()
+      .normalize()
+    )
+
+    typescriptCompile(actual).asClue { tscOutput ->
+      tscOutput.shouldNotBeEmpty()
+      tscOutput shouldNotContain "error"
+    }
   }
 
   @Test
   fun testExampleListObjects02() {
-    captureOutput("ExampleListObjects02") {
+    val actual = captureOutput("ExampleListObjects02") {
       dev.adamko.kxstsgen.example.exampleListObjects02.main()
     }.normalizeJoin()
-      .shouldBe(
-        // language=TypeScript
-        """
+
+    actual.shouldBe(
+      // language=TypeScript
+      """
           |export interface MyLists {
           |  listOfMaps: { [key: string]: number }[];
           |  listOfColourMaps: { [key: string]: Colour }[];
@@ -64,8 +79,13 @@ class ListsTests {
           |export interface Colour {
           |  rgb: string;
           |}
-        """.trimMargin()
-          .normalize()
-      )
+      """.trimMargin()
+      .normalize()
+    )
+
+    typescriptCompile(actual).asClue { tscOutput ->
+      tscOutput.shouldNotBeEmpty()
+      tscOutput shouldNotContain "error"
+    }
   }
 }
