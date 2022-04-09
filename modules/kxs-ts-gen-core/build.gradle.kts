@@ -6,9 +6,11 @@ plugins {
   buildsrc.convention.`maven-publish`
   kotlin("plugin.serialization")
 //  id("org.jetbrains.reflekt")
+  id("io.kotest.multiplatform")
 }
 
 val kotlinxSerializationVersion = "1.3.2"
+val kotestVersion = "5.2.2"
 
 kotlin {
 
@@ -70,6 +72,12 @@ kotlin {
     val commonTest by getting {
       dependencies {
         implementation(kotlin("test"))
+
+        implementation("io.kotest:kotest-assertions-core:$kotestVersion")
+        implementation("io.kotest:kotest-assertions-json:$kotestVersion")
+        implementation("io.kotest:kotest-property:$kotestVersion")
+        implementation("io.kotest:kotest-framework-engine:$kotestVersion")
+        implementation("io.kotest:kotest-framework-datatest:$kotestVersion")
       }
     }
 //    val nativeMain by getting
@@ -81,6 +89,11 @@ kotlin {
         implementation(kotlin("reflect"))
       }
     }
-//    val jvmTest by getting
+
+    val jvmTest by getting {
+      dependencies {
+        implementation("io.kotest:kotest-runner-junit5-jvm:$kotestVersion")
+      }
+    }
   }
 }
