@@ -132,7 +132,7 @@ fun interface TsElementConverter {
         }
 
         // create type union and namespace
-        val subInterfaceTypeUnion = TsDeclaration.TsTypeAlias(
+        val subInterfaceTypeUnion = TsDeclaration.TsTypeUnion(
           namespaceId,
           subInterfaceRefs.keys
         )

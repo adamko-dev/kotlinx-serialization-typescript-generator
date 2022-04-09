@@ -163,7 +163,9 @@ fun main() {
 > You can get the full code [here](./code/example/example-polymorphic-sealed-class-01.kt).
 
 ```typescript
-export type Project = Project.DeprecatedProject | Project.OProj;
+export type Project =
+  | Project.DeprecatedProject
+  | Project.OProj;
 
 export namespace Project {
   export enum Type {
@@ -231,7 +233,10 @@ fun main() {
 > You can get the full code [here](./code/example/example-polymorphic-sealed-class-02.kt).
 
 ```typescript
-export type Dog = Dog.Golden | Dog.Mutt | Dog.NovaScotia;
+export type Dog =
+  | Dog.Golden
+  | Dog.Mutt
+  | Dog.NovaScotia;
 
 export namespace Dog {
   export enum Type {
@@ -322,7 +327,9 @@ fun main() {
 > You can get the full code [here](./code/example/example-polymorphic-objects-01.kt).
 
 ```typescript
-export type Response = Response.EmptyResponse | Response.TextResponse;
+export type Response =
+  | Response.EmptyResponse
+  | Response.TextResponse;
 
 export namespace Response {
   export enum Type {

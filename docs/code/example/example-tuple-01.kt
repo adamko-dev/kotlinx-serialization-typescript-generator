@@ -27,14 +27,14 @@ data class SimpleTypes(
       element(SimpleTypes::privateMember)
     }
   ) {
-    override fun tupleConstructor(elements: List<*>): SimpleTypes {
+    override fun tupleConstructor(elements: Iterator<*>): SimpleTypes {
       // When deserializing, the elements will be available as a list, in the order defined
       return SimpleTypes(
-        elements[0] as String,
-        elements[1] as Int,
-        elements[2] as Double,
-        elements[3] as Boolean,
-        elements[4] as String,
+        elements.next() as String,
+        elements.next() as Int,
+        elements.next() as Double,
+        elements.next() as Boolean,
+        elements.next() as String,
       )
     }
   }
