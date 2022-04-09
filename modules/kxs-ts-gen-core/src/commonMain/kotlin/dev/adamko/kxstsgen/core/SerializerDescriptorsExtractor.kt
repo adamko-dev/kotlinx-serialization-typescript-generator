@@ -66,12 +66,25 @@ fun interface SerializerDescriptorsExtractor {
         StructureKind.OBJECT  -> descriptor.elementDescriptors
 
         PolymorphicKind.SEALED,
-        PolymorphicKind.OPEN  -> {
-          descriptor
-            .elementDescriptors
+        PolymorphicKind.OPEN  ->
+          // Polymorphic descriptors have 2 elements, the 'type' and 'value' - we don't need either
+          // for generation, they're metadata that will be used later.
+          // The elements of 'value' are similarly unneeded, but their elements might contain new
+          // descriptors - so extract them
+          descriptor.elementDescriptors
             .flatMap { it.elementDescriptors }
             .flatMap { it.elementDescriptors }
-        }
+
+        // Example:
+        // com.application.Polymorphic<MySealedClass>
+        //   ├── 'type' descriptor (ignore / it's a String, so check its elements, it doesn't hurt)
+        //   └── 'value' descriptor (check elements...)
+        //        ├── com.application.Polymorphic<Subclass1>  (ignore)
+        //        │   ├── Double                              (extract!)
+        //        │   └── com.application.SomeOtherClass      (extract!)
+        //        └── com.application.Polymorphic<Subclass2>  (ignore)
+        //            ├── UInt                                (extract!)
+        //            └── List<com.application.AnotherClass   (extract!
       }
     }
   }
