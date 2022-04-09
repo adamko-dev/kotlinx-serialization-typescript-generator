@@ -68,6 +68,7 @@ open class KxsTsGenerator(
 
   open fun generate(vararg serializers: KSerializer<*>): String {
     return serializers
+      .toSet()
 
       // 1. get all SerialDescriptors from a KSerializer
       .flatMap { serializer ->
