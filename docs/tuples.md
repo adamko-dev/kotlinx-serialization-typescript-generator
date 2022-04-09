@@ -58,14 +58,14 @@ data class SimpleTypes(
       element(SimpleTypes::privateMember)
     }
   ) {
-    override fun tupleConstructor(elements: List<*>): SimpleTypes {
+    override fun tupleConstructor(elements: Iterator<*>): SimpleTypes {
       // When deserializing, the elements will be available as a list, in the order defined
       return SimpleTypes(
-        elements[0] as String,
-        elements[1] as Int,
-        elements[2] as Double,
-        elements[3] as Boolean,
-        elements[4] as String,
+        elements.next() as String,
+        elements.next() as Int,
+        elements.next() as Double,
+        elements.next() as Boolean,
+        elements.next() as String,
       )
     }
   }
@@ -111,7 +111,7 @@ data class OptionalFields(
       element(OptionalFields::nullableOptionalString)
     }
   ) {
-    override fun tupleConstructor(elements: List<*>): OptionalFields {
+    override fun tupleConstructor(elements: Iterator<*>): OptionalFields {
       val iter = elements.iterator()
       return OptionalFields(
         iter.next() as String,
@@ -154,11 +154,11 @@ data class Coordinates(
       element(Coordinates::z)
     }
   ) {
-    override fun tupleConstructor(elements: List<*>): Coordinates {
+    override fun tupleConstructor(elements: Iterator<*>): Coordinates {
       return Coordinates(
-        elements[0] as Int,
-        elements[1] as Int,
-        elements[2] as Int,
+        elements.next() as Int,
+        elements.next() as Int,
+        elements.next() as Int,
       )
     }
   }

@@ -22,7 +22,7 @@ data class OptionalFields(
       element(OptionalFields::nullableOptionalString)
     }
   ) {
-    override fun tupleConstructor(elements: List<*>): OptionalFields {
+    override fun tupleConstructor(elements: Iterator<*>): OptionalFields {
       val iter = elements.iterator()
       return OptionalFields(
         iter.next() as String,

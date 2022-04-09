@@ -20,11 +20,11 @@ data class Coordinates(
       element(Coordinates::z)
     }
   ) {
-    override fun tupleConstructor(elements: List<*>): Coordinates {
+    override fun tupleConstructor(elements: Iterator<*>): Coordinates {
       return Coordinates(
-        elements[0] as Int,
-        elements[1] as Int,
-        elements[2] as Int,
+        elements.next() as Int,
+        elements.next() as Int,
+        elements.next() as Int,
       )
     }
   }

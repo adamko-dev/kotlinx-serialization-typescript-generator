@@ -96,7 +96,7 @@ abstract class TupleSerializer<T>(
   }
   private val indexedTupleElements = tupleElements.associateBy { it.index }
 
-  abstract fun tupleConstructor(elements: List<*>): T
+  abstract fun tupleConstructor(elements: Iterator<*>): T
 
   override val descriptor: SerialDescriptor = buildSerialDescriptor(
     serialName = serialName,
@@ -123,7 +123,7 @@ abstract class TupleSerializer<T>(
       generateSequence {
         val index = decodeElementIndex(descriptor)
         indexedTupleElements[index]?.decodeElement(this)
-      }.toList()
+      }.iterator()
     }
     return tupleConstructor(elements)
   }
