@@ -2,6 +2,7 @@
 
 package dev.adamko.kxstsgen.core.experiments
 
+import kotlin.reflect.KProperty1
 import kotlinx.serialization.InternalSerializationApi
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.descriptors.SerialDescriptor
@@ -17,6 +18,7 @@ import kotlinx.serialization.serializer
 
 
 open class TupleElement<T, E>(
+  open val name: String,
   open val index: Int,
   open val elementSerializer: KSerializer<E>,
   open val elementAccessor: T.() -> E,
@@ -45,10 +47,12 @@ open class TupleElement<T, E>(
 
 inline fun <T, reified E> tupleElement(
   index: Int,
+  name: String,
   noinline elementAccessor: T.() -> E,
   serializer: KSerializer<E> = serializer(),
 ): TupleElement<T, E> {
   return TupleElement(
+    name,
     index,
     serializer,
     elementAccessor,
@@ -73,9 +77,16 @@ class TupleElementsBuilder<T> {
   val elementsSize by _elements::size
 
   inline fun <reified E> element(
+    property: KProperty1<T, E>
+  ) {
+    element(property.name, property)
+  }
+
+  inline fun <reified E> element(
+    name: String,
     noinline elementAccessor: T.() -> E,
   ) {
-    element(tupleElement(elementsSize, elementAccessor))
+    element(tupleElement(elementsSize, name, elementAccessor))
   }
 
   fun element(element: TupleElement<T, *>) {
@@ -106,7 +117,7 @@ abstract class TupleSerializer<T>(
     tupleElements
       .sortedBy { it.index }
       .forEach { tupleElement ->
-        element("element${tupleElement.index}", tupleElement.descriptor)
+        element(tupleElement.name, tupleElement.descriptor)
       }
   }
 

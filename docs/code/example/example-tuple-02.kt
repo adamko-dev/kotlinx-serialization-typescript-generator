@@ -6,29 +6,27 @@ import dev.adamko.kxstsgen.*
 import dev.adamko.kxstsgen.core.experiments.TupleSerializer
 import kotlinx.serialization.*
 
-@Serializable(with = OptionalFields.Serializer::class)
-data class OptionalFields(
-  val requiredString: String,
-  val optionalString: String = "",
-  val nullableString: String?,
-  val nullableOptionalString: String? = "",
+@Serializable(with = PostalAddressUSA.Serializer::class)
+data class PostalAddressUSA(
+  @SerialName("num") // 'SerialName' will be ignored in 'Tuple' form
+  val houseNumber: String,
+  val streetName: String,
+  val postcode: String,
 ) {
-  object Serializer : TupleSerializer<OptionalFields>(
-    "OptionalFields",
+  object Serializer : TupleSerializer<PostalAddressUSA>(
+    "PostalAddressUSA",
     {
-      element(OptionalFields::requiredString)
-      element(OptionalFields::optionalString)
-      element(OptionalFields::nullableString)
-      element(OptionalFields::nullableOptionalString)
+      element(PostalAddressUSA::houseNumber)
+      // custom labels for 'streetName', 'postcode'
+      element("street", PostalAddressUSA::streetName)
+      element("zip", PostalAddressUSA::postcode)
     }
   ) {
-    override fun tupleConstructor(elements: Iterator<*>): OptionalFields {
-      val iter = elements.iterator()
-      return OptionalFields(
-        iter.next() as String,
-        iter.next() as String,
-        iter.next() as String,
-        iter.next() as String,
+    override fun tupleConstructor(elements: Iterator<*>): PostalAddressUSA {
+      return PostalAddressUSA(
+        elements.next() as String,
+        elements.next() as String,
+        elements.next() as String,
       )
     }
   }
@@ -36,5 +34,5 @@ data class OptionalFields(
 
 fun main() {
   val tsGenerator = KxsTsGenerator()
-  println(tsGenerator.generate(OptionalFields.serializer()))
+  println(tsGenerator.generate(PostalAddressUSA.serializer()))
 }

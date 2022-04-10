@@ -20,7 +20,13 @@ class TuplesTest : FunSpec({
       actual.shouldBe(
         // language=TypeScript
         """
-          |export type SimpleTypes = [string, number, number | null, boolean, string];
+          |export type SimpleTypes = [
+          |  aString: string,
+          |  anInt: number,
+          |  aDouble: number | null,
+          |  bool: boolean,
+          |  privateMember: string,
+          |];
         """.trimMargin()
         .normalize()
       )
@@ -40,7 +46,11 @@ class TuplesTest : FunSpec({
       actual.shouldBe(
         // language=TypeScript
         """
-          |export type OptionalFields = [string, string, string | null, string | null];
+          |export type PostalAddressUSA = [
+          |  houseNumber: string, // @SerialName("num") was ignored
+          |  street: string, // custom name
+          |  zip: string, // custom name
+          |];
         """.trimMargin()
         .normalize()
       )
@@ -60,7 +70,12 @@ class TuplesTest : FunSpec({
       actual.shouldBe(
         // language=TypeScript
         """
-          |export type Coordinates = [number, number, number];
+          |export type OptionalFields = [
+          |  requiredString: string,
+          |  optionalString: string,
+          |  nullableString: string | null,
+          |  nullableOptionalString: string | null,
+          |];
         """.trimMargin()
         .normalize()
       )
@@ -80,13 +95,41 @@ class TuplesTest : FunSpec({
       actual.shouldBe(
         // language=TypeScript
         """
+          |export type Coordinates = [
+          |  x: number,
+          |  y: number,
+          |  z: number,
+          |];
+        """.trimMargin()
+        .normalize()
+      )
+    }
+
+    test("expect actual compiles").config(tags = tsCompile) {
+      actual.shouldTypeScriptCompile()
+    }
+  }
+
+  context("ExampleTuple05") {
+    val actual = captureOutput("ExampleTuple05") {
+      dev.adamko.kxstsgen.example.exampleTuple05.main()
+    }.normalizeJoin()
+
+    test("expect actual matches TypeScript") {
+      actual.shouldBe(
+        // language=TypeScript
+        """
           |export interface GameLocations {
           |  homeLocation: Coordinates;
           |  allLocations: Coordinates[];
           |  namedLocations: { [key: string]: Coordinates };
           |}
           |
-          |export type Coordinates = [number, number, number];
+          |export type Coordinates = [
+          |  x: number,
+          |  y: number,
+          |  z: number,
+          |];
         """.trimMargin()
         .normalize()
       )
