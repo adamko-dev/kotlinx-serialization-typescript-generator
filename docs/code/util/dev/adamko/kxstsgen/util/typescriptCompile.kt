@@ -1,5 +1,3 @@
-@file:Suppress("PackageDirectoryMismatch")
-
 package dev.adamko.kxstsgen.util
 
 import com.github.pgreze.process.ProcessResult

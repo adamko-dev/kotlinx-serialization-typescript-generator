@@ -1,5 +1,5 @@
-@file:Suppress("PackageDirectoryMismatch")
 package dev.adamko.kxstsgen.util
+
 
 /**
  * * filter out lines that are `//` comments
