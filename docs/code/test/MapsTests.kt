@@ -130,6 +130,38 @@ class MapsTests : FunSpec({
     }
   }
 
+  context("ExampleMapPrimitive06") {
+    val actual = captureOutput("ExampleMapPrimitive06") {
+      dev.adamko.kxstsgen.example.exampleMapPrimitive06.main()
+    }.normalizeJoin()
+
+    test("expect actual matches TypeScript") {
+      actual.shouldBe(
+        // language=TypeScript
+        """
+          |export interface Example {
+          |  complex: Map<ComplexKey, string>;
+          |  simple: { [key: SimpleKey]: string };
+          |  doubleSimple: { [key: DoubleSimpleKey]: string };
+          |}
+          |
+          |export interface ComplexKey {
+          |  complex: string;
+          |}
+          |
+          |export type SimpleKey = string;
+          |
+          |export type DoubleSimpleKey = SimpleKey;
+        """.trimMargin()
+        .normalize()
+      )
+    }
+
+    test("expect actual compiles").config(tags = tsCompile) {
+      actual.shouldTypeScriptCompile()
+    }
+  }
+
   context("ExampleMapComplex01") {
     val actual = captureOutput("ExampleMapComplex01") {
       dev.adamko.kxstsgen.example.exampleMapComplex01.main()
@@ -171,7 +203,7 @@ class MapsTests : FunSpec({
         // language=TypeScript
         """
           |export interface CanvasProperties {
-          |  colourNames: Map<ColourMapKey, string>;
+          |  colourNames: { [key: ColourMapKey]: string };
           |}
           |
           |export type ColourMapKey = string;
