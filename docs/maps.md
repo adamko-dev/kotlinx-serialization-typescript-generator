@@ -10,6 +10,7 @@
   * [Maps with Collections](#maps-with-collections)
   * [Maps with value classes](#maps-with-value-classes)
   * [Nullable keys and values](#nullable-keys-and-values)
+  * [Type alias keys](#type-alias-keys)
   * [Maps with complex keys](#maps-with-complex-keys)
     * [ES6 Map](#es6-map)
     * [Maps with complex keys - Map Key class](#maps-with-complex-keys---map-key-class)
@@ -169,6 +170,80 @@ export interface Config {
 
 <!--- TEST -->
 
+### Type alias keys
+
+Type aliased keys should still use an indexed type, if the type alias is suitable.
+
+```kotlin
+@Serializable
+data class Example(
+  val complex: Map<ComplexKey, String>,
+  val simple: Map<SimpleKey, String>,
+  val doubleSimple: Map<DoubleSimpleKey, String>,
+  val enum: Map<EnumKey, String>,
+  val doubleEnum: Map<DoubleEnumKey, String>,
+)
+
+@Serializable
+data class ComplexKey(val complex: String)
+
+@Serializable
+@JvmInline
+value class SimpleKey(val simple: String)
+
+@Serializable
+@JvmInline
+value class DoubleSimpleKey(val simple: SimpleKey)
+
+@Serializable
+enum class ExampleEnum { A, B, C, }
+
+@Serializable
+@JvmInline
+value class EnumKey(val e: ExampleEnum)
+
+@Serializable
+@JvmInline
+value class DoubleEnumKey(val e: ExampleEnum)
+
+fun main() {
+  val tsGenerator = KxsTsGenerator()
+  println(tsGenerator.generate(Example.serializer()))
+}
+```
+
+> You can get the full code [here](./code/example/example-map-primitive-06.kt).
+
+```typescript
+export interface Example {
+  complex: Map<ComplexKey, string>;
+  simple: { [key: SimpleKey]: string };
+  doubleSimple: { [key: DoubleSimpleKey]: string };
+  enum: { [key in EnumKey]: string };
+  doubleEnum: { [key in DoubleEnumKey]: string };
+}
+
+export interface ComplexKey {
+  complex: string;
+}
+
+export type SimpleKey = string;
+
+export type DoubleSimpleKey = SimpleKey;
+
+export type EnumKey = ExampleEnum;
+
+export type DoubleEnumKey = ExampleEnum;
+
+export enum ExampleEnum {
+  A = "A",
+  B = "B",
+  C = "C",
+}
+```
+
+<!--- TEST -->
+
 ### Maps with complex keys
 
 JSON maps **must** have keys that are either strings, positive integers, or enums.
@@ -284,9 +359,11 @@ fun main() {
 
 > You can get the full code [here](./code/example/example-map-complex-02.kt).
 
+Because the map now has a non-complex key, an 'indexed type' is generated.
+
 ```typescript
 export interface CanvasProperties {
-  colourNames: Map<ColourMapKey, string>;
+  colourNames: { [key: ColourMapKey]: string };
 }
 
 export type ColourMapKey = string;

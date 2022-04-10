@@ -5,6 +5,7 @@ import kotlinx.serialization.descriptors.PrimitiveKind
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.descriptors.SerialKind
 import kotlinx.serialization.descriptors.StructureKind
+import kotlinx.serialization.descriptors.elementDescriptors
 
 
 fun interface TsMapTypeConverter {
@@ -22,6 +23,8 @@ fun interface TsMapTypeConverter {
     ): TsLiteral.TsMap.Type {
 
       if (keyDescriptor.isNullable) return TsLiteral.TsMap.Type.MAP
+
+      if (keyDescriptor.isInline) return extractInlineType(keyDescriptor, valDescriptor)
 
       return when (keyDescriptor.kind) {
         SerialKind.ENUM      -> TsLiteral.TsMap.Type.MAPPED_OBJECT
@@ -43,6 +46,20 @@ fun interface TsMapTypeConverter {
         StructureKind.OBJECT,
         PolymorphicKind.SEALED,
         PolymorphicKind.OPEN -> TsLiteral.TsMap.Type.MAP
+      }
+    }
+
+    tailrec fun extractInlineType(
+      keyDescriptor: SerialDescriptor?,
+      valDescriptor: SerialDescriptor?,
+    ): TsLiteral.TsMap.Type {
+      return when {
+        keyDescriptor == null   -> TsLiteral.TsMap.Type.MAP
+        !keyDescriptor.isInline -> this(keyDescriptor, valDescriptor)
+        else                    -> {
+          val inlineKeyDescriptor = keyDescriptor.elementDescriptors.firstOrNull()
+          extractInlineType(inlineKeyDescriptor, valDescriptor)
+        }
       }
     }
   }
