@@ -7,9 +7,10 @@
 
 * [Tuples](#tuples)
   * [Tuple example](#tuple-example)
+  * [Tuple labels](#tuple-labels)
   * [Optional elements in tuples](#optional-elements-in-tuples)
   * [Properties all the same type](#properties-all-the-same-type)
-    * [Tuples as interface properties](#tuples-as-interface-properties)
+  * [Tuples as interface properties](#tuples-as-interface-properties)
 
 <!--- END -->
 
@@ -80,7 +81,66 @@ fun main() {
 > You can get the full code [here](./code/example/example-tuple-01.kt).
 
 ```typescript
-export type SimpleTypes = [string, number, number | null, boolean, string];
+export type SimpleTypes = [
+  aString: string,
+  anInt: number,
+  aDouble: number | null,
+  bool: boolean,
+  privateMember: string,
+];
+```
+
+<!--- TEST -->
+
+### Tuple labels
+
+By default, the tuple elements are labelled with the names of properties, not the `@SerialName`,
+which will be ignored. This isn't important for serialization because the tuple will be serialized
+without the name of the property.
+
+The name of the label can be overridden if desired while defining the elements.
+
+```kotlin
+@Serializable(with = PostalAddressUSA.Serializer::class)
+data class PostalAddressUSA(
+  @SerialName("num") // 'SerialName' will be ignored in 'Tuple' form
+  val houseNumber: String,
+  val streetName: String,
+  val postcode: String,
+) {
+  object Serializer : TupleSerializer<PostalAddressUSA>(
+    "PostalAddressUSA",
+    {
+      element(PostalAddressUSA::houseNumber)
+      // custom labels for 'streetName', 'postcode'
+      element("street", PostalAddressUSA::streetName)
+      element("zip", PostalAddressUSA::postcode)
+    }
+  ) {
+    override fun tupleConstructor(elements: Iterator<*>): PostalAddressUSA {
+      return PostalAddressUSA(
+        elements.next() as String,
+        elements.next() as String,
+        elements.next() as String,
+      )
+    }
+  }
+}
+
+fun main() {
+  val tsGenerator = KxsTsGenerator()
+  println(tsGenerator.generate(PostalAddressUSA.serializer()))
+}
+```
+
+> You can get the full code [here](./code/example/example-tuple-02.kt).
+
+```typescript
+export type PostalAddressUSA = [
+  houseNumber: string, // @SerialName("num") was ignored
+  street: string, // custom name
+  zip: string, // custom name
+];
 ```
 
 <!--- TEST -->
@@ -129,10 +189,15 @@ fun main() {
 }
 ```
 
-> You can get the full code [here](./code/example/example-tuple-02.kt).
+> You can get the full code [here](./code/example/example-tuple-03.kt).
 
 ```typescript
-export type OptionalFields = [string, string, string | null, string | null];
+export type OptionalFields = [
+  requiredString: string,
+  optionalString: string,
+  nullableString: string | null,
+  nullableOptionalString: string | null,
+];
 ```
 
 <!--- TEST -->
@@ -170,18 +235,22 @@ fun main() {
 }
 ```
 
-> You can get the full code [here](./code/example/example-tuple-03.kt).
+> You can get the full code [here](./code/example/example-tuple-04.kt).
 
 ```typescript
-export type Coordinates = [number, number, number];
+export type Coordinates = [
+  x: number,
+  y: number,
+  z: number,
+];
 ```
 
 <!--- TEST -->
 
-#### Tuples as interface properties
+### Tuples as interface properties
 
 ```kotlin
-import dev.adamko.kxstsgen.example.exampleTuple03.Coordinates
+import dev.adamko.kxstsgen.example.exampleTuple04.Coordinates
 
 @Serializable
 class GameLocations(
@@ -196,7 +265,7 @@ fun main() {
 }
 ```
 
-> You can get the full code [here](./code/example/example-tuple-04.kt).
+> You can get the full code [here](./code/example/example-tuple-05.kt).
 
 ```typescript
 export interface GameLocations {
@@ -205,7 +274,11 @@ export interface GameLocations {
   namedLocations: { [key: string]: Coordinates };
 }
 
-export type Coordinates = [number, number, number];
+export type Coordinates = [
+  x: number,
+  y: number,
+  z: number,
+];
 ```
 
 <!--- TEST -->

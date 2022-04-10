@@ -126,7 +126,7 @@ fun interface TsElementConverter {
             false,
           )
 
-          val literalTypeProperty = TsProperty.Named(discriminatorName, false, literalTypeRef)
+          val literalTypeProperty = TsProperty(discriminatorName, literalTypeRef, false)
 
           subclass.copy(properties = setOf(literalTypeProperty) + subclass.properties)
         }
@@ -165,12 +165,7 @@ fun interface TsElementConverter {
     ): TsDeclaration {
       val resultId = elementIdConverter(descriptor)
 
-      val properties = descriptor.elementDescriptors.mapIndexed { index, fieldDescriptor ->
-        val name = descriptor.getElementName(index)
-        val fieldTypeRef = typeRefConverter(fieldDescriptor)
-        val optional = descriptor.isElementOptional(index)
-        TsProperty.Named(name, optional, fieldTypeRef)
-      }.toSet()
+      val properties = convertProperties(descriptor)
 
       return TsDeclaration.TsInterface(resultId, properties)
     }
@@ -181,13 +176,21 @@ fun interface TsElementConverter {
     ): TsDeclaration.TsTuple {
       val resultId = elementIdConverter(descriptor)
 
-      val properties = descriptor.elementDescriptors.mapIndexed { index, fieldDescriptor ->
-        val fieldTypeRef = typeRefConverter(fieldDescriptor)
-        val optional = descriptor.isElementOptional(index)
-        TsProperty.Unnamed(optional, fieldTypeRef)
-      }
+      val properties = convertProperties(descriptor)
 
       return TsDeclaration.TsTuple(resultId, properties)
+    }
+
+
+    open fun convertProperties(
+      descriptor: SerialDescriptor,
+    ): Set<TsProperty> {
+      return descriptor.elementDescriptors.mapIndexed { index, fieldDescriptor ->
+        val name = descriptor.getElementName(index)
+        val fieldTypeRef = typeRefConverter(fieldDescriptor)
+        val optional = descriptor.isElementOptional(index)
+        TsProperty(name, fieldTypeRef, optional)
+      }.toSet()
     }
 
 

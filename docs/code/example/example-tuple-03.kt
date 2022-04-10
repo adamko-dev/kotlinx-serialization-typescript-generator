@@ -6,25 +6,29 @@ import dev.adamko.kxstsgen.*
 import dev.adamko.kxstsgen.core.experiments.TupleSerializer
 import kotlinx.serialization.*
 
-@Serializable(with = Coordinates.Serializer::class)
-data class Coordinates(
-  val x: Int,
-  val y: Int,
-  val z: Int,
+@Serializable(with = OptionalFields.Serializer::class)
+data class OptionalFields(
+  val requiredString: String,
+  val optionalString: String = "",
+  val nullableString: String?,
+  val nullableOptionalString: String? = "",
 ) {
-  object Serializer : TupleSerializer<Coordinates>(
-    "Coordinates",
+  object Serializer : TupleSerializer<OptionalFields>(
+    "OptionalFields",
     {
-      element(Coordinates::x)
-      element(Coordinates::y)
-      element(Coordinates::z)
+      element(OptionalFields::requiredString)
+      element(OptionalFields::optionalString)
+      element(OptionalFields::nullableString)
+      element(OptionalFields::nullableOptionalString)
     }
   ) {
-    override fun tupleConstructor(elements: Iterator<*>): Coordinates {
-      return Coordinates(
-        elements.next() as Int,
-        elements.next() as Int,
-        elements.next() as Int,
+    override fun tupleConstructor(elements: Iterator<*>): OptionalFields {
+      val iter = elements.iterator()
+      return OptionalFields(
+        iter.next() as String,
+        iter.next() as String,
+        iter.next() as String,
+        iter.next() as String,
       )
     }
   }
@@ -32,5 +36,5 @@ data class Coordinates(
 
 fun main() {
   val tsGenerator = KxsTsGenerator()
-  println(tsGenerator.generate(Coordinates.serializer()))
+  println(tsGenerator.generate(OptionalFields.serializer()))
 }

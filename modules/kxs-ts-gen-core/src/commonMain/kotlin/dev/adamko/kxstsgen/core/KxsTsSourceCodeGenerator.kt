@@ -111,7 +111,7 @@ abstract class KxsTsSourceCodeGenerator(
      * ```
      */
     open fun generateInterfaceProperty(
-      property: TsProperty.Named
+      property: TsProperty
     ): String {
       val separator = if (property.optional) "?: " else ": "
       val propertyType = generateTypeReference(property.typeRef)
@@ -166,14 +166,17 @@ abstract class KxsTsSourceCodeGenerator(
 
     override fun generateTuple(tuple: TsDeclaration.TsTuple): String {
 
-      val types = tuple.elements.joinToString(separator = ", ") {
-        val optionalMarker = if (it.optional) "?" else ""
-        generateTypeReference(it.typeRef) + optionalMarker
+      val types = tuple.elements.joinToString(separator = "\n") { property ->
+        val optionalMarker = if (property.optional) "?" else ""
+        val typeRef = generateTypeReference(property.typeRef)
+        "${config.indent}${property.name}: $typeRef$optionalMarker,"
       }
 
       return """
-        |export type ${tuple.id.name} = [$types];
-      """.trimMargin()
+        ¦export type ${tuple.id.name} = [
+        ¦$types
+        ¦];
+      """.trimMargin("¦")
     }
 
 

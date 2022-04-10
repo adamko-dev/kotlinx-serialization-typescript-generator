@@ -55,13 +55,13 @@ sealed interface TsDeclaration : TsElement {
   /**  A [tuple type](https://www.typescriptlang.org/docs/handbook/2/objects.html#tuple-types). */
   data class TsTuple(
     override val id: TsElementId,
-    val elements: List<TsProperty.Unnamed>,
+    val elements: Set<TsProperty>,
   ) : TsDeclaration
 
 
   data class TsInterface(
     override val id: TsElementId,
-    val properties: Set<TsProperty.Named>,
+    val properties: Set<TsProperty>,
   ) : TsDeclaration
 
 
@@ -158,26 +158,14 @@ sealed interface TsTypeRef {
  * A property within an [interface][TsDeclaration.TsInterface]
  * or [tuple][TsDeclaration.TsTuple].
  */
-sealed interface TsProperty {
-  val typeRef: TsTypeRef
+data class TsProperty(
+  val name: String,
+  val typeRef: TsTypeRef,
   /**
    * A property may be required or optional. See the TypeScript docs:
    * ['Optional Properties'](https://www.typescriptlang.org/docs/handbook/2/objects.html#optional-properties)
    *
    * Optionality is different to nullability, which is defined by [TsTypeRef.nullable].
    */
-  val optional: Boolean
-
-
-  data class Named(
-    val name: String,
-    override val optional: Boolean,
-    override val typeRef: TsTypeRef,
-  ) : TsProperty
-
-
-  data class Unnamed(
-    override val optional: Boolean,
-    override val typeRef: TsTypeRef,
-  ) : TsProperty
-}
+  val optional: Boolean,
+)
