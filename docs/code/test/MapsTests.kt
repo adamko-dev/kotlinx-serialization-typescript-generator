@@ -143,6 +143,8 @@ class MapsTests : FunSpec({
           |  complex: Map<ComplexKey, string>;
           |  simple: { [key: SimpleKey]: string };
           |  doubleSimple: { [key: DoubleSimpleKey]: string };
+          |  enum: { [key in EnumKey]: string };
+          |  doubleEnum: { [key in DoubleEnumKey]: string };
           |}
           |
           |export interface ComplexKey {
@@ -152,6 +154,16 @@ class MapsTests : FunSpec({
           |export type SimpleKey = string;
           |
           |export type DoubleSimpleKey = SimpleKey;
+          |
+          |export type EnumKey = ExampleEnum;
+          |
+          |export type DoubleEnumKey = ExampleEnum;
+          |
+          |export enum ExampleEnum {
+          |  A = "A",
+          |  B = "B",
+          |  C = "C",
+          |}
         """.trimMargin()
         .normalize()
       )

@@ -6,6 +6,15 @@ import kotlinx.serialization.*
 import dev.adamko.kxstsgen.*
 
 @Serializable
+data class Example(
+  val complex: Map<ComplexKey, String>,
+  val simple: Map<SimpleKey, String>,
+  val doubleSimple: Map<DoubleSimpleKey, String>,
+  val enum: Map<EnumKey, String>,
+  val doubleEnum: Map<DoubleEnumKey, String>,
+)
+
+@Serializable
 data class ComplexKey(val complex: String)
 
 @Serializable
@@ -17,11 +26,15 @@ value class SimpleKey(val simple: String)
 value class DoubleSimpleKey(val simple: SimpleKey)
 
 @Serializable
-data class Example(
-  val complex: Map<ComplexKey, String>,
-  val simple: Map<SimpleKey, String>,
-  val doubleSimple: Map<DoubleSimpleKey, String>,
-)
+enum class ExampleEnum { A, B, C, }
+
+@Serializable
+@JvmInline
+value class EnumKey(val e: ExampleEnum)
+
+@Serializable
+@JvmInline
+value class DoubleEnumKey(val e: ExampleEnum)
 
 fun main() {
   val tsGenerator = KxsTsGenerator()
