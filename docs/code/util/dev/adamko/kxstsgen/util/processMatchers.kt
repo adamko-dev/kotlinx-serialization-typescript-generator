@@ -44,7 +44,7 @@ suspend fun String?.shouldTypeScriptCompile(): String = withContext(processConte
   )
   file.writeText(src)
 
-  val (process, output) = tsc2(file)
+  val (process, output) = typescriptCompile(file)
   output.joinToString("\n").asClue { log ->
     withClue("exit code should be 0") { process shouldBeExactly 0 }
     log.shouldNotBeEmpty()
@@ -54,43 +54,3 @@ suspend fun String?.shouldTypeScriptCompile(): String = withContext(processConte
 
   src
 }
-
-//
-//private fun Process?.shouldHaveSuccessfulExitCode(): Process {
-//  this.shouldNotBeNull()
-//  this.should { haveSuccessfulExitCode() }
-//  return this
-//}
-//
-//// process should...
-//private fun haveSuccessfulExitCode(): Matcher<Process> = Matcher { process ->
-//  MatcherResult(
-//    process.exitValue() != 0,
-//    { "process did not exit successfully ${process.exitValue()}" },
-//    { "process should not exit successfully, but exit code was ${process.exitValue()}" },
-//  )
-//}
-//
-//
-//fun Process?.shouldHaveFinished(
-//  timeout: Duration = 5.seconds,
-//): Process {
-//  this.shouldNotBeNull()
-//  this.should { haveFinished(timeout) }
-//  return this
-//}
-//
-//// process should...
-//private fun haveFinished(
-//  timeout: Duration = 5.seconds,
-//): Matcher<Process> = Matcher { process ->
-//
-//  process.waitFor(timeout.inWholeMilliseconds, TimeUnit.MILLISECONDS)
-//  process.destroy()
-//
-//  MatcherResult(
-//    !process.isAlive,
-//    { "process is still alive" },
-//    { "process should not be alive" },
-//  )
-//}

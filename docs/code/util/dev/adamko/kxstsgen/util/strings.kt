@@ -16,6 +16,7 @@ fun String.normalize(): String =
         .ifBlank { "" }
     }
 
+
 /** [normalize] each String, then [join][joinToString] them */
 fun Iterable<String>.normalizeJoin(): String =
   joinToString("\n") { it.normalize() }
