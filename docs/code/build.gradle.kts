@@ -29,6 +29,7 @@ dependencies {
 }
 
 tasks.withType<KotlinCompile> {
+  mustRunAfter(tasks.knit)
   kotlinOptions.freeCompilerArgs += listOf(
     "-opt-in=kotlinx.serialization.ExperimentalSerializationApi",
   )
@@ -50,13 +51,9 @@ knit {
   }
 }
 
+tasks.withType<Test>().configureEach { dependsOn(tasks.knit) }
+
 tasks.test {
-  dependsOn(tasks.knit)
-//  finalizedBy(tasks.knitCheck)
+  // TSCompile tests are slow, they don't need to run every time
+  systemProperty("kotest.tags", "!TSCompile")
 }
-
-tasks.compileKotlin { mustRunAfter(tasks.knit) }
-
-//tasks.knitCheck {
-//  dependsOn(tasks.test)
-//}
