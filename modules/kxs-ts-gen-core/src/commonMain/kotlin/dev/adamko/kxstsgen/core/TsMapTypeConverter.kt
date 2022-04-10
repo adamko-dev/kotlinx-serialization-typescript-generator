@@ -50,15 +50,16 @@ fun interface TsMapTypeConverter {
     }
 
     tailrec fun extractInlineType(
-      keyDescriptor: SerialDescriptor,
+      keyDescriptor: SerialDescriptor?,
       valDescriptor: SerialDescriptor?,
     ): TsLiteral.TsMap.Type {
-      if (!keyDescriptor.isInline) {
-        return this(keyDescriptor, valDescriptor)
-      } else {
-        val inlineKeyDescriptor = keyDescriptor.elementDescriptors.firstOrNull()
-          ?: return TsLiteral.TsMap.Type.MAP
-        return extractInlineType(inlineKeyDescriptor, valDescriptor)
+      return when {
+        keyDescriptor == null   -> TsLiteral.TsMap.Type.MAP
+        !keyDescriptor.isInline -> this(keyDescriptor, valDescriptor)
+        else                    -> {
+          val inlineKeyDescriptor = keyDescriptor.elementDescriptors.firstOrNull()
+          extractInlineType(inlineKeyDescriptor, valDescriptor)
+        }
       }
     }
   }
