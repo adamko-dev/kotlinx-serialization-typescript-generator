@@ -64,7 +64,7 @@ fun interface TsTypeRefConverter {
       val (keyDescriptor, valueDescriptor) = descriptor.elementDescriptors.toList()
       val keyTypeRef = this(keyDescriptor)
       val valueTypeRef = this(valueDescriptor)
-      val type = mapTypeConverter(keyDescriptor)
+      val type = mapTypeConverter(keyDescriptor, valueDescriptor)
       val map = TsLiteral.TsMap(keyTypeRef, valueTypeRef, type)
       return TsTypeRef.Literal(map, descriptor.isNullable)
     }

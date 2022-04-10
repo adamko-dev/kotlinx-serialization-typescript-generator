@@ -2,18 +2,22 @@
 @file:Suppress("JSUnusedLocalSymbols")
 package dev.adamko.kxstsgen.example.test
 
+import dev.adamko.kxstsgen.util.*
+import io.kotest.core.spec.style.*
 import io.kotest.matchers.*
 import kotlinx.knit.test.*
-import org.junit.jupiter.api.Test
-import dev.adamko.kxstsgen.util.*
 
-class ListsTests {
-  @Test
-  fun testExampleListPrimitive01() {
-    captureOutput("ExampleListPrimitive01") {
+class ListsTests : FunSpec({
+
+  tags(Knit)
+
+  context("ExampleListPrimitive01") {
+    val actual = captureOutput("ExampleListPrimitive01") {
       dev.adamko.kxstsgen.example.exampleListPrimitive01.main()
     }.normalizeJoin()
-      .shouldBe(
+
+    test("expect actual matches TypeScript") {
+      actual.shouldBe(
         // language=TypeScript
         """
           |export interface MyLists {
@@ -22,16 +26,22 @@ class ListsTests {
           |  longs: number[];
           |}
         """.trimMargin()
-          .normalize()
+        .normalize()
       )
+    }
+
+    test("expect actual compiles").config(tags = tsCompile) {
+      actual.shouldTypeScriptCompile()
+    }
   }
 
-  @Test
-  fun testExampleListObjects01() {
-    captureOutput("ExampleListObjects01") {
+  context("ExampleListObjects01") {
+    val actual = captureOutput("ExampleListObjects01") {
       dev.adamko.kxstsgen.example.exampleListObjects01.main()
     }.normalizeJoin()
-      .shouldBe(
+
+    test("expect actual matches TypeScript") {
+      actual.shouldBe(
         // language=TypeScript
         """
           |export interface MyLists {
@@ -44,16 +54,22 @@ class ListsTests {
           |  rgb: string;
           |}
         """.trimMargin()
-          .normalize()
+        .normalize()
       )
+    }
+
+    test("expect actual compiles").config(tags = tsCompile) {
+      actual.shouldTypeScriptCompile()
+    }
   }
 
-  @Test
-  fun testExampleListObjects02() {
-    captureOutput("ExampleListObjects02") {
+  context("ExampleListObjects02") {
+    val actual = captureOutput("ExampleListObjects02") {
       dev.adamko.kxstsgen.example.exampleListObjects02.main()
     }.normalizeJoin()
-      .shouldBe(
+
+    test("expect actual matches TypeScript") {
+      actual.shouldBe(
         // language=TypeScript
         """
           |export interface MyLists {
@@ -65,7 +81,12 @@ class ListsTests {
           |  rgb: string;
           |}
         """.trimMargin()
-          .normalize()
+        .normalize()
       )
+    }
+
+    test("expect actual compiles").config(tags = tsCompile) {
+      actual.shouldTypeScriptCompile()
+    }
   }
-}
+})

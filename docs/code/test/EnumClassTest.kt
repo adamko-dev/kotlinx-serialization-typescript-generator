@@ -2,18 +2,22 @@
 @file:Suppress("JSUnusedLocalSymbols")
 package dev.adamko.kxstsgen.example.test
 
+import dev.adamko.kxstsgen.util.*
+import io.kotest.core.spec.style.*
 import io.kotest.matchers.*
 import kotlinx.knit.test.*
-import org.junit.jupiter.api.Test
-import dev.adamko.kxstsgen.util.*
 
-class EnumClassTest {
-  @Test
-  fun testExampleEnumClass01() {
-    captureOutput("ExampleEnumClass01") {
+class EnumClassTest : FunSpec({
+
+  tags(Knit)
+
+  context("ExampleEnumClass01") {
+    val actual = captureOutput("ExampleEnumClass01") {
       dev.adamko.kxstsgen.example.exampleEnumClass01.main()
     }.normalizeJoin()
-      .shouldBe(
+
+    test("expect actual matches TypeScript") {
+      actual.shouldBe(
         // language=TypeScript
         """
           |export enum SomeType {
@@ -22,16 +26,22 @@ class EnumClassTest {
           |  Gamma = "Gamma",
           |}
         """.trimMargin()
-          .normalize()
+        .normalize()
       )
+    }
+
+    test("expect actual compiles").config(tags = tsCompile) {
+      actual.shouldTypeScriptCompile()
+    }
   }
 
-  @Test
-  fun testExampleEnumClass02() {
-    captureOutput("ExampleEnumClass02") {
+  context("ExampleEnumClass02") {
+    val actual = captureOutput("ExampleEnumClass02") {
       dev.adamko.kxstsgen.example.exampleEnumClass02.main()
     }.normalizeJoin()
-      .shouldBe(
+
+    test("expect actual matches TypeScript") {
+      actual.shouldBe(
         // language=TypeScript
         """
           |export enum SomeType2 {
@@ -40,7 +50,12 @@ class EnumClassTest {
           |  Gamma = "Gamma",
           |}
         """.trimMargin()
-          .normalize()
+        .normalize()
       )
+    }
+
+    test("expect actual compiles").config(tags = tsCompile) {
+      actual.shouldTypeScriptCompile()
+    }
   }
-}
+})

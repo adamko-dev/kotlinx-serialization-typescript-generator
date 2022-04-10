@@ -4,32 +4,41 @@
 @file:Suppress("JSUnusedLocalSymbols")
 package ${test.package}
 
-import io.kotest.matchers.*
-import kotlinx.knit.test.*
-import org.junit.jupiter.api.Test
 import dev.adamko.kxstsgen.util.*
+<#--import io.kotest.assertions.*-->
+<#--import io.kotest.core.*-->
+import io.kotest.core.spec.style.*
+import io.kotest.matchers.*
+<#--import io.kotest.matchers.string.*-->
+import kotlinx.knit.test.*
 
-class ${test.name} {
+class ${test.name} : FunSpec({
+
+  tags(Knit)
+
 <#list cases as case><#assign method = test["mode.${case.param}"]!"custom">
-  @Test
-  fun test${case.name}() {
-    captureOutput("${case.name}") {
+  context("${case.name}") {
+    val actual = captureOutput("${case.name}") {
       ${case.knit.package}.${case.knit.name}.main()
-    }<#if method != "custom">.${method}(
+    }.normalizeJoin()
+
+    test("expect actual matches TypeScript") {
+      actual.shouldBe(
         // language=TypeScript
         """
-<#list case.lines as line>
+          <#list case.lines as line>
           |${line}
-</#list>
+          </#list>
         """.trimMargin()
-          .normalize()
+        .normalize()
       )
-<#else>.also { lines ->
-      check(${case.param})
     }
-</#if>
+
+    test("expect actual compiles").config(tags = tsCompile) {
+      actual.shouldTypeScriptCompile()
+    }
   }
 <#sep>
 
 </#list>
-}
+})

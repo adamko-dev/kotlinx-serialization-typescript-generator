@@ -2,34 +2,44 @@
 @file:Suppress("JSUnusedLocalSymbols")
 package dev.adamko.kxstsgen.example.test
 
+import dev.adamko.kxstsgen.util.*
+import io.kotest.core.spec.style.*
 import io.kotest.matchers.*
 import kotlinx.knit.test.*
-import org.junit.jupiter.api.Test
-import dev.adamko.kxstsgen.util.*
 
-class BasicClassesTest {
-  @Test
-  fun testExamplePlainClassSingleField01() {
-    captureOutput("ExamplePlainClassSingleField01") {
+class BasicClassesTest : FunSpec({
+
+  tags(Knit)
+
+  context("ExamplePlainClassSingleField01") {
+    val actual = captureOutput("ExamplePlainClassSingleField01") {
       dev.adamko.kxstsgen.example.examplePlainClassSingleField01.main()
     }.normalizeJoin()
-      .shouldBe(
+
+    test("expect actual matches TypeScript") {
+      actual.shouldBe(
         // language=TypeScript
         """
           |export interface Color {
           |  rgb: number;
           |}
         """.trimMargin()
-          .normalize()
+        .normalize()
       )
+    }
+
+    test("expect actual compiles").config(tags = tsCompile) {
+      actual.shouldTypeScriptCompile()
+    }
   }
 
-  @Test
-  fun testExamplePlainClassPrimitiveFields01() {
-    captureOutput("ExamplePlainClassPrimitiveFields01") {
+  context("ExamplePlainClassPrimitiveFields01") {
+    val actual = captureOutput("ExamplePlainClassPrimitiveFields01") {
       dev.adamko.kxstsgen.example.examplePlainClassPrimitiveFields01.main()
     }.normalizeJoin()
-      .shouldBe(
+
+    test("expect actual matches TypeScript") {
+      actual.shouldBe(
         // language=TypeScript
         """
           |export interface SimpleTypes {
@@ -40,16 +50,22 @@ class BasicClassesTest {
           |  privateMember: string;
           |}
         """.trimMargin()
-          .normalize()
+        .normalize()
       )
+    }
+
+    test("expect actual compiles").config(tags = tsCompile) {
+      actual.shouldTypeScriptCompile()
+    }
   }
 
-  @Test
-  fun testExamplePlainDataClass01() {
-    captureOutput("ExamplePlainDataClass01") {
+  context("ExamplePlainDataClass01") {
+    val actual = captureOutput("ExamplePlainDataClass01") {
       dev.adamko.kxstsgen.example.examplePlainDataClass01.main()
     }.normalizeJoin()
-      .shouldBe(
+
+    test("expect actual matches TypeScript") {
+      actual.shouldBe(
         // language=TypeScript
         """
           |export interface SomeDataClass {
@@ -60,22 +76,33 @@ class BasicClassesTest {
           |  privateMember: string;
           |}
         """.trimMargin()
-          .normalize()
+        .normalize()
       )
+    }
+
+    test("expect actual compiles").config(tags = tsCompile) {
+      actual.shouldTypeScriptCompile()
+    }
   }
 
-  @Test
-  fun testExamplePlainClassPrimitiveFields02() {
-    captureOutput("ExamplePlainClassPrimitiveFields02") {
+  context("ExamplePlainClassPrimitiveFields02") {
+    val actual = captureOutput("ExamplePlainClassPrimitiveFields02") {
       dev.adamko.kxstsgen.example.examplePlainClassPrimitiveFields02.main()
     }.normalizeJoin()
-      .shouldBe(
+
+    test("expect actual matches TypeScript") {
+      actual.shouldBe(
         // language=TypeScript
         """
           |export interface SimpleTypes {
           |}
         """.trimMargin()
-          .normalize()
+        .normalize()
       )
+    }
+
+    test("expect actual compiles").config(tags = tsCompile) {
+      actual.shouldTypeScriptCompile()
+    }
   }
-}
+})

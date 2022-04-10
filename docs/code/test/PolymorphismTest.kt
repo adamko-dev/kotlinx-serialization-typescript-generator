@@ -2,18 +2,22 @@
 @file:Suppress("JSUnusedLocalSymbols")
 package dev.adamko.kxstsgen.example.test
 
+import dev.adamko.kxstsgen.util.*
+import io.kotest.core.spec.style.*
 import io.kotest.matchers.*
 import kotlinx.knit.test.*
-import org.junit.jupiter.api.Test
-import dev.adamko.kxstsgen.util.*
 
-class PolymorphismTest {
-  @Test
-  fun testExamplePolymorphicAbstractClassPrimitiveFields01() {
-    captureOutput("ExamplePolymorphicAbstractClassPrimitiveFields01") {
+class PolymorphismTest : FunSpec({
+
+  tags(Knit)
+
+  context("ExamplePolymorphicAbstractClassPrimitiveFields01") {
+    val actual = captureOutput("ExamplePolymorphicAbstractClassPrimitiveFields01") {
       dev.adamko.kxstsgen.example.examplePolymorphicAbstractClassPrimitiveFields01.main()
     }.normalizeJoin()
-      .shouldBe(
+
+    test("expect actual matches TypeScript") {
+      actual.shouldBe(
         // language=TypeScript
         """
           |export type SimpleTypes = any;
@@ -25,32 +29,44 @@ class PolymorphismTest {
           |//   privateMember: string;
           |// }
         """.trimMargin()
-          .normalize()
+        .normalize()
       )
+    }
+
+    test("expect actual compiles").config(tags = tsCompile) {
+      actual.shouldTypeScriptCompile()
+    }
   }
 
-  @Test
-  fun testExamplePolymorphicStaticTypes01() {
-    captureOutput("ExamplePolymorphicStaticTypes01") {
+  context("ExamplePolymorphicStaticTypes01") {
+    val actual = captureOutput("ExamplePolymorphicStaticTypes01") {
       dev.adamko.kxstsgen.example.examplePolymorphicStaticTypes01.main()
     }.normalizeJoin()
-      .shouldBe(
+
+    test("expect actual matches TypeScript") {
+      actual.shouldBe(
         // language=TypeScript
         """
           |export interface Project {
           |  name: string;
           |}
         """.trimMargin()
-          .normalize()
+        .normalize()
       )
+    }
+
+    test("expect actual compiles").config(tags = tsCompile) {
+      actual.shouldTypeScriptCompile()
+    }
   }
 
-  @Test
-  fun testExamplePolymorphicStaticTypes02() {
-    captureOutput("ExamplePolymorphicStaticTypes02") {
+  context("ExamplePolymorphicStaticTypes02") {
+    val actual = captureOutput("ExamplePolymorphicStaticTypes02") {
       dev.adamko.kxstsgen.example.examplePolymorphicStaticTypes02.main()
     }.normalizeJoin()
-      .shouldBe(
+
+    test("expect actual matches TypeScript") {
+      actual.shouldBe(
         // language=TypeScript
         """
           |export type Project = any;
@@ -63,16 +79,22 @@ class PolymorphismTest {
           |//   owner: string;
           |// }
         """.trimMargin()
-          .normalize()
+        .normalize()
       )
+    }
+
+    test("expect actual compiles").config(tags = tsCompile) {
+      actual.shouldTypeScriptCompile()
+    }
   }
 
-  @Test
-  fun testExamplePolymorphicSealedClass01() {
-    captureOutput("ExamplePolymorphicSealedClass01") {
+  context("ExamplePolymorphicSealedClass01") {
+    val actual = captureOutput("ExamplePolymorphicSealedClass01") {
       dev.adamko.kxstsgen.example.examplePolymorphicSealedClass01.main()
     }.normalizeJoin()
-      .shouldBe(
+
+    test("expect actual matches TypeScript") {
+      actual.shouldBe(
         // language=TypeScript
         """
           |export type Project =
@@ -98,16 +120,22 @@ class PolymorphismTest {
           |  }
           |}
         """.trimMargin()
-          .normalize()
+        .normalize()
       )
+    }
+
+    test("expect actual compiles").config(tags = tsCompile) {
+      actual.shouldTypeScriptCompile()
+    }
   }
 
-  @Test
-  fun testExamplePolymorphicSealedClass02() {
-    captureOutput("ExamplePolymorphicSealedClass02") {
+  context("ExamplePolymorphicSealedClass02") {
+    val actual = captureOutput("ExamplePolymorphicSealedClass02") {
       dev.adamko.kxstsgen.example.examplePolymorphicSealedClass02.main()
     }.normalizeJoin()
-      .shouldBe(
+
+    test("expect actual matches TypeScript") {
+      actual.shouldBe(
         // language=TypeScript
         """
           |export type Dog =
@@ -178,16 +206,22 @@ class PolymorphismTest {
           |//   }
           |// }
         """.trimMargin()
-          .normalize()
+        .normalize()
       )
+    }
+
+    test("expect actual compiles").config(tags = tsCompile) {
+      actual.shouldTypeScriptCompile()
+    }
   }
 
-  @Test
-  fun testExamplePolymorphicObjects01() {
-    captureOutput("ExamplePolymorphicObjects01") {
+  context("ExamplePolymorphicObjects01") {
+    val actual = captureOutput("ExamplePolymorphicObjects01") {
       dev.adamko.kxstsgen.example.examplePolymorphicObjects01.main()
     }.normalizeJoin()
-      .shouldBe(
+
+    test("expect actual matches TypeScript") {
+      actual.shouldBe(
         // language=TypeScript
         """
           |export type Response =
@@ -210,37 +244,54 @@ class PolymorphismTest {
           |  }
           |}
         """.trimMargin()
-          .normalize()
+        .normalize()
       )
+    }
+
+    test("expect actual compiles").config(tags = tsCompile) {
+      actual.shouldTypeScriptCompile()
+    }
   }
 
-  @Test
-  fun testExampleGenerics01() {
-    captureOutput("ExampleGenerics01") {
+  context("ExampleGenerics01") {
+    val actual = captureOutput("ExampleGenerics01") {
       dev.adamko.kxstsgen.example.exampleGenerics01.main()
     }.normalizeJoin()
-      .shouldBe(
+
+    test("expect actual matches TypeScript") {
+      actual.shouldBe(
         // language=TypeScript
         """
           |export interface Box {
           |  value: number;
           |}
         """.trimMargin()
-          .normalize()
+        .normalize()
       )
+    }
+
+    test("expect actual compiles").config(tags = tsCompile) {
+      actual.shouldTypeScriptCompile()
+    }
   }
 
-  @Test
-  fun testExampleJsonPolymorphic01() {
-    captureOutput("ExampleJsonPolymorphic01") {
+  context("ExampleJsonPolymorphic01") {
+    val actual = captureOutput("ExampleJsonPolymorphic01") {
       dev.adamko.kxstsgen.example.exampleJsonPolymorphic01.main()
     }.normalizeJoin()
-      .shouldBe(
+
+    test("expect actual matches TypeScript") {
+      actual.shouldBe(
         // language=TypeScript
         """
           |export type Project = any;
         """.trimMargin()
-          .normalize()
+        .normalize()
       )
+    }
+
+    test("expect actual compiles").config(tags = tsCompile) {
+      actual.shouldTypeScriptCompile()
+    }
   }
-}
+})

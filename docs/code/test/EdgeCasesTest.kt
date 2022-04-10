@@ -2,18 +2,22 @@
 @file:Suppress("JSUnusedLocalSymbols")
 package dev.adamko.kxstsgen.example.test
 
+import dev.adamko.kxstsgen.util.*
+import io.kotest.core.spec.style.*
 import io.kotest.matchers.*
 import kotlinx.knit.test.*
-import org.junit.jupiter.api.Test
-import dev.adamko.kxstsgen.util.*
 
-class EdgeCasesTest {
-  @Test
-  fun testExampleEdgecaseRecursiveReferences01() {
-    captureOutput("ExampleEdgecaseRecursiveReferences01") {
+class EdgeCasesTest : FunSpec({
+
+  tags(Knit)
+
+  context("ExampleEdgecaseRecursiveReferences01") {
+    val actual = captureOutput("ExampleEdgecaseRecursiveReferences01") {
       dev.adamko.kxstsgen.example.exampleEdgecaseRecursiveReferences01.main()
     }.normalizeJoin()
-      .shouldBe(
+
+    test("expect actual matches TypeScript") {
+      actual.shouldBe(
         // language=TypeScript
         """
           |export interface A {
@@ -24,16 +28,22 @@ class EdgeCasesTest {
           |  a: A;
           |}
         """.trimMargin()
-          .normalize()
+        .normalize()
       )
+    }
+
+    test("expect actual compiles").config(tags = tsCompile) {
+      actual.shouldTypeScriptCompile()
+    }
   }
 
-  @Test
-  fun testExampleEdgecaseRecursiveReferences02() {
-    captureOutput("ExampleEdgecaseRecursiveReferences02") {
+  context("ExampleEdgecaseRecursiveReferences02") {
+    val actual = captureOutput("ExampleEdgecaseRecursiveReferences02") {
       dev.adamko.kxstsgen.example.exampleEdgecaseRecursiveReferences02.main()
     }.normalizeJoin()
-      .shouldBe(
+
+    test("expect actual matches TypeScript") {
+      actual.shouldBe(
         // language=TypeScript
         """
           |export interface A {
@@ -44,16 +54,22 @@ class EdgeCasesTest {
           |  list: A[];
           |}
         """.trimMargin()
-          .normalize()
+        .normalize()
       )
+    }
+
+    test("expect actual compiles").config(tags = tsCompile) {
+      actual.shouldTypeScriptCompile()
+    }
   }
 
-  @Test
-  fun testExampleEdgecaseRecursiveReferences03() {
-    captureOutput("ExampleEdgecaseRecursiveReferences03") {
+  context("ExampleEdgecaseRecursiveReferences03") {
+    val actual = captureOutput("ExampleEdgecaseRecursiveReferences03") {
       dev.adamko.kxstsgen.example.exampleEdgecaseRecursiveReferences03.main()
     }.normalizeJoin()
-      .shouldBe(
+
+    test("expect actual matches TypeScript") {
+      actual.shouldBe(
         // language=TypeScript
         """
           |export interface A {
@@ -64,7 +80,12 @@ class EdgeCasesTest {
           |  map: { [key: string]: A };
           |}
         """.trimMargin()
-          .normalize()
+        .normalize()
       )
+    }
+
+    test("expect actual compiles").config(tags = tsCompile) {
+      actual.shouldTypeScriptCompile()
+    }
   }
-}
+})

@@ -2,50 +2,66 @@
 @file:Suppress("JSUnusedLocalSymbols")
 package dev.adamko.kxstsgen.example.test
 
+import dev.adamko.kxstsgen.util.*
+import io.kotest.core.spec.style.*
 import io.kotest.matchers.*
 import kotlinx.knit.test.*
-import org.junit.jupiter.api.Test
-import dev.adamko.kxstsgen.util.*
 
-class DefaultValuesTest {
-  @Test
-  fun testExampleDefaultValuesSingleField01() {
-    captureOutput("ExampleDefaultValuesSingleField01") {
+class DefaultValuesTest : FunSpec({
+
+  tags(Knit)
+
+  context("ExampleDefaultValuesSingleField01") {
+    val actual = captureOutput("ExampleDefaultValuesSingleField01") {
       dev.adamko.kxstsgen.example.exampleDefaultValuesSingleField01.main()
     }.normalizeJoin()
-      .shouldBe(
+
+    test("expect actual matches TypeScript") {
+      actual.shouldBe(
         // language=TypeScript
         """
           |export interface Colour {
           |  rgb?: number;
           |}
         """.trimMargin()
-          .normalize()
+        .normalize()
       )
+    }
+
+    test("expect actual compiles").config(tags = tsCompile) {
+      actual.shouldTypeScriptCompile()
+    }
   }
 
-  @Test
-  fun testExampleDefaultValuesSingleField02() {
-    captureOutput("ExampleDefaultValuesSingleField02") {
+  context("ExampleDefaultValuesSingleField02") {
+    val actual = captureOutput("ExampleDefaultValuesSingleField02") {
       dev.adamko.kxstsgen.example.exampleDefaultValuesSingleField02.main()
     }.normalizeJoin()
-      .shouldBe(
+
+    test("expect actual matches TypeScript") {
+      actual.shouldBe(
         // language=TypeScript
         """
           |export interface Colour {
           |  rgb: number | null;
           |}
         """.trimMargin()
-          .normalize()
+        .normalize()
       )
+    }
+
+    test("expect actual compiles").config(tags = tsCompile) {
+      actual.shouldTypeScriptCompile()
+    }
   }
 
-  @Test
-  fun testExampleDefaultValuesPrimitiveFields01() {
-    captureOutput("ExampleDefaultValuesPrimitiveFields01") {
+  context("ExampleDefaultValuesPrimitiveFields01") {
+    val actual = captureOutput("ExampleDefaultValuesPrimitiveFields01") {
       dev.adamko.kxstsgen.example.exampleDefaultValuesPrimitiveFields01.main()
     }.normalizeJoin()
-      .shouldBe(
+
+    test("expect actual matches TypeScript") {
+      actual.shouldBe(
         // language=TypeScript
         """
           |export interface ContactDetails {
@@ -55,7 +71,12 @@ class DefaultValuesTest {
           |  phoneNumber?: string | null;
           |}
         """.trimMargin()
-          .normalize()
+        .normalize()
       )
+    }
+
+    test("expect actual compiles").config(tags = tsCompile) {
+      actual.shouldTypeScriptCompile()
+    }
   }
-}
+})

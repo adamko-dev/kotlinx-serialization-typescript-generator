@@ -9,12 +9,21 @@ import kotlinx.serialization.descriptors.StructureKind
 
 fun interface TsMapTypeConverter {
 
-  operator fun invoke(descriptor: SerialDescriptor): TsLiteral.TsMap.Type
+  operator fun invoke(
+    keyDescriptor: SerialDescriptor,
+    valDescriptor: SerialDescriptor?,
+  ): TsLiteral.TsMap.Type
 
   object Default : TsMapTypeConverter {
 
-    override operator fun invoke(descriptor: SerialDescriptor): TsLiteral.TsMap.Type {
-      return when (descriptor.kind) {
+    override operator fun invoke(
+      keyDescriptor: SerialDescriptor,
+      valDescriptor: SerialDescriptor?,
+    ): TsLiteral.TsMap.Type {
+
+      if (keyDescriptor.isNullable) return TsLiteral.TsMap.Type.MAP
+
+      return when (keyDescriptor.kind) {
         SerialKind.ENUM      -> TsLiteral.TsMap.Type.MAPPED_OBJECT
 
         PrimitiveKind.STRING -> TsLiteral.TsMap.Type.INDEX_SIGNATURE

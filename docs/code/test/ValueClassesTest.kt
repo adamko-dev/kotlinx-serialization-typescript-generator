@@ -2,32 +2,42 @@
 @file:Suppress("JSUnusedLocalSymbols")
 package dev.adamko.kxstsgen.example.test
 
+import dev.adamko.kxstsgen.util.*
+import io.kotest.core.spec.style.*
 import io.kotest.matchers.*
 import kotlinx.knit.test.*
-import org.junit.jupiter.api.Test
-import dev.adamko.kxstsgen.util.*
 
-class ValueClassesTest {
-  @Test
-  fun testExampleValueClasses01() {
-    captureOutput("ExampleValueClasses01") {
+class ValueClassesTest : FunSpec({
+
+  tags(Knit)
+
+  context("ExampleValueClasses01") {
+    val actual = captureOutput("ExampleValueClasses01") {
       dev.adamko.kxstsgen.example.exampleValueClasses01.main()
     }.normalizeJoin()
-      .shouldBe(
+
+    test("expect actual matches TypeScript") {
+      actual.shouldBe(
         // language=TypeScript
         """
           |export type AuthToken = string;
         """.trimMargin()
-          .normalize()
+        .normalize()
       )
+    }
+
+    test("expect actual compiles").config(tags = tsCompile) {
+      actual.shouldTypeScriptCompile()
+    }
   }
 
-  @Test
-  fun testExampleValueClasses02() {
-    captureOutput("ExampleValueClasses02") {
+  context("ExampleValueClasses02") {
+    val actual = captureOutput("ExampleValueClasses02") {
       dev.adamko.kxstsgen.example.exampleValueClasses02.main()
     }.normalizeJoin()
-      .shouldBe(
+
+    test("expect actual matches TypeScript") {
+      actual.shouldBe(
         // language=TypeScript
         """
           |export type UByte = number;
@@ -38,37 +48,54 @@ class ValueClassesTest {
           |
           |export type ULong = number;
         """.trimMargin()
-          .normalize()
+        .normalize()
       )
+    }
+
+    test("expect actual compiles").config(tags = tsCompile) {
+      actual.shouldTypeScriptCompile()
+    }
   }
 
-  @Test
-  fun testExampleValueClasses03() {
-    captureOutput("ExampleValueClasses03") {
+  context("ExampleValueClasses03") {
+    val actual = captureOutput("ExampleValueClasses03") {
       dev.adamko.kxstsgen.example.exampleValueClasses03.main()
     }.normalizeJoin()
-      .shouldBe(
+
+    test("expect actual matches TypeScript") {
+      actual.shouldBe(
         // language=TypeScript
         """
           |export type ULong = number & { __ULong__: void };
         """.trimMargin()
-          .normalize()
+        .normalize()
       )
+    }
+
+    test("expect actual compiles").config(tags = tsCompile) {
+      actual.shouldTypeScriptCompile()
+    }
   }
 
-  @Test
-  fun testExampleValueClasses04() {
-    captureOutput("ExampleValueClasses04") {
+  context("ExampleValueClasses04") {
+    val actual = captureOutput("ExampleValueClasses04") {
       dev.adamko.kxstsgen.example.exampleValueClasses04.main()
     }.normalizeJoin()
-      .shouldBe(
+
+    test("expect actual matches TypeScript") {
+      actual.shouldBe(
         // language=TypeScript
         """
           |export type UserCount = UInt;
           |
           |export type UInt = number;
         """.trimMargin()
-          .normalize()
+        .normalize()
       )
+    }
+
+    test("expect actual compiles").config(tags = tsCompile) {
+      actual.shouldTypeScriptCompile()
+    }
   }
-}
+})

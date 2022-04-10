@@ -10,7 +10,7 @@ plugins {
 }
 
 val kotlinxSerializationVersion = "1.3.2"
-val kotestVersion = "5.2.2"
+val kotestVersion = "5.2.3"
 
 kotlin {
 
