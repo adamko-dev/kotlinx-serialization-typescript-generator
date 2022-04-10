@@ -13,7 +13,7 @@ plugins {
 }
 
 dependencies {
-  testImplementation(platform("io.kotest:kotest-bom:5.2.1"))
+  testImplementation(platform("io.kotest:kotest-bom:5.2.3"))
   testImplementation("io.kotest:kotest-runner-junit5")
   testImplementation("io.kotest:kotest-assertions-core")
   testImplementation("io.kotest:kotest-property")
@@ -49,6 +49,6 @@ tasks.compileTestKotlin {
   kotlinOptions.freeCompilerArgs += "-opt-in=io.kotest.common.ExperimentalKotest"
 }
 
-tasks.test {
+tasks.withType<Test>().configureEach {
   useJUnitPlatform()
 }

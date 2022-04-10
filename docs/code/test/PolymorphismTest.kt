@@ -3,22 +3,23 @@
 package dev.adamko.kxstsgen.example.test
 
 import dev.adamko.kxstsgen.util.*
-import io.kotest.assertions.*
+import io.kotest.core.spec.style.*
 import io.kotest.matchers.*
-import io.kotest.matchers.string.*
 import kotlinx.knit.test.*
-import org.junit.jupiter.api.Test
 
-class PolymorphismTest {
-  @Test
-  fun testExamplePolymorphicAbstractClassPrimitiveFields01() {
+class PolymorphismTest : FunSpec({
+
+  tags(Knit)
+
+  context("ExamplePolymorphicAbstractClassPrimitiveFields01") {
     val actual = captureOutput("ExamplePolymorphicAbstractClassPrimitiveFields01") {
       dev.adamko.kxstsgen.example.examplePolymorphicAbstractClassPrimitiveFields01.main()
     }.normalizeJoin()
 
-    actual.shouldBe(
-      // language=TypeScript
-      """
+    test("expect actual matches TypeScript") {
+      actual.shouldBe(
+        // language=TypeScript
+        """
           |export type SimpleTypes = any;
           |// export interface SimpleTypes {
           |//   aString: string;
@@ -27,47 +28,47 @@ class PolymorphismTest {
           |//   bool: boolean;
           |//   privateMember: string;
           |// }
-      """.trimMargin()
-      .normalize()
-    )
+        """.trimMargin()
+        .normalize()
+      )
+    }
 
-    typescriptCompile(actual).asClue { tscOutput ->
-      tscOutput.shouldNotBeEmpty()
-      tscOutput shouldNotContain "error"
+    test("expect actual compiles").config(tags = tsCompile) {
+      actual.shouldTypeScriptCompile()
     }
   }
 
-  @Test
-  fun testExamplePolymorphicStaticTypes01() {
+  context("ExamplePolymorphicStaticTypes01") {
     val actual = captureOutput("ExamplePolymorphicStaticTypes01") {
       dev.adamko.kxstsgen.example.examplePolymorphicStaticTypes01.main()
     }.normalizeJoin()
 
-    actual.shouldBe(
-      // language=TypeScript
-      """
+    test("expect actual matches TypeScript") {
+      actual.shouldBe(
+        // language=TypeScript
+        """
           |export interface Project {
           |  name: string;
           |}
-      """.trimMargin()
-      .normalize()
-    )
+        """.trimMargin()
+        .normalize()
+      )
+    }
 
-    typescriptCompile(actual).asClue { tscOutput ->
-      tscOutput.shouldNotBeEmpty()
-      tscOutput shouldNotContain "error"
+    test("expect actual compiles").config(tags = tsCompile) {
+      actual.shouldTypeScriptCompile()
     }
   }
 
-  @Test
-  fun testExamplePolymorphicStaticTypes02() {
+  context("ExamplePolymorphicStaticTypes02") {
     val actual = captureOutput("ExamplePolymorphicStaticTypes02") {
       dev.adamko.kxstsgen.example.examplePolymorphicStaticTypes02.main()
     }.normalizeJoin()
 
-    actual.shouldBe(
-      // language=TypeScript
-      """
+    test("expect actual matches TypeScript") {
+      actual.shouldBe(
+        // language=TypeScript
+        """
           |export type Project = any;
           |// export interface Project {
           |//   name: string;
@@ -77,25 +78,25 @@ class PolymorphismTest {
           |//   name: string;
           |//   owner: string;
           |// }
-      """.trimMargin()
-      .normalize()
-    )
+        """.trimMargin()
+        .normalize()
+      )
+    }
 
-    typescriptCompile(actual).asClue { tscOutput ->
-      tscOutput.shouldNotBeEmpty()
-      tscOutput shouldNotContain "error"
+    test("expect actual compiles").config(tags = tsCompile) {
+      actual.shouldTypeScriptCompile()
     }
   }
 
-  @Test
-  fun testExamplePolymorphicSealedClass01() {
+  context("ExamplePolymorphicSealedClass01") {
     val actual = captureOutput("ExamplePolymorphicSealedClass01") {
       dev.adamko.kxstsgen.example.examplePolymorphicSealedClass01.main()
     }.normalizeJoin()
 
-    actual.shouldBe(
-      // language=TypeScript
-      """
+    test("expect actual matches TypeScript") {
+      actual.shouldBe(
+        // language=TypeScript
+        """
           |export type Project =
           |  | Project.DeprecatedProject
           |  | Project.OProj;
@@ -118,25 +119,25 @@ class PolymorphismTest {
           |    reason: string;
           |  }
           |}
-      """.trimMargin()
-      .normalize()
-    )
+        """.trimMargin()
+        .normalize()
+      )
+    }
 
-    typescriptCompile(actual).asClue { tscOutput ->
-      tscOutput.shouldNotBeEmpty()
-      tscOutput shouldNotContain "error"
+    test("expect actual compiles").config(tags = tsCompile) {
+      actual.shouldTypeScriptCompile()
     }
   }
 
-  @Test
-  fun testExamplePolymorphicSealedClass02() {
+  context("ExamplePolymorphicSealedClass02") {
     val actual = captureOutput("ExamplePolymorphicSealedClass02") {
       dev.adamko.kxstsgen.example.examplePolymorphicSealedClass02.main()
     }.normalizeJoin()
 
-    actual.shouldBe(
-      // language=TypeScript
-      """
+    test("expect actual matches TypeScript") {
+      actual.shouldBe(
+        // language=TypeScript
+        """
           |export type Dog =
           |  | Dog.Golden
           |  | Dog.Mutt
@@ -204,25 +205,25 @@ class PolymorphismTest {
           |//     }
           |//   }
           |// }
-      """.trimMargin()
-      .normalize()
-    )
+        """.trimMargin()
+        .normalize()
+      )
+    }
 
-    typescriptCompile(actual).asClue { tscOutput ->
-      tscOutput.shouldNotBeEmpty()
-      tscOutput shouldNotContain "error"
+    test("expect actual compiles").config(tags = tsCompile) {
+      actual.shouldTypeScriptCompile()
     }
   }
 
-  @Test
-  fun testExamplePolymorphicObjects01() {
+  context("ExamplePolymorphicObjects01") {
     val actual = captureOutput("ExamplePolymorphicObjects01") {
       dev.adamko.kxstsgen.example.examplePolymorphicObjects01.main()
     }.normalizeJoin()
 
-    actual.shouldBe(
-      // language=TypeScript
-      """
+    test("expect actual matches TypeScript") {
+      actual.shouldBe(
+        // language=TypeScript
+        """
           |export type Response =
           |  | Response.EmptyResponse
           |  | Response.TextResponse;
@@ -242,55 +243,55 @@ class PolymorphismTest {
           |    text: string;
           |  }
           |}
-      """.trimMargin()
-      .normalize()
-    )
+        """.trimMargin()
+        .normalize()
+      )
+    }
 
-    typescriptCompile(actual).asClue { tscOutput ->
-      tscOutput.shouldNotBeEmpty()
-      tscOutput shouldNotContain "error"
+    test("expect actual compiles").config(tags = tsCompile) {
+      actual.shouldTypeScriptCompile()
     }
   }
 
-  @Test
-  fun testExampleGenerics01() {
+  context("ExampleGenerics01") {
     val actual = captureOutput("ExampleGenerics01") {
       dev.adamko.kxstsgen.example.exampleGenerics01.main()
     }.normalizeJoin()
 
-    actual.shouldBe(
-      // language=TypeScript
-      """
+    test("expect actual matches TypeScript") {
+      actual.shouldBe(
+        // language=TypeScript
+        """
           |export interface Box {
           |  value: number;
           |}
-      """.trimMargin()
-      .normalize()
-    )
+        """.trimMargin()
+        .normalize()
+      )
+    }
 
-    typescriptCompile(actual).asClue { tscOutput ->
-      tscOutput.shouldNotBeEmpty()
-      tscOutput shouldNotContain "error"
+    test("expect actual compiles").config(tags = tsCompile) {
+      actual.shouldTypeScriptCompile()
     }
   }
 
-  @Test
-  fun testExampleJsonPolymorphic01() {
+  context("ExampleJsonPolymorphic01") {
     val actual = captureOutput("ExampleJsonPolymorphic01") {
       dev.adamko.kxstsgen.example.exampleJsonPolymorphic01.main()
     }.normalizeJoin()
 
-    actual.shouldBe(
-      // language=TypeScript
-      """
+    test("expect actual matches TypeScript") {
+      actual.shouldBe(
+        // language=TypeScript
+        """
           |export type Project = any;
-      """.trimMargin()
-      .normalize()
-    )
+        """.trimMargin()
+        .normalize()
+      )
+    }
 
-    typescriptCompile(actual).asClue { tscOutput ->
-      tscOutput.shouldNotBeEmpty()
-      tscOutput shouldNotContain "error"
+    test("expect actual compiles").config(tags = tsCompile) {
+      actual.shouldTypeScriptCompile()
     }
   }
-}
+})

@@ -3,79 +3,80 @@
 package dev.adamko.kxstsgen.example.test
 
 import dev.adamko.kxstsgen.util.*
-import io.kotest.assertions.*
+import io.kotest.core.spec.style.*
 import io.kotest.matchers.*
-import io.kotest.matchers.string.*
 import kotlinx.knit.test.*
-import org.junit.jupiter.api.Test
 
-class DefaultValuesTest {
-  @Test
-  fun testExampleDefaultValuesSingleField01() {
+class DefaultValuesTest : FunSpec({
+
+  tags(Knit)
+
+  context("ExampleDefaultValuesSingleField01") {
     val actual = captureOutput("ExampleDefaultValuesSingleField01") {
       dev.adamko.kxstsgen.example.exampleDefaultValuesSingleField01.main()
     }.normalizeJoin()
 
-    actual.shouldBe(
-      // language=TypeScript
-      """
+    test("expect actual matches TypeScript") {
+      actual.shouldBe(
+        // language=TypeScript
+        """
           |export interface Colour {
           |  rgb?: number;
           |}
-      """.trimMargin()
-      .normalize()
-    )
+        """.trimMargin()
+        .normalize()
+      )
+    }
 
-    typescriptCompile(actual).asClue { tscOutput ->
-      tscOutput.shouldNotBeEmpty()
-      tscOutput shouldNotContain "error"
+    test("expect actual compiles").config(tags = tsCompile) {
+      actual.shouldTypeScriptCompile()
     }
   }
 
-  @Test
-  fun testExampleDefaultValuesSingleField02() {
+  context("ExampleDefaultValuesSingleField02") {
     val actual = captureOutput("ExampleDefaultValuesSingleField02") {
       dev.adamko.kxstsgen.example.exampleDefaultValuesSingleField02.main()
     }.normalizeJoin()
 
-    actual.shouldBe(
-      // language=TypeScript
-      """
+    test("expect actual matches TypeScript") {
+      actual.shouldBe(
+        // language=TypeScript
+        """
           |export interface Colour {
           |  rgb: number | null;
           |}
-      """.trimMargin()
-      .normalize()
-    )
+        """.trimMargin()
+        .normalize()
+      )
+    }
 
-    typescriptCompile(actual).asClue { tscOutput ->
-      tscOutput.shouldNotBeEmpty()
-      tscOutput shouldNotContain "error"
+    test("expect actual compiles").config(tags = tsCompile) {
+      actual.shouldTypeScriptCompile()
     }
   }
 
-  @Test
-  fun testExampleDefaultValuesPrimitiveFields01() {
+  context("ExampleDefaultValuesPrimitiveFields01") {
     val actual = captureOutput("ExampleDefaultValuesPrimitiveFields01") {
       dev.adamko.kxstsgen.example.exampleDefaultValuesPrimitiveFields01.main()
     }.normalizeJoin()
 
-    actual.shouldBe(
-      // language=TypeScript
-      """
+    test("expect actual matches TypeScript") {
+      actual.shouldBe(
+        // language=TypeScript
+        """
           |export interface ContactDetails {
           |  name: string;
           |  email: string | null;
           |  active?: boolean;
           |  phoneNumber?: string | null;
           |}
-      """.trimMargin()
-      .normalize()
-    )
+        """.trimMargin()
+        .normalize()
+      )
+    }
 
-    typescriptCompile(actual).asClue { tscOutput ->
-      tscOutput.shouldNotBeEmpty()
-      tscOutput shouldNotContain "error"
+    test("expect actual compiles").config(tags = tsCompile) {
+      actual.shouldTypeScriptCompile()
     }
   }
-}
+})

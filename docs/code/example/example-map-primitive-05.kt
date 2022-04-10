@@ -7,7 +7,8 @@ import dev.adamko.kxstsgen.*
 
 @Serializable
 data class Config(
-  val properties: Map<String?, String?>
+  val nullableVals: Map<String, String?>,
+  val nullableKeys: Map<String?, String>,
 )
 
 fun main() {

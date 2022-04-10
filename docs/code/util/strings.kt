@@ -1,3 +1,4 @@
+@file:Suppress("PackageDirectoryMismatch")
 package dev.adamko.kxstsgen.util
 
 /**

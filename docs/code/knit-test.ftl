@@ -5,36 +5,40 @@
 package ${test.package}
 
 import dev.adamko.kxstsgen.util.*
-import io.kotest.assertions.*
+<#--import io.kotest.assertions.*-->
+<#--import io.kotest.core.*-->
+import io.kotest.core.spec.style.*
 import io.kotest.matchers.*
-import io.kotest.matchers.string.*
+<#--import io.kotest.matchers.string.*-->
 import kotlinx.knit.test.*
-import org.junit.jupiter.api.Test
 
-class ${test.name} {
+class ${test.name} : FunSpec({
+
+  tags(Knit)
+
 <#list cases as case><#assign method = test["mode.${case.param}"]!"custom">
-  @Test
-  fun test${case.name}() {
+  context("${case.name}") {
     val actual = captureOutput("${case.name}") {
       ${case.knit.package}.${case.knit.name}.main()
     }.normalizeJoin()
 
-    actual.shouldBe(
-      // language=TypeScript
-      """
-        <#list case.lines as line>
-        |${line}
-        </#list>
-      """.trimMargin()
-      .normalize()
-    )
+    test("expect actual matches TypeScript") {
+      actual.shouldBe(
+        // language=TypeScript
+        """
+          <#list case.lines as line>
+          |${line}
+          </#list>
+        """.trimMargin()
+        .normalize()
+      )
+    }
 
-    typescriptCompile(actual).asClue { tscOutput ->
-      tscOutput.shouldNotBeEmpty()
-      tscOutput shouldNotContain "error"
+    test("expect actual compiles").config(tags = tsCompile) {
+      actual.shouldTypeScriptCompile()
     }
   }
 <#sep>
 
 </#list>
-}
+})

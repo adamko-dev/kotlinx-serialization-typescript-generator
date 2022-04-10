@@ -1,34 +1,67 @@
+@file:Suppress("PackageDirectoryMismatch")
+
 package dev.adamko.kxstsgen.util
 
+import com.github.pgreze.process.ProcessResult
+import com.github.pgreze.process.Redirect
+import com.github.pgreze.process.process
+import java.io.InputStream
 import java.nio.file.Path
-import java.util.concurrent.TimeUnit
 import kotlin.io.path.createTempFile
+import kotlin.io.path.inputStream
 import kotlin.io.path.invariantSeparatorsPathString
-import kotlin.io.path.writeText
+import kotlin.io.path.nameWithoutExtension
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.withContext
 
 
-fun typescriptCompile(
-  typeScriptSrcCode: String
-): String {
-  val file: Path = createTempFile("kxstsgen", ".d.ts")
-  file.writeText(typeScriptSrcCode)
-
-  val process: Process = ProcessBuilder(
+@OptIn(ExperimentalCoroutinesApi::class)
+suspend fun tsc2(
+  typeScriptFile: Path,
+): ProcessResult {
+  return process(
     npxCmd,
-    "-p",
-    "typescript",
+    "-p", "typescript",
     "tsc",
-    file.invariantSeparatorsPathString,
+    typeScriptFile.invariantSeparatorsPathString,
     "--noEmit",
-    "--listFiles",
+    "--listFiles", // so we can check $file is compiled
+    "--pretty", "false", // doesn't work?
+    "--strict",
     "--target", "esnext", // required for Map<>
+
+    stdout = Redirect.CAPTURE,
+    stderr = Redirect.CAPTURE,
   )
-    .start()
+}
 
-  process.waitFor(5, TimeUnit.SECONDS)
+suspend fun typescriptCompile(
+  typeScriptFile: Path,
+): Pair<Process, InputStream> {
 
-  return process.inputStream.readAllBytes().decodeToString() +
-    process.errorStream.readAllBytes().decodeToString()
+  val logFile = createTempFile(
+    typeScriptFile.parent,
+    prefix = typeScriptFile.fileName.nameWithoutExtension.dropLastWhile { it.isDigit() } + "_",
+    suffix = ".log",
+  )
+
+  val processBuilder = ProcessBuilder(
+    npxCmd,
+    "-p", "typescript",
+    "tsc",
+    typeScriptFile.invariantSeparatorsPathString,
+    "--noEmit",
+    "--listFiles", // so we can check $file is compiled
+    "--pretty", "false", // doesn't work?
+    "--strict",
+    "--target", "esnext", // required for Map<>
+  ).redirectErrorStream(true)
+    .redirectOutput(logFile.toFile())
+
+  return withContext(Dispatchers.IO) {
+    processBuilder.start() to logFile.inputStream()
+  }
 }
 
 

@@ -3,34 +3,34 @@
 
 package dev.adamko.kxstsgen.example.test
 
+import dev.adamko.kxstsgen.util.TSCompile
 import dev.adamko.kxstsgen.util.normalize
 import dev.adamko.kxstsgen.util.normalizeJoin
-import dev.adamko.kxstsgen.util.typescriptCompile
-import io.kotest.assertions.asClue
+import dev.adamko.kxstsgen.util.shouldTypeScriptCompile
+import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
-import io.kotest.matchers.string.shouldNotBeEmpty
-import io.kotest.matchers.string.shouldNotContain
 import kotlinx.knit.test.captureOutput
-import org.junit.jupiter.api.Test
 
-class TuplesTest2 {
-  @Test
-  fun testExampleTuple01() {
+class TuplesTest2 : FunSpec({
+
+  context("ExampleTuple01") {
+
     val actual = captureOutput("ExampleTuple01") {
       dev.adamko.kxstsgen.example.exampleTuple01.main()
     }.normalizeJoin()
 
-    actual.shouldBe(
-      // language=TypeScript
-      """
-          |export type SimpleTypes = [string, number, number | null, boolean, string];
-        """.trimMargin()
-        .normalize()
-    )
+    test("expect actual matches TypeScript") {
+      actual.shouldBe(
+        // language=TypeScript
+        """
+        |export type SimpleTypes = [string, number, number | null, boolean, string];
+      """.trimMargin()
+          .normalize()
+      )
+    }
 
-    typescriptCompile(actual).asClue { tscOutput ->
-      tscOutput.shouldNotBeEmpty()
-      tscOutput shouldNotContain "error"
+    test("expect actual compiles").config(tags = setOf(TSCompile)) {
+      actual.shouldTypeScriptCompile()
     }
   }
-}
+})
