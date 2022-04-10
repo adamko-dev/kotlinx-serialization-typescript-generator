@@ -140,10 +140,15 @@ export type Data = string;
 
 ### Nullable keys and values
 
+Nullable keys are not allowed, so are convert to an ES6 Map.
+
+> An index signature parameter type must be 'string', 'number', 'symbol', or a template literal type
+
 ```kotlin
 @Serializable
 data class Config(
-  val properties: Map<String?, String?>
+  val nullableVals: Map<String, String?>,
+  val nullableKeys: Map<String?, String>,
 )
 
 fun main() {
@@ -156,7 +161,9 @@ fun main() {
 
 ```typescript
 export interface Config {
-  properties: { [key: string | null]: string | null };
+  nullableVals: { [key: string]: string | null };
+  // [key: string | null] is not allowed
+  nullableKeys: Map<string | null, string>;
 }
 ```
 
