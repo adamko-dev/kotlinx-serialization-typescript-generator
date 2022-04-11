@@ -20,7 +20,7 @@ fun interface TsElementIdConverter {
         .substringBeforeLast(">")
 
       return when {
-        namespace.isBlank() -> TsElementId("$id")
+        namespace.isBlank() -> TsElementId(id)
         else                -> TsElementId("$namespace.$id")
       }
     }
