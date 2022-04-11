@@ -12,21 +12,27 @@ fun interface TsMapTypeConverter {
 
   operator fun invoke(
     keyDescriptor: SerialDescriptor,
-    valDescriptor: SerialDescriptor?,
+    valDescriptor: SerialDescriptor,
   ): TsLiteral.TsMap.Type
 
   object Default : TsMapTypeConverter {
 
     override operator fun invoke(
       keyDescriptor: SerialDescriptor,
-      valDescriptor: SerialDescriptor?,
+      valDescriptor: SerialDescriptor,
     ): TsLiteral.TsMap.Type {
+      return when {
+        keyDescriptor.isNullable -> TsLiteral.TsMap.Type.MAP
+        keyDescriptor.isInline   -> extractInlineType(keyDescriptor)
+        else                     -> serialKindMapType(keyDescriptor.kind)
+      }
+    }
 
-      if (keyDescriptor.isNullable) return TsLiteral.TsMap.Type.MAP
-
-      if (keyDescriptor.isInline) return extractInlineType(keyDescriptor, valDescriptor)
-
-      return when (keyDescriptor.kind) {
+    /** Determine a map type based on [kind] */
+    fun serialKindMapType(
+      kind: SerialKind,
+    ): TsLiteral.TsMap.Type {
+      return when (kind) {
         SerialKind.ENUM      -> TsLiteral.TsMap.Type.MAPPED_OBJECT
 
         PrimitiveKind.STRING -> TsLiteral.TsMap.Type.INDEX_SIGNATURE
@@ -49,16 +55,14 @@ fun interface TsMapTypeConverter {
       }
     }
 
-    tailrec fun extractInlineType(
-      keyDescriptor: SerialDescriptor?,
-      valDescriptor: SerialDescriptor?,
-    ): TsLiteral.TsMap.Type {
+
+    tailrec fun extractInlineType(keyDescriptor: SerialDescriptor): TsLiteral.TsMap.Type {
       return when {
-        keyDescriptor == null   -> TsLiteral.TsMap.Type.MAP
-        !keyDescriptor.isInline -> this(keyDescriptor, valDescriptor)
-        else                    -> {
-          val inlineKeyDescriptor = keyDescriptor.elementDescriptors.firstOrNull()
-          extractInlineType(inlineKeyDescriptor, valDescriptor)
+        !keyDescriptor.isInline
+          || keyDescriptor.elementsCount == 0 -> serialKindMapType(keyDescriptor.kind)
+        else                                  -> {
+          val inlineKeyDescriptor = keyDescriptor.elementDescriptors.first()
+          extractInlineType(inlineKeyDescriptor)
         }
       }
     }
