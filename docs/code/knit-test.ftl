@@ -1,3 +1,4 @@
+<#--@formatter:off-->
 <#-- @ftlvariable name="test.name" type="java.lang.String" -->
 <#-- @ftlvariable name="test.package" type="java.lang.String" -->
 // This file was automatically generated from ${file.name} by Knit tool. Do not edit.
@@ -24,7 +25,9 @@ class ${test.name} : FunSpec({
 
     test("expect actual matches TypeScript") {
       actual.shouldBe(
+        <#if case.param != "TS_COMPILE_OFF">
         // language=TypeScript
+        </#if>
         """
           <#list case.lines as line>
           |${line}
@@ -34,9 +37,16 @@ class ${test.name} : FunSpec({
       )
     }
 
+    <#if case.param == "TS_COMPILE_OFF">
+    // TS_COMPILE_OFF
+    // test("expect actual compiles").config(tags = tsCompile) {
+    //   actual.shouldTypeScriptCompile()
+    // }
+    <#else>
     test("expect actual compiles").config(tags = tsCompile) {
       actual.shouldTypeScriptCompile()
     }
+    </#if>
   }
 <#sep>
 

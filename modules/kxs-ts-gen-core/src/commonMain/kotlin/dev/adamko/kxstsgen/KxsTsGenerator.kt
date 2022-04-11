@@ -7,6 +7,7 @@ import dev.adamko.kxstsgen.core.TsElement
 import dev.adamko.kxstsgen.core.TsElementConverter
 import dev.adamko.kxstsgen.core.TsElementId
 import dev.adamko.kxstsgen.core.TsElementIdConverter
+import dev.adamko.kxstsgen.core.TsLiteral
 import dev.adamko.kxstsgen.core.TsMapTypeConverter
 import dev.adamko.kxstsgen.core.TsTypeRef
 import dev.adamko.kxstsgen.core.TsTypeRefConverter
@@ -18,71 +19,117 @@ import kotlinx.serialization.descriptors.SerialDescriptor
  * Generate TypeScript from [`@Serializable`][Serializable] Kotlin.
  *
  * The output can be controlled by the settings in [config],
- * or by setting hardcoded values in [serializerDescriptors] or [descriptorElements],
+ * or by setting hardcoded values in [serializerDescriptorOverrides] or [descriptorOverrides],
  * or changed by overriding any converter.
  *
  * @param[config] General settings that affect how KxTsGen works
- * @param[descriptorsExtractor] Given a [KSerializer], extract all [SerialDescriptor]s
- * @param[elementIdConverter] Create an [TsElementId] from a [SerialDescriptor]
- * @param[mapTypeConverter] Decides how [Map]s should be converted
- * @param[typeRefConverter] Creates [TsTypeRef]s
- * @param[elementConverter] Converts [SerialDescriptor]s to [TsElement]s
  * @param[sourceCodeGenerator] Convert [TsElement]s to TypeScript source code
  */
 open class KxsTsGenerator(
   open val config: KxsTsConfig = KxsTsConfig(),
 
-  open val descriptorsExtractor: SerializerDescriptorsExtractor = SerializerDescriptorsExtractor.Default,
-
-  open val elementIdConverter: TsElementIdConverter = TsElementIdConverter.Default,
-
-  open val mapTypeConverter: TsMapTypeConverter = TsMapTypeConverter.Default,
-
-  open val typeRefConverter: TsTypeRefConverter =
-    TsTypeRefConverter.Default(elementIdConverter, mapTypeConverter),
-
-  open val elementConverter: TsElementConverter =
-    TsElementConverter.Default(
-      elementIdConverter,
-      mapTypeConverter,
-      typeRefConverter,
-    ),
-
   open val sourceCodeGenerator: KxsTsSourceCodeGenerator = KxsTsSourceCodeGenerator.Default(config),
 ) {
 
-  /**
-   * Stateful cache of all [descriptors][SerialDescriptor] extracted from a
-   * [serializer][KSerializer].
-   *
-   * To customise the descriptors that a serializer produces, set value into this map.
-   */
-  open val serializerDescriptors: MutableMap<KSerializer<*>, Set<SerialDescriptor>> = mutableMapOf()
 
-  /**
-   * Cache of all [elements][TsElement] that are created from any [descriptor][SerialDescriptor].
-   *
-   * To customise the elements that a descriptor produces, set value into this map.
-   */
-  open val descriptorElements: MutableMap<SerialDescriptor, Set<TsElement>> = mutableMapOf()
+  val serializerDescriptorOverrides: MutableMap<KSerializer<*>, Set<SerialDescriptor>> =
+    mutableMapOf()
+
+  val descriptorOverrides: MutableMap<SerialDescriptor, TsElement> = mutableMapOf()
+
+
+  open val descriptorsExtractor = object : SerializerDescriptorsExtractor {
+    val extractor: SerializerDescriptorsExtractor = SerializerDescriptorsExtractor.Default
+    val cache: MutableMap<KSerializer<*>, Set<SerialDescriptor>> = mutableMapOf()
+
+    override fun invoke(serializer: KSerializer<*>): Set<SerialDescriptor> =
+      cache.getOrPut(serializer) {
+        serializerDescriptorOverrides[serializer] ?: extractor(serializer)
+      }
+  }
+
+
+  val elementIdConverter: TsElementIdConverter = object : TsElementIdConverter {
+    private val converter: TsElementIdConverter = TsElementIdConverter.Default
+    private val cache: MutableMap<SerialDescriptor, TsElementId> = mutableMapOf()
+
+    override fun invoke(descriptor: SerialDescriptor): TsElementId =
+      cache.getOrPut(descriptor) {
+        when (val override = descriptorOverrides[descriptor]) {
+          is TsDeclaration -> override.id
+          else             -> converter(descriptor)
+        }
+      }
+  }
+
+
+  val mapTypeConverter: TsMapTypeConverter = object : TsMapTypeConverter {
+    private val converter = TsMapTypeConverter.Default
+    private val cache: MutableMap<Pair<SerialDescriptor, SerialDescriptor>, TsLiteral.TsMap.Type> =
+      mutableMapOf()
+
+    override fun invoke(
+      keyDescriptor: SerialDescriptor,
+      valDescriptor: SerialDescriptor,
+    ): TsLiteral.TsMap.Type =
+      cache.getOrPut(keyDescriptor to valDescriptor) {
+        when (val override = descriptorOverrides[keyDescriptor]) {
+          is TsLiteral.TsMap -> override.type
+          else               -> converter(keyDescriptor, valDescriptor)
+        }
+      }
+  }
+
+
+  val typeRefConverter: TsTypeRefConverter = object : TsTypeRefConverter {
+    private val converter = TsTypeRefConverter.Default(elementIdConverter, mapTypeConverter)
+    val cache: MutableMap<SerialDescriptor, TsTypeRef> = mutableMapOf()
+
+    override fun invoke(descriptor: SerialDescriptor): TsTypeRef =
+      cache.getOrPut(descriptor) {
+        when (val override = descriptorOverrides[descriptor]) {
+          null             -> converter(descriptor)
+          is TsLiteral     -> TsTypeRef.Literal(override, descriptor.isNullable)
+          is TsDeclaration -> TsTypeRef.Declaration(override.id, null, descriptor.isNullable)
+        }
+      }
+  }
+
+
+  val elementConverter: TsElementConverter = object : TsElementConverter {
+    private val converter = TsElementConverter.Default(
+      elementIdConverter,
+      mapTypeConverter,
+      typeRefConverter,
+    )
+    val cache: MutableMap<SerialDescriptor, Set<TsElement>> = mutableMapOf()
+
+    override fun invoke(descriptor: SerialDescriptor): Set<TsElement> =
+      cache.getOrPut(descriptor) {
+        when (val override = descriptorOverrides[descriptor]) {
+          null -> converter(descriptor)
+          else -> setOf(override)
+        }
+      }
+  }
+
 
   open fun generate(vararg serializers: KSerializer<*>): String {
     return serializers
       .toSet()
 
       // 1. get all SerialDescriptors from a KSerializer
-      .flatMap { serializer ->
-        serializerDescriptors.getOrPut(serializer) { descriptorsExtractor(serializer) }
-      }
+      .flatMap { serializer -> descriptorsExtractor(serializer) }
       .toSet()
 
       // 2. convert each SerialDescriptor to some TsElements
-      .flatMap { descriptor ->
-        descriptorElements.getOrPut(descriptor) { elementConverter(descriptor) }
-      }
+      .flatMap { descriptor -> elementConverter(descriptor) }
       .toSet()
 
+      // 3. group by namespaces
       .groupBy { element -> sourceCodeGenerator.groupElementsBy(element) }
+
+      // 4. convert to source code
       .mapValues { (_, elements) ->
         elements
           .filterIsInstance<TsDeclaration>()
