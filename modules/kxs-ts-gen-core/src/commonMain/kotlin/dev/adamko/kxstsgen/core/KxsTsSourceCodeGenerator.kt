@@ -86,6 +86,7 @@ abstract class KxsTsSourceCodeGenerator(
       """.trimMargin()
     }
 
+
     override fun generateInterface(element: TsDeclaration.TsInterface): String {
 
       val properties = element.properties
@@ -99,6 +100,7 @@ abstract class KxsTsSourceCodeGenerator(
         append("}")
       }
     }
+
 
     /**
      * Generate
@@ -144,6 +146,7 @@ abstract class KxsTsSourceCodeGenerator(
         }
       }
     }
+
 
     override fun generateTypeUnion(element: TsDeclaration.TsTypeUnion): String {
       return if (element.typeRefs.isEmpty()) {
@@ -248,7 +251,5 @@ abstract class KxsTsSourceCodeGenerator(
         TsLiteral.TsMap.Type.MAP             -> "Map<$keyTypeRef, $valueTypeRef>"
       }
     }
-
   }
-
 }
