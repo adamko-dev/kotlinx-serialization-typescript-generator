@@ -9,24 +9,16 @@ import kotlinx.serialization.builtins.serializer
 import dev.adamko.kxstsgen.core.*
 
 @Serializable
-data class ItemHolder(
-  val item: Item,
-)
-
-@Serializable
 data class Item(
-  val count: UInt? = 0u,
+  val price: Double,
+  val count: Int,
 )
 
 fun main() {
   val tsGenerator = KxsTsGenerator()
 
   tsGenerator.descriptorOverrides +=
-    UInt.serializer().descriptor to TsDeclaration.TsTypeAlias(
-      id = TsElementId("kotlin.UInt"),
-      typeRef = TsTypeRef.Declaration(id = TsElementId("uint"), parent = null, nullable = false)
-    )
+    Double.serializer().descriptor to TsLiteral.Custom("customDouble")
 
-  println(tsGenerator.generate(ItemHolder.serializer()))
+  println(tsGenerator.generate(Item.serializer()))
 }
-

@@ -66,6 +66,41 @@ export type Double = double; // assume that 'double' will be provided by another
 
 <!--- TEST TS_COMPILE_OFF -->
 
+Instead of changing the output to be a type alias, a custom 'literal' type can be set instead.
+
+```kotlin
+import kotlinx.serialization.builtins.serializer
+import dev.adamko.kxstsgen.core.*
+
+@Serializable
+data class Item(
+  val price: Double,
+  val count: Int,
+)
+
+fun main() {
+  val tsGenerator = KxsTsGenerator()
+
+  tsGenerator.descriptorOverrides +=
+    Double.serializer().descriptor to TsLiteral.Custom("customDouble")
+
+  println(tsGenerator.generate(Item.serializer()))
+}
+```
+
+> You can get the full code [here](./code/example/example-customising-output-02.kt).
+
+This produces no type alias, and `Double` is overridden to be `customDouble`.
+
+```typescript
+export interface Item {
+  price: customDouble;
+  count: number;
+}
+```
+
+<!--- TEST TS_COMPILE_OFF -->
+
 ### Override nullable elements
 
 Even though UInt is nullable, it should be overridden by the UInt defined in `descriptorOverrides`.
@@ -82,6 +117,7 @@ data class ItemHolder(
 @Serializable
 data class Item(
   val count: UInt? = 0u,
+  val score: Int? = 0,
 )
 
 fun main() {
@@ -93,12 +129,14 @@ fun main() {
       typeRef = TsTypeRef.Declaration(id = TsElementId("uint"), parent = null, nullable = false)
     )
 
+  tsGenerator.descriptorOverrides += Int.serializer().descriptor to TsLiteral.Custom("customInt")
+
   println(tsGenerator.generate(ItemHolder.serializer()))
 }
 
 ```
 
-> You can get the full code [here](./code/example/example-customising-output-02.kt).
+> You can get the full code [here](./code/example/example-customising-output-03.kt).
 
 ```typescript
 export interface ItemHolder {
@@ -107,6 +145,7 @@ export interface ItemHolder {
 
 export interface Item {
   count?: UInt | null;
+  score?: customInt | null;
 }
 
 export type UInt = uint;
@@ -130,14 +169,20 @@ import dev.adamko.kxstsgen.core.*
 value class Tick(val value: UInt)
 
 @Serializable
+@JvmInline
+value class Phase(val value: Int)
+
+@Serializable
 data class ItemHolder(
   val item: Item,
   val tick: Tick?,
+  val phase: Phase?,
 )
 
 @Serializable
 data class Item(
   val count: UInt? = 0u,
+  val score: Int? = 0,
 )
 
 fun main() {
@@ -149,25 +194,31 @@ fun main() {
       typeRef = TsTypeRef.Declaration(id = TsElementId("uint"), parent = null, nullable = false)
     )
 
+  tsGenerator.descriptorOverrides += Int.serializer().descriptor to TsLiteral.Custom("customInt")
+
   println(tsGenerator.generate(ItemHolder.serializer()))
 }
 
 
 ```
 
-> You can get the full code [here](./code/example/example-customising-output-03.kt).
+> You can get the full code [here](./code/example/example-customising-output-04.kt).
 
 ```typescript
 export interface ItemHolder {
   item: Item;
   tick: Tick | null;
+  phase: Phase | null;
 }
 
 export interface Item {
   count?: UInt | null;
+  score?: customInt | null;
 }
 
 export type Tick = UInt;
+
+export type Phase = customInt;
 
 export type UInt = uint;
 ```

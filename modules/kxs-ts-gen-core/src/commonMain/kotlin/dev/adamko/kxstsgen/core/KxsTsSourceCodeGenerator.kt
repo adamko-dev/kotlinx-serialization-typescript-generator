@@ -200,6 +200,8 @@ abstract class KxsTsSourceCodeGenerator(
           }
 
           is TsLiteral.TsMap     -> generateMapTypeReference(typeRef.element)
+
+          is TsLiteral.Custom    -> typeRef.element.value
         }
 
         is TsTypeRef.Declaration -> {

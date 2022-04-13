@@ -120,6 +120,8 @@ sealed interface TsLiteral : TsElement {
     }
   }
 
+  @JvmInline
+  value class Custom(val value: String) : TsLiteral
 }
 
 

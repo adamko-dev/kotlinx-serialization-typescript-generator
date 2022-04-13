@@ -1,6 +1,6 @@
 // This file was automatically generated from customising-output.md by Knit tool. Do not edit.
 @file:Suppress("PackageDirectoryMismatch", "unused")
-package dev.adamko.kxstsgen.example.exampleCustomisingOutput03
+package dev.adamko.kxstsgen.example.exampleCustomisingOutput04
 
 import kotlinx.serialization.*
 import dev.adamko.kxstsgen.*
@@ -8,9 +8,20 @@ import dev.adamko.kxstsgen.*
 import kotlinx.serialization.builtins.serializer
 import dev.adamko.kxstsgen.core.*
 
+
+@Serializable
+@JvmInline
+value class Tick(val value: UInt)
+
+@Serializable
+@JvmInline
+value class Phase(val value: Int)
+
 @Serializable
 data class ItemHolder(
   val item: Item,
+  val tick: Tick?,
+  val phase: Phase?,
 )
 
 @Serializable
@@ -32,4 +43,5 @@ fun main() {
 
   println(tsGenerator.generate(ItemHolder.serializer()))
 }
+
 
