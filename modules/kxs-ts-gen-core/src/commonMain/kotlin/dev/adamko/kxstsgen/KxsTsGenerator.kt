@@ -13,6 +13,7 @@ import dev.adamko.kxstsgen.core.TsTypeRef
 import dev.adamko.kxstsgen.core.TsTypeRefConverter
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.descriptors.SerialDescriptor
+import kotlinx.serialization.descriptors.nullable
 
 
 /**
@@ -37,6 +38,12 @@ open class KxsTsGenerator(
 
   val descriptorOverrides: MutableMap<SerialDescriptor, TsElement> = mutableMapOf()
 
+  private fun findOverride(descriptor: SerialDescriptor): TsElement? {
+    return descriptorOverrides.entries.run {
+      firstOrNull { it.key == descriptor } ?: firstOrNull { it.key.nullable == descriptor.nullable }
+    }?.value
+  }
+
 
   open val descriptorsExtractor = object : SerializerDescriptorsExtractor {
     val extractor: SerializerDescriptorsExtractor = SerializerDescriptorsExtractor.Default
@@ -55,7 +62,7 @@ open class KxsTsGenerator(
 
     override fun invoke(descriptor: SerialDescriptor): TsElementId =
       cache.getOrPut(descriptor) {
-        when (val override = descriptorOverrides[descriptor]) {
+        when (val override = findOverride(descriptor)) {
           is TsDeclaration -> override.id
           else             -> converter(descriptor)
         }
@@ -73,10 +80,7 @@ open class KxsTsGenerator(
       valDescriptor: SerialDescriptor,
     ): TsLiteral.TsMap.Type =
       cache.getOrPut(keyDescriptor to valDescriptor) {
-        when (val override = descriptorOverrides[keyDescriptor]) {
-          is TsLiteral.TsMap -> override.type
-          else               -> converter(keyDescriptor, valDescriptor)
-        }
+        converter(keyDescriptor, valDescriptor)
       }
   }
 
@@ -87,7 +91,7 @@ open class KxsTsGenerator(
 
     override fun invoke(descriptor: SerialDescriptor): TsTypeRef =
       cache.getOrPut(descriptor) {
-        when (val override = descriptorOverrides[descriptor]) {
+        when (val override = findOverride(descriptor)) {
           null             -> converter(descriptor)
           is TsLiteral     -> TsTypeRef.Literal(override, descriptor.isNullable)
           is TsDeclaration -> TsTypeRef.Declaration(override.id, null, descriptor.isNullable)
@@ -106,7 +110,7 @@ open class KxsTsGenerator(
 
     override fun invoke(descriptor: SerialDescriptor): Set<TsElement> =
       cache.getOrPut(descriptor) {
-        when (val override = descriptorOverrides[descriptor]) {
+        when (val override = findOverride(descriptor)) {
           null -> converter(descriptor)
           else -> setOf(override)
         }

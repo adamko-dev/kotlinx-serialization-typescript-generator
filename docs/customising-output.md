@@ -7,6 +7,8 @@
 
 * [Introduction](#introduction)
   * [Overriding output](#overriding-output)
+  * [Override nullable elements](#override-nullable-elements)
+  * [Override both nullable and non-nullable descriptors](#override-both-nullable-and-non-nullable-descriptors)
 
 <!--- END -->
 
@@ -60,6 +62,114 @@ export interface Item {
 }
 
 export type Double = double; // assume that 'double' will be provided by another library
+```
+
+<!--- TEST TS_COMPILE_OFF -->
+
+### Override nullable elements
+
+Even though UInt is nullable, it should be overridden by the UInt defined in `descriptorOverrides`.
+
+```kotlin
+import kotlinx.serialization.builtins.serializer
+import dev.adamko.kxstsgen.core.*
+
+@Serializable
+data class ItemHolder(
+  val item: Item,
+)
+
+@Serializable
+data class Item(
+  val count: UInt? = 0u,
+)
+
+fun main() {
+  val tsGenerator = KxsTsGenerator()
+
+  tsGenerator.descriptorOverrides +=
+    UInt.serializer().descriptor to TsDeclaration.TsTypeAlias(
+      id = TsElementId("kotlin.UInt"),
+      typeRef = TsTypeRef.Declaration(id = TsElementId("uint"), parent = null, nullable = false)
+    )
+
+  println(tsGenerator.generate(ItemHolder.serializer()))
+}
+
+```
+
+> You can get the full code [here](./code/example/example-customising-output-02.kt).
+
+```typescript
+export interface ItemHolder {
+  item: Item;
+}
+
+export interface Item {
+  count?: UInt | null;
+}
+
+export type UInt = uint;
+```
+
+<!--- TEST TS_COMPILE_OFF -->
+
+### Override both nullable and non-nullable descriptors
+
+`Tick` has a non-nullable UInt, while `Item` has a nullable UInt. Also, in `ItemHolder`, `Tick` is
+nullable. Even though a non-nullable override for UInt is supplied, the output shouldn't have
+conflicting overrides.
+
+```kotlin
+import kotlinx.serialization.builtins.serializer
+import dev.adamko.kxstsgen.core.*
+
+
+@Serializable
+@JvmInline
+value class Tick(val value: UInt)
+
+@Serializable
+data class ItemHolder(
+  val item: Item,
+  val tick: Tick?,
+)
+
+@Serializable
+data class Item(
+  val count: UInt? = 0u,
+)
+
+fun main() {
+  val tsGenerator = KxsTsGenerator()
+
+  tsGenerator.descriptorOverrides +=
+    UInt.serializer().descriptor to TsDeclaration.TsTypeAlias(
+      id = TsElementId("kotlin.UInt"),
+      typeRef = TsTypeRef.Declaration(id = TsElementId("uint"), parent = null, nullable = false)
+    )
+
+  println(tsGenerator.generate(ItemHolder.serializer()))
+}
+
+
+```
+
+> You can get the full code [here](./code/example/example-customising-output-03.kt).
+
+```typescript
+export interface ItemHolder {
+  item: Item;
+  tick: Tick | null;
+}
+
+export interface Item {
+  count?: UInt | null;
+}
+
+export type Tick = UInt;
+
+export type UInt = uint;
 ```
 
 <!--- TEST TS_COMPILE_OFF -->
