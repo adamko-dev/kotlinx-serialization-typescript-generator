@@ -44,15 +44,10 @@ class CustomisingOutputTest : FunSpec({
     test("expect actual matches TypeScript") {
       actual.shouldBe(
         """
-          |export interface ItemHolder {
-          |  item: Item;
-          |}
-          |
           |export interface Item {
-          |  count?: UInt | null;
+          |  price: customDouble;
+          |  count: number;
           |}
-          |
-          |export type UInt = uint;
         """.trimMargin()
         .normalize()
       )
@@ -74,14 +69,47 @@ class CustomisingOutputTest : FunSpec({
         """
           |export interface ItemHolder {
           |  item: Item;
-          |  tick: Tick | null;
           |}
           |
           |export interface Item {
           |  count?: UInt | null;
+          |  score?: customInt | null;
+          |}
+          |
+          |export type UInt = uint;
+        """.trimMargin()
+        .normalize()
+      )
+    }
+
+    // TS_COMPILE_OFF
+    // test("expect actual compiles").config(tags = tsCompile) {
+    //   actual.shouldTypeScriptCompile()
+    // }
+  }
+
+  context("ExampleCustomisingOutput04") {
+    val actual = captureOutput("ExampleCustomisingOutput04") {
+      dev.adamko.kxstsgen.example.exampleCustomisingOutput04.main()
+    }.normalizeJoin()
+
+    test("expect actual matches TypeScript") {
+      actual.shouldBe(
+        """
+          |export interface ItemHolder {
+          |  item: Item;
+          |  tick: Tick | null;
+          |  phase: Phase | null;
+          |}
+          |
+          |export interface Item {
+          |  count?: UInt | null;
+          |  score?: customInt | null;
           |}
           |
           |export type Tick = UInt;
+          |
+          |export type Phase = customInt;
           |
           |export type UInt = uint;
         """.trimMargin()
