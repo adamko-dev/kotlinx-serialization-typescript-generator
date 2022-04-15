@@ -14,14 +14,14 @@ val kotestVersion = "5.2.3"
 
 kotlin {
 
-//  js(IR) {
-//    binaries.executable()
-//    browser {
+  js(IR) {
+    binaries.executable()
+    browser {
 //      commonWebpackConfig {
 //        cssSupport.enabled = true
 //      }
-//    }
-//  }
+    }
+  }
 
   jvm {
     compilations.all {
@@ -82,8 +82,8 @@ kotlin {
     }
 //    val nativeMain by getting
 //    val nativeTest by getting
-//    val jsMain by getting
-//    val jsTest by getting
+    val jsMain by getting
+    val jsTest by getting
     val jvmMain by getting {
       dependencies {
         implementation(kotlin("reflect"))
@@ -95,5 +95,20 @@ kotlin {
         implementation("io.kotest:kotest-runner-junit5-jvm:$kotestVersion")
       }
     }
+  }
+}
+
+
+val javadocJar by tasks.creating(Jar::class) {
+  group = JavaBasePlugin.DOCUMENTATION_GROUP
+  description = "Assembles java doc to jar"
+  archiveClassifier.set("javadoc")
+  from(tasks.javadoc)
+}
+
+
+publishing {
+  publications.withType<MavenPublication>().configureEach {
+    artifact(javadocJar)
   }
 }
