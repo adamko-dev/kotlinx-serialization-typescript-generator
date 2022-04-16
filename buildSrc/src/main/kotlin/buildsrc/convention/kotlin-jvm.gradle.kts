@@ -33,7 +33,7 @@ java {
 
 tasks.withType<KotlinCompile> {
   kotlinOptions {
-    jvmTarget = "11"
+    jvmTarget = "1.8"
     apiVersion = "1.6"
     languageVersion = "1.6"
   }
