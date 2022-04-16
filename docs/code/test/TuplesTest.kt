@@ -123,6 +123,7 @@ class TuplesTest : FunSpec({
           |  homeLocation: Coordinates;
           |  allLocations: Coordinates[];
           |  namedLocations: { [key: string]: Coordinates };
+          |  locationsInfo: Map<Coordinates, string>;
           |}
           |
           |export type Coordinates = [

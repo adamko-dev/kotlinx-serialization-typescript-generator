@@ -257,6 +257,7 @@ class GameLocations(
   val homeLocation: Coordinates,
   val allLocations: List<Coordinates>,
   val namedLocations: Map<String, Coordinates>,
+  val locationsInfo: Map<Coordinates, String>,
 )
 
 fun main() {
@@ -272,6 +273,7 @@ export interface GameLocations {
   homeLocation: Coordinates;
   allLocations: Coordinates[];
   namedLocations: { [key: string]: Coordinates };
+  locationsInfo: Map<Coordinates, string>;
 }
 
 export type Coordinates = [

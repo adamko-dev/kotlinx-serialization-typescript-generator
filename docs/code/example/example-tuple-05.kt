@@ -13,6 +13,7 @@ class GameLocations(
   val homeLocation: Coordinates,
   val allLocations: List<Coordinates>,
   val namedLocations: Map<String, Coordinates>,
+  val locationsInfo: Map<Coordinates, String>,
 )
 
 fun main() {
