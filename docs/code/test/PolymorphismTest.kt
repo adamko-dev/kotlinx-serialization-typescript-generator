@@ -104,7 +104,7 @@ class PolymorphismTest : FunSpec({
           |export namespace Project {
           |  export enum Type {
           |    OProj = "OProj",
-          |    DeprecatedProject = "DeprecatedProject",
+          |    DeprecatedProject = "dev.adamko.kxstsgen.example.examplePolymorphicSealedClass01.DeprecatedProject",
           |  }
           |
           |  export interface OProj {
@@ -145,9 +145,9 @@ class PolymorphismTest : FunSpec({
           |
           |export namespace Dog {
           |  export enum Type {
-          |    Mutt = "Mutt",
-          |    Golden = "Golden",
-          |    NovaScotia = "NovaScotia",
+          |    Mutt = "Dog.Mutt",
+          |    Golden = "Dog.Retriever.Golden",
+          |    NovaScotia = "Dog.Retriever.NovaScotia",
           |  }
           |
           |  export interface Mutt {
@@ -230,8 +230,8 @@ class PolymorphismTest : FunSpec({
           |
           |export namespace Response {
           |  export enum Type {
-          |    EmptyResponse = "EmptyResponse",
-          |    TextResponse = "TextResponse",
+          |    EmptyResponse = "dev.adamko.kxstsgen.example.examplePolymorphicObjects01.EmptyResponse",
+          |    TextResponse = "dev.adamko.kxstsgen.example.examplePolymorphicObjects01.TextResponse",
           |  }
           |
           |  export interface EmptyResponse {

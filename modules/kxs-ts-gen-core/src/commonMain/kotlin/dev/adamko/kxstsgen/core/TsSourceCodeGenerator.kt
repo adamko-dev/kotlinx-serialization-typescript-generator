@@ -75,8 +75,9 @@ abstract class TsSourceCodeGenerator(
 
       val enumMembers = enum.members.joinToString("\n") { member ->
         """
-          |${config.indent}$member = "$member",
+          |${member.name} = "${generateTypeReference(member.typeRef)}",
         """.trimMargin()
+          .prependIndent(config.indent)
       }
 
       return """

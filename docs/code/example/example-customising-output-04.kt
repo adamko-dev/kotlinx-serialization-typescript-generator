@@ -43,5 +43,3 @@ fun main() {
 
   println(tsGenerator.generate(ItemHolder.serializer()))
 }
-
-

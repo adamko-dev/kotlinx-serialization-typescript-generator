@@ -28,7 +28,7 @@ data class SimpleTypes(
     }
   ) {
     override fun tupleConstructor(elements: Iterator<*>): SimpleTypes {
-      // When deserializing, the elements will be available as a list, in the order defined
+      // When deserializing, the elements will be available as a list, in the order defined above
       return SimpleTypes(
         elements.next() as String,
         elements.next() as Int,
