@@ -2,28 +2,23 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
   buildsrc.convention.`kotlin-jvm`
-//  kotlin("plugin.serialization")
-
-//  id("org.jetbrains.reflekt")
 }
 
 description = "Experimental alternative to Kotlinx Serialization. Currently unused."
 
-val kspVersion = "1.6.10-1.0.4"
-val kotlinCompileTestingVersion = "1.4.7"
-val kotlinxSerializationVersion = "1.3.2" // TODO put dependencies in libs.version.toml
 
 dependencies {
-  implementation("com.google.devtools.ksp:symbol-processing-api:$kspVersion")
+  implementation(platform(projects.modules.versionsPlatform))
 
-  testImplementation("com.github.tschuchortdev:kotlin-compile-testing:$kotlinCompileTestingVersion")
-  testImplementation("com.github.tschuchortdev:kotlin-compile-testing-ksp:$kotlinCompileTestingVersion")
+  implementation(libs.kotlinSymbolProcessing)
+
+  testImplementation(libs.kotlinCompileTesting)
+  testImplementation(libs.kotlinCompileTesting.ksp)
 
   implementation(projects.modules.kxsTsGenCore)
 
-  implementation(platform("org.jetbrains.kotlinx:kotlinx-serialization-bom:${kotlinxSerializationVersion}"))
-  implementation("org.jetbrains.kotlinx:kotlinx-serialization-core")
-  implementation("org.jetbrains.kotlinx:kotlinx-serialization-json")
+  implementation(libs.kotlinx.serialization.core)
+  implementation(libs.kotlinx.serialization.json)
 
   testImplementation(kotlin("test"))
 }

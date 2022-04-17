@@ -8,47 +8,32 @@ plugins {
 }
 
 
-object Versions {
-  const val jvmTarget = "11"
-  const val kotlinTarget = "1.6"
-
-  const val kotlin = "1.6.20"
-
-  const val kotlinxKnit = "0.3.0"
-  const val kotlinxKover = "0.5.0"
-  const val kotlinxSerialization = "1.3.2"
-  const val ksp = "1.6.20-1.0.5"
-  const val gradleNodePlugin = "3.2.1"
-
-  const val kotest = "5.2.3"
-}
-
-
 dependencies {
-  implementation(enforcedPlatform("org.jetbrains.kotlin:kotlin-bom:${Versions.kotlin}"))
+  implementation(enforcedPlatform(libs.kotlin.bom))
   implementation("org.jetbrains.kotlin:kotlin-serialization")
-  implementation("org.jetbrains.kotlin:kotlin-reflect")
-  implementation("org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.kotlin}")
+//  implementation("org.jetbrains.kotlin:kotlin-reflect")
 
-  implementation("com.google.devtools.ksp:com.google.devtools.ksp.gradle.plugin:${Versions.ksp}")
+  implementation(libs.kotlin.gradlePlugin)
+  implementation(libs.kotlinSymbolProcessing.gradlePlugin)
 
-  implementation(platform("org.jetbrains.kotlinx:kotlinx-serialization-bom:${Versions.kotlinxSerialization}"))
+  implementation(libs.kotest.gradlePlugin)
 
-  implementation("io.kotest:kotest-framework-multiplatform-plugin-gradle:${Versions.kotest}")
+  implementation(libs.kotlinx.kover.gradlePlugin)
 
-  implementation("org.jetbrains.kotlinx:kotlinx-knit:${Versions.kotlinxKnit}")
-  implementation("org.jetbrains.kotlinx:kover:${Versions.kotlinxKover}")
+  implementation(libs.kotlinx.knit.gradlePlugin)
 
-  implementation("com.github.node-gradle:gradle-node-plugin:${Versions.gradleNodePlugin}")
+  implementation(libs.gradleNodePlugin)
 }
 
+val jvmTarget = "11"
+val kotlinTarget = "1.6"
 
 tasks.withType<KotlinCompile>().configureEach {
 
   kotlinOptions {
-    jvmTarget = Versions.jvmTarget
-    apiVersion = Versions.kotlinTarget
-    languageVersion = Versions.kotlinTarget
+    jvmTarget = jvmTarget
+    apiVersion = kotlinTarget
+    languageVersion = kotlinTarget
   }
 
   kotlinOptions.freeCompilerArgs += listOf(
@@ -60,11 +45,11 @@ tasks.withType<KotlinCompile>().configureEach {
 
 kotlin {
   jvmToolchain {
-    (this as JavaToolchainSpec).languageVersion.set(JavaLanguageVersion.of(Versions.jvmTarget))
+    (this as JavaToolchainSpec).languageVersion.set(JavaLanguageVersion.of(jvmTarget))
   }
 
   kotlinDslPluginOptions {
-    jvmTarget.set(Versions.jvmTarget)
+    jvmTarget.set(jvmTarget)
   }
 }
 
