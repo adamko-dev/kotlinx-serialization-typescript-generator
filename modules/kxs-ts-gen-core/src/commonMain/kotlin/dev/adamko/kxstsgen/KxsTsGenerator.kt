@@ -1,6 +1,6 @@
 package dev.adamko.kxstsgen
 
-import dev.adamko.kxstsgen.core.KxsTsSourceCodeGenerator
+import dev.adamko.kxstsgen.core.TsSourceCodeGenerator
 import dev.adamko.kxstsgen.core.SerializerDescriptorsExtractor
 import dev.adamko.kxstsgen.core.TsDeclaration
 import dev.adamko.kxstsgen.core.TsElement
@@ -29,7 +29,7 @@ import kotlinx.serialization.descriptors.nullable
 open class KxsTsGenerator(
   open val config: KxsTsConfig = KxsTsConfig(),
 
-  open val sourceCodeGenerator: KxsTsSourceCodeGenerator = KxsTsSourceCodeGenerator.Default(config),
+  open val sourceCodeGenerator: TsSourceCodeGenerator = TsSourceCodeGenerator.Default(config),
 ) {
 
 
