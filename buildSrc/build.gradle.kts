@@ -3,19 +3,21 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
   idea
   `kotlin-dsl`
-  kotlin("jvm") version "1.6.10"
+  kotlin("jvm") version "1.6.20"
   `project-report`
 }
 
 
 object Versions {
   const val jvmTarget = "11"
-  const val kotlin = "1.6.10"
   const val kotlinTarget = "1.6"
+
+  const val kotlin = "1.6.20"
+
   const val kotlinxKnit = "0.3.0"
   const val kotlinxKover = "0.5.0"
   const val kotlinxSerialization = "1.3.2"
-  const val ksp = "1.6.10-1.0.4"
+  const val ksp = "1.6.20-1.0.5"
   const val gradleNodePlugin = "3.2.1"
 
   const val kotest = "5.2.3"
