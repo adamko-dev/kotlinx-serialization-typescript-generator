@@ -132,52 +132,23 @@ abstract class TupleSerializer<T>(
   }
 
   override fun deserialize(decoder: Decoder): T {
-    val elements = decoder.decodeStructure(descriptor) {
-
-      generateSequence { decodeElementIndex(descriptor) }
-        .takeWhile { it != CompositeDecoder.DECODE_DONE }
-        .map { index ->
+    return decoder.decodeStructure(descriptor) {
+      // the sequence *must* be collected inside 'decodeStructure'
+      val elements = generateSequence { decodeElementIndex(descriptor) }
+        .mapNotNull { index ->
+          when (index) {
+            CompositeDecoder.UNKNOWN_NAME -> error("unknown name at index:$index")
+            CompositeDecoder.DECODE_DONE  -> null
+            else                          -> index
+          }
+        }.map { index ->
           val tupleElement = indexedTupleElements.getOrElse(index) {
-            error("no tuple element at index: $index")
+            error("no tuple element at index:$index")
           }
           tupleElement.decodeElement(this@decodeStructure)
-        }.toList() // the sequence *must* be collected inside 'decodeStructure'
+        }
 
-
-//      deserializeTupleElements(this) { decodeElementIndex(descriptor) }
-//      buildList {
-//        while (true) {
-//          when (val index = decodeElementIndex(descriptor)) {
-//            CompositeDecoder.DECODE_DONE -> break
-//            else                         -> {
-//              val tupleElement = indexedTupleElements.getOrElse(index) {
-//                error("no tuple element at index: $index")
-//              }
-//              val decodedElement = tupleElement.decodeElement(this@decodeStructure)
-//              add(decodedElement)
-//            }
-//          }
-//        }
-//      }
+      tupleConstructor(elements.iterator())
     }
-    return tupleConstructor(elements.iterator())
   }
-
-//  private tailrec fun deserializeTupleElements(
-//    decoder: CompositeDecoder,
-//    currentElements: List<Any?> = emptyList(),
-//    nextIndex: () -> Int,
-//  ): List<Any?> {
-//    return when (val index = nextIndex()) {
-//      CompositeDecoder.DECODE_DONE -> currentElements
-//      else                         -> {
-//        val tupleElement = indexedTupleElements.getOrElse(index) {
-//          error("no tuple element at index: $index")
-//        }
-//        val decodedElement = tupleElement.decodeElement(decoder)
-//        deserializeTupleElements(decoder, currentElements + decodedElement, nextIndex)
-//      }
-//    }
-//  }
-
 }
