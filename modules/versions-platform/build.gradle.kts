@@ -1,6 +1,8 @@
 plugins {
+  buildsrc.convention.subproject
+  buildsrc.convention.`maven-publish`
+
   `java-platform`
-  `maven-publish`
 }
 
 javaPlatform {

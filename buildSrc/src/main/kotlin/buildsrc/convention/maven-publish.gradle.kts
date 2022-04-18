@@ -1,6 +1,7 @@
 package buildsrc.convention
 
 plugins {
+  id("buildsrc.convention.subproject")
   `maven-publish`
 }
 
