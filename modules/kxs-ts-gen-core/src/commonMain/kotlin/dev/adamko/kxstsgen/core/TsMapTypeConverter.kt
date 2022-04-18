@@ -35,6 +35,8 @@ fun interface TsMapTypeConverter {
       return when (kind) {
         SerialKind.ENUM      -> TsLiteral.TsMap.Type.MAPPED_OBJECT
 
+        PrimitiveKind.INT,
+        PrimitiveKind.LONG,
         PrimitiveKind.STRING -> TsLiteral.TsMap.Type.INDEX_SIGNATURE
 
         SerialKind.CONTEXTUAL,
@@ -42,8 +44,6 @@ fun interface TsMapTypeConverter {
         PrimitiveKind.BYTE,
         PrimitiveKind.CHAR,
         PrimitiveKind.SHORT,
-        PrimitiveKind.INT,
-        PrimitiveKind.LONG,
         PrimitiveKind.FLOAT,
         PrimitiveKind.DOUBLE,
         StructureKind.CLASS,
