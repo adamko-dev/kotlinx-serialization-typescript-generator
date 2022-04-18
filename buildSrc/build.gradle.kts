@@ -25,15 +25,15 @@ dependencies {
   implementation(libs.gradleNodePlugin)
 }
 
-val jvmTarget = "11"
-val kotlinTarget = "1.6"
+val gradleJvmTarget = "11"
+val gradleKotlinTarget = "1.6"
 
 tasks.withType<KotlinCompile>().configureEach {
 
   kotlinOptions {
-    jvmTarget = jvmTarget
-    apiVersion = kotlinTarget
-    languageVersion = kotlinTarget
+    jvmTarget = gradleJvmTarget
+    apiVersion = gradleKotlinTarget
+    languageVersion = gradleKotlinTarget
   }
 
   kotlinOptions.freeCompilerArgs += listOf(
@@ -45,11 +45,11 @@ tasks.withType<KotlinCompile>().configureEach {
 
 kotlin {
   jvmToolchain {
-    (this as JavaToolchainSpec).languageVersion.set(JavaLanguageVersion.of(jvmTarget))
+    (this as JavaToolchainSpec).languageVersion.set(JavaLanguageVersion.of(gradleJvmTarget))
   }
 
   kotlinDslPluginOptions {
-    jvmTarget.set(jvmTarget)
+    jvmTarget.set(gradleJvmTarget)
   }
 }
 

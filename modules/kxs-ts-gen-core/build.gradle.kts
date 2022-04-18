@@ -101,8 +101,8 @@ kotlin {
 //}
 //
 
-publishing {
-  publications.withType<MavenPublication>().configureEach {
-//    artifact(javadocJar)
-  }
-}
+//publishing {
+//  publications.withType<MavenPublication>().configureEach {
+////    artifact(javadocJar)
+//  }
+//}
