@@ -10,9 +10,10 @@ import kotlinx.knit.test.*
 class MapsTests : FunSpec({
 
   tags(Knit)
-
   context("ExampleMapPrimitive01") {
-    val actual = captureOutput("ExampleMapPrimitive01") {
+    val caseName = testCase.name.testName
+
+    val actual = captureOutput(caseName) {
       dev.adamko.kxstsgen.example.exampleMapPrimitive01.main()
     }.normalizeJoin()
 
@@ -29,12 +30,14 @@ class MapsTests : FunSpec({
     }
 
     test("expect actual compiles").config(tags = tsCompile) {
-      actual.shouldTypeScriptCompile()
+      actual.shouldTypeScriptCompile(caseName)
     }
   }
 
   context("ExampleMapPrimitive02") {
-    val actual = captureOutput("ExampleMapPrimitive02") {
+    val caseName = testCase.name.testName
+
+    val actual = captureOutput(caseName) {
       dev.adamko.kxstsgen.example.exampleMapPrimitive02.main()
     }.normalizeJoin()
 
@@ -56,12 +59,14 @@ class MapsTests : FunSpec({
     }
 
     test("expect actual compiles").config(tags = tsCompile) {
-      actual.shouldTypeScriptCompile()
+      actual.shouldTypeScriptCompile(caseName)
     }
   }
 
   context("ExampleMapPrimitive03") {
-    val actual = captureOutput("ExampleMapPrimitive03") {
+    val caseName = testCase.name.testName
+
+    val actual = captureOutput(caseName) {
       dev.adamko.kxstsgen.example.exampleMapPrimitive03.main()
     }.normalizeJoin()
 
@@ -78,12 +83,14 @@ class MapsTests : FunSpec({
     }
 
     test("expect actual compiles").config(tags = tsCompile) {
-      actual.shouldTypeScriptCompile()
+      actual.shouldTypeScriptCompile(caseName)
     }
   }
 
   context("ExampleMapPrimitive04") {
-    val actual = captureOutput("ExampleMapPrimitive04") {
+    val caseName = testCase.name.testName
+
+    val actual = captureOutput(caseName) {
       dev.adamko.kxstsgen.example.exampleMapPrimitive04.main()
     }.normalizeJoin()
 
@@ -102,12 +109,14 @@ class MapsTests : FunSpec({
     }
 
     test("expect actual compiles").config(tags = tsCompile) {
-      actual.shouldTypeScriptCompile()
+      actual.shouldTypeScriptCompile(caseName)
     }
   }
 
   context("ExampleMapPrimitive05") {
-    val actual = captureOutput("ExampleMapPrimitive05") {
+    val caseName = testCase.name.testName
+
+    val actual = captureOutput(caseName) {
       dev.adamko.kxstsgen.example.exampleMapPrimitive05.main()
     }.normalizeJoin()
 
@@ -126,12 +135,14 @@ class MapsTests : FunSpec({
     }
 
     test("expect actual compiles").config(tags = tsCompile) {
-      actual.shouldTypeScriptCompile()
+      actual.shouldTypeScriptCompile(caseName)
     }
   }
 
   context("ExampleMapPrimitive06") {
-    val actual = captureOutput("ExampleMapPrimitive06") {
+    val caseName = testCase.name.testName
+
+    val actual = captureOutput(caseName) {
       dev.adamko.kxstsgen.example.exampleMapPrimitive06.main()
     }.normalizeJoin()
 
@@ -170,12 +181,14 @@ class MapsTests : FunSpec({
     }
 
     test("expect actual compiles").config(tags = tsCompile) {
-      actual.shouldTypeScriptCompile()
+      actual.shouldTypeScriptCompile(caseName)
     }
   }
 
   context("ExampleMapComplex01") {
-    val actual = captureOutput("ExampleMapComplex01") {
+    val caseName = testCase.name.testName
+
+    val actual = captureOutput(caseName) {
       dev.adamko.kxstsgen.example.exampleMapComplex01.main()
     }.normalizeJoin()
 
@@ -201,12 +214,14 @@ class MapsTests : FunSpec({
     }
 
     test("expect actual compiles").config(tags = tsCompile) {
-      actual.shouldTypeScriptCompile()
+      actual.shouldTypeScriptCompile(caseName)
     }
   }
 
   context("ExampleMapComplex02") {
-    val actual = captureOutput("ExampleMapComplex02") {
+    val caseName = testCase.name.testName
+
+    val actual = captureOutput(caseName) {
       dev.adamko.kxstsgen.example.exampleMapComplex02.main()
     }.normalizeJoin()
 
@@ -225,12 +240,14 @@ class MapsTests : FunSpec({
     }
 
     test("expect actual compiles").config(tags = tsCompile) {
-      actual.shouldTypeScriptCompile()
+      actual.shouldTypeScriptCompile(caseName)
     }
   }
 
   context("ExampleMapComplex03") {
-    val actual = captureOutput("ExampleMapComplex03") {
+    val caseName = testCase.name.testName
+
+    val actual = captureOutput(caseName) {
       dev.adamko.kxstsgen.example.exampleMapComplex03.main()
     }.normalizeJoin()
 
@@ -247,7 +264,7 @@ class MapsTests : FunSpec({
     }
 
     test("expect actual compiles").config(tags = tsCompile) {
-      actual.shouldTypeScriptCompile()
+      actual.shouldTypeScriptCompile(caseName)
     }
   }
 })

@@ -33,13 +33,15 @@ private val tempDir: Path by lazy {
 }
 
 
-suspend fun String?.shouldTypeScriptCompile(): String = withContext(processContext) {
+suspend fun String?.shouldTypeScriptCompile(
+  testName: String
+): String = withContext(processContext) {
   val src = this@shouldTypeScriptCompile
   src.shouldNotBeNull()
 
   val file: Path = createTempFile(
     directory = tempDir,
-    prefix = src.filter { it.isLetterOrDigit() }.take(20),
+    prefix = testName,
     suffix = ".ts",
   )
   file.writeText(src)

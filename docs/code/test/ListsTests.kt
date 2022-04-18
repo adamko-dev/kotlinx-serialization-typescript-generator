@@ -10,9 +10,10 @@ import kotlinx.knit.test.*
 class ListsTests : FunSpec({
 
   tags(Knit)
-
   context("ExampleListPrimitive01") {
-    val actual = captureOutput("ExampleListPrimitive01") {
+    val caseName = testCase.name.testName
+
+    val actual = captureOutput(caseName) {
       dev.adamko.kxstsgen.example.exampleListPrimitive01.main()
     }.normalizeJoin()
 
@@ -31,12 +32,14 @@ class ListsTests : FunSpec({
     }
 
     test("expect actual compiles").config(tags = tsCompile) {
-      actual.shouldTypeScriptCompile()
+      actual.shouldTypeScriptCompile(caseName)
     }
   }
 
   context("ExampleListObjects01") {
-    val actual = captureOutput("ExampleListObjects01") {
+    val caseName = testCase.name.testName
+
+    val actual = captureOutput(caseName) {
       dev.adamko.kxstsgen.example.exampleListObjects01.main()
     }.normalizeJoin()
 
@@ -59,12 +62,14 @@ class ListsTests : FunSpec({
     }
 
     test("expect actual compiles").config(tags = tsCompile) {
-      actual.shouldTypeScriptCompile()
+      actual.shouldTypeScriptCompile(caseName)
     }
   }
 
   context("ExampleListObjects02") {
-    val actual = captureOutput("ExampleListObjects02") {
+    val caseName = testCase.name.testName
+
+    val actual = captureOutput(caseName) {
       dev.adamko.kxstsgen.example.exampleListObjects02.main()
     }.normalizeJoin()
 
@@ -86,7 +91,7 @@ class ListsTests : FunSpec({
     }
 
     test("expect actual compiles").config(tags = tsCompile) {
-      actual.shouldTypeScriptCompile()
+      actual.shouldTypeScriptCompile(caseName)
     }
   }
 })

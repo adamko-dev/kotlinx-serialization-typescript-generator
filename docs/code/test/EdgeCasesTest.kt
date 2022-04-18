@@ -10,9 +10,10 @@ import kotlinx.knit.test.*
 class EdgeCasesTest : FunSpec({
 
   tags(Knit)
-
   context("ExampleEdgecaseRecursiveReferences01") {
-    val actual = captureOutput("ExampleEdgecaseRecursiveReferences01") {
+    val caseName = testCase.name.testName
+
+    val actual = captureOutput(caseName) {
       dev.adamko.kxstsgen.example.exampleEdgecaseRecursiveReferences01.main()
     }.normalizeJoin()
 
@@ -33,12 +34,14 @@ class EdgeCasesTest : FunSpec({
     }
 
     test("expect actual compiles").config(tags = tsCompile) {
-      actual.shouldTypeScriptCompile()
+      actual.shouldTypeScriptCompile(caseName)
     }
   }
 
   context("ExampleEdgecaseRecursiveReferences02") {
-    val actual = captureOutput("ExampleEdgecaseRecursiveReferences02") {
+    val caseName = testCase.name.testName
+
+    val actual = captureOutput(caseName) {
       dev.adamko.kxstsgen.example.exampleEdgecaseRecursiveReferences02.main()
     }.normalizeJoin()
 
@@ -59,12 +62,14 @@ class EdgeCasesTest : FunSpec({
     }
 
     test("expect actual compiles").config(tags = tsCompile) {
-      actual.shouldTypeScriptCompile()
+      actual.shouldTypeScriptCompile(caseName)
     }
   }
 
   context("ExampleEdgecaseRecursiveReferences03") {
-    val actual = captureOutput("ExampleEdgecaseRecursiveReferences03") {
+    val caseName = testCase.name.testName
+
+    val actual = captureOutput(caseName) {
       dev.adamko.kxstsgen.example.exampleEdgecaseRecursiveReferences03.main()
     }.normalizeJoin()
 
@@ -85,7 +90,7 @@ class EdgeCasesTest : FunSpec({
     }
 
     test("expect actual compiles").config(tags = tsCompile) {
-      actual.shouldTypeScriptCompile()
+      actual.shouldTypeScriptCompile(caseName)
     }
   }
 })

@@ -10,9 +10,10 @@ import kotlinx.knit.test.*
 class EnumClassTest : FunSpec({
 
   tags(Knit)
-
   context("ExampleEnumClass01") {
-    val actual = captureOutput("ExampleEnumClass01") {
+    val caseName = testCase.name.testName
+
+    val actual = captureOutput(caseName) {
       dev.adamko.kxstsgen.example.exampleEnumClass01.main()
     }.normalizeJoin()
 
@@ -31,12 +32,14 @@ class EnumClassTest : FunSpec({
     }
 
     test("expect actual compiles").config(tags = tsCompile) {
-      actual.shouldTypeScriptCompile()
+      actual.shouldTypeScriptCompile(caseName)
     }
   }
 
   context("ExampleEnumClass02") {
-    val actual = captureOutput("ExampleEnumClass02") {
+    val caseName = testCase.name.testName
+
+    val actual = captureOutput(caseName) {
       dev.adamko.kxstsgen.example.exampleEnumClass02.main()
     }.normalizeJoin()
 
@@ -55,7 +58,7 @@ class EnumClassTest : FunSpec({
     }
 
     test("expect actual compiles").config(tags = tsCompile) {
-      actual.shouldTypeScriptCompile()
+      actual.shouldTypeScriptCompile(caseName)
     }
   }
 })

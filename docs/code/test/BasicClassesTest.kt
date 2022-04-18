@@ -10,9 +10,10 @@ import kotlinx.knit.test.*
 class BasicClassesTest : FunSpec({
 
   tags(Knit)
-
   context("ExamplePlainClassSingleField01") {
-    val actual = captureOutput("ExamplePlainClassSingleField01") {
+    val caseName = testCase.name.testName
+
+    val actual = captureOutput(caseName) {
       dev.adamko.kxstsgen.example.examplePlainClassSingleField01.main()
     }.normalizeJoin()
 
@@ -29,12 +30,14 @@ class BasicClassesTest : FunSpec({
     }
 
     test("expect actual compiles").config(tags = tsCompile) {
-      actual.shouldTypeScriptCompile()
+      actual.shouldTypeScriptCompile(caseName)
     }
   }
 
   context("ExamplePlainClassPrimitiveFields01") {
-    val actual = captureOutput("ExamplePlainClassPrimitiveFields01") {
+    val caseName = testCase.name.testName
+
+    val actual = captureOutput(caseName) {
       dev.adamko.kxstsgen.example.examplePlainClassPrimitiveFields01.main()
     }.normalizeJoin()
 
@@ -55,12 +58,14 @@ class BasicClassesTest : FunSpec({
     }
 
     test("expect actual compiles").config(tags = tsCompile) {
-      actual.shouldTypeScriptCompile()
+      actual.shouldTypeScriptCompile(caseName)
     }
   }
 
   context("ExamplePlainDataClass01") {
-    val actual = captureOutput("ExamplePlainDataClass01") {
+    val caseName = testCase.name.testName
+
+    val actual = captureOutput(caseName) {
       dev.adamko.kxstsgen.example.examplePlainDataClass01.main()
     }.normalizeJoin()
 
@@ -81,12 +86,14 @@ class BasicClassesTest : FunSpec({
     }
 
     test("expect actual compiles").config(tags = tsCompile) {
-      actual.shouldTypeScriptCompile()
+      actual.shouldTypeScriptCompile(caseName)
     }
   }
 
   context("ExamplePlainClassPrimitiveFields02") {
-    val actual = captureOutput("ExamplePlainClassPrimitiveFields02") {
+    val caseName = testCase.name.testName
+
+    val actual = captureOutput(caseName) {
       dev.adamko.kxstsgen.example.examplePlainClassPrimitiveFields02.main()
     }.normalizeJoin()
 
@@ -102,7 +109,7 @@ class BasicClassesTest : FunSpec({
     }
 
     test("expect actual compiles").config(tags = tsCompile) {
-      actual.shouldTypeScriptCompile()
+      actual.shouldTypeScriptCompile(caseName)
     }
   }
 })

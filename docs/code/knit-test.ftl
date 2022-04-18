@@ -16,10 +16,12 @@ import kotlinx.knit.test.*
 class ${test.name} : FunSpec({
 
   tags(Knit)
-
-<#list cases as case><#assign method = test["mode.${case.param}"]!"custom">
+<#--<#assign method = test["mode.${case.param}"]!"custom">-->
+<#list cases as case>
   context("${case.name}") {
-    val actual = captureOutput("${case.name}") {
+    val caseName = testCase.name.testName
+
+    val actual = captureOutput(caseName) {
       ${case.knit.package}.${case.knit.name}.main()
     }.normalizeJoin()
 
@@ -40,11 +42,11 @@ class ${test.name} : FunSpec({
     <#if case.param == "TS_COMPILE_OFF">
     // TS_COMPILE_OFF
     // test("expect actual compiles").config(tags = tsCompile) {
-    //   actual.shouldTypeScriptCompile()
+    //   actual.shouldTypeScriptCompile(caseName)
     // }
     <#else>
     test("expect actual compiles").config(tags = tsCompile) {
-      actual.shouldTypeScriptCompile()
+      actual.shouldTypeScriptCompile(caseName)
     }
     </#if>
   }

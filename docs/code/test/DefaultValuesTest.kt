@@ -10,9 +10,10 @@ import kotlinx.knit.test.*
 class DefaultValuesTest : FunSpec({
 
   tags(Knit)
-
   context("ExampleDefaultValuesSingleField01") {
-    val actual = captureOutput("ExampleDefaultValuesSingleField01") {
+    val caseName = testCase.name.testName
+
+    val actual = captureOutput(caseName) {
       dev.adamko.kxstsgen.example.exampleDefaultValuesSingleField01.main()
     }.normalizeJoin()
 
@@ -29,12 +30,14 @@ class DefaultValuesTest : FunSpec({
     }
 
     test("expect actual compiles").config(tags = tsCompile) {
-      actual.shouldTypeScriptCompile()
+      actual.shouldTypeScriptCompile(caseName)
     }
   }
 
   context("ExampleDefaultValuesSingleField02") {
-    val actual = captureOutput("ExampleDefaultValuesSingleField02") {
+    val caseName = testCase.name.testName
+
+    val actual = captureOutput(caseName) {
       dev.adamko.kxstsgen.example.exampleDefaultValuesSingleField02.main()
     }.normalizeJoin()
 
@@ -51,12 +54,14 @@ class DefaultValuesTest : FunSpec({
     }
 
     test("expect actual compiles").config(tags = tsCompile) {
-      actual.shouldTypeScriptCompile()
+      actual.shouldTypeScriptCompile(caseName)
     }
   }
 
   context("ExampleDefaultValuesPrimitiveFields01") {
-    val actual = captureOutput("ExampleDefaultValuesPrimitiveFields01") {
+    val caseName = testCase.name.testName
+
+    val actual = captureOutput(caseName) {
       dev.adamko.kxstsgen.example.exampleDefaultValuesPrimitiveFields01.main()
     }.normalizeJoin()
 
@@ -76,7 +81,7 @@ class DefaultValuesTest : FunSpec({
     }
 
     test("expect actual compiles").config(tags = tsCompile) {
-      actual.shouldTypeScriptCompile()
+      actual.shouldTypeScriptCompile(caseName)
     }
   }
 })

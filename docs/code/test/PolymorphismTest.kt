@@ -10,9 +10,10 @@ import kotlinx.knit.test.*
 class PolymorphismTest : FunSpec({
 
   tags(Knit)
-
   context("ExamplePolymorphicAbstractClassPrimitiveFields01") {
-    val actual = captureOutput("ExamplePolymorphicAbstractClassPrimitiveFields01") {
+    val caseName = testCase.name.testName
+
+    val actual = captureOutput(caseName) {
       dev.adamko.kxstsgen.example.examplePolymorphicAbstractClassPrimitiveFields01.main()
     }.normalizeJoin()
 
@@ -34,12 +35,14 @@ class PolymorphismTest : FunSpec({
     }
 
     test("expect actual compiles").config(tags = tsCompile) {
-      actual.shouldTypeScriptCompile()
+      actual.shouldTypeScriptCompile(caseName)
     }
   }
 
   context("ExamplePolymorphicStaticTypes01") {
-    val actual = captureOutput("ExamplePolymorphicStaticTypes01") {
+    val caseName = testCase.name.testName
+
+    val actual = captureOutput(caseName) {
       dev.adamko.kxstsgen.example.examplePolymorphicStaticTypes01.main()
     }.normalizeJoin()
 
@@ -56,12 +59,14 @@ class PolymorphismTest : FunSpec({
     }
 
     test("expect actual compiles").config(tags = tsCompile) {
-      actual.shouldTypeScriptCompile()
+      actual.shouldTypeScriptCompile(caseName)
     }
   }
 
   context("ExamplePolymorphicStaticTypes02") {
-    val actual = captureOutput("ExamplePolymorphicStaticTypes02") {
+    val caseName = testCase.name.testName
+
+    val actual = captureOutput(caseName) {
       dev.adamko.kxstsgen.example.examplePolymorphicStaticTypes02.main()
     }.normalizeJoin()
 
@@ -84,12 +89,14 @@ class PolymorphismTest : FunSpec({
     }
 
     test("expect actual compiles").config(tags = tsCompile) {
-      actual.shouldTypeScriptCompile()
+      actual.shouldTypeScriptCompile(caseName)
     }
   }
 
   context("ExamplePolymorphicSealedClass01") {
-    val actual = captureOutput("ExamplePolymorphicSealedClass01") {
+    val caseName = testCase.name.testName
+
+    val actual = captureOutput(caseName) {
       dev.adamko.kxstsgen.example.examplePolymorphicSealedClass01.main()
     }.normalizeJoin()
 
@@ -125,12 +132,14 @@ class PolymorphismTest : FunSpec({
     }
 
     test("expect actual compiles").config(tags = tsCompile) {
-      actual.shouldTypeScriptCompile()
+      actual.shouldTypeScriptCompile(caseName)
     }
   }
 
   context("ExamplePolymorphicSealedClass02") {
-    val actual = captureOutput("ExamplePolymorphicSealedClass02") {
+    val caseName = testCase.name.testName
+
+    val actual = captureOutput(caseName) {
       dev.adamko.kxstsgen.example.examplePolymorphicSealedClass02.main()
     }.normalizeJoin()
 
@@ -211,12 +220,14 @@ class PolymorphismTest : FunSpec({
     }
 
     test("expect actual compiles").config(tags = tsCompile) {
-      actual.shouldTypeScriptCompile()
+      actual.shouldTypeScriptCompile(caseName)
     }
   }
 
   context("ExamplePolymorphicObjects01") {
-    val actual = captureOutput("ExamplePolymorphicObjects01") {
+    val caseName = testCase.name.testName
+
+    val actual = captureOutput(caseName) {
       dev.adamko.kxstsgen.example.examplePolymorphicObjects01.main()
     }.normalizeJoin()
 
@@ -249,12 +260,14 @@ class PolymorphismTest : FunSpec({
     }
 
     test("expect actual compiles").config(tags = tsCompile) {
-      actual.shouldTypeScriptCompile()
+      actual.shouldTypeScriptCompile(caseName)
     }
   }
 
   context("ExampleGenerics01") {
-    val actual = captureOutput("ExampleGenerics01") {
+    val caseName = testCase.name.testName
+
+    val actual = captureOutput(caseName) {
       dev.adamko.kxstsgen.example.exampleGenerics01.main()
     }.normalizeJoin()
 
@@ -271,12 +284,14 @@ class PolymorphismTest : FunSpec({
     }
 
     test("expect actual compiles").config(tags = tsCompile) {
-      actual.shouldTypeScriptCompile()
+      actual.shouldTypeScriptCompile(caseName)
     }
   }
 
   context("ExampleJsonPolymorphic01") {
-    val actual = captureOutput("ExampleJsonPolymorphic01") {
+    val caseName = testCase.name.testName
+
+    val actual = captureOutput(caseName) {
       dev.adamko.kxstsgen.example.exampleJsonPolymorphic01.main()
     }.normalizeJoin()
 
@@ -291,7 +306,7 @@ class PolymorphismTest : FunSpec({
     }
 
     test("expect actual compiles").config(tags = tsCompile) {
-      actual.shouldTypeScriptCompile()
+      actual.shouldTypeScriptCompile(caseName)
     }
   }
 })
