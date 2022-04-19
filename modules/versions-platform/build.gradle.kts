@@ -14,6 +14,7 @@ dependencies {
   api(platform(libs.kotlin.bom))
   api(platform(libs.kotlinx.serialization.bom))
   api(platform(libs.kotlinx.coroutines.bom))
+  api(platform(libs.okio.bom))
 
   api(platform(libs.kotest.bom))
 

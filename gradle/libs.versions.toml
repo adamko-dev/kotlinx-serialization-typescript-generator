@@ -13,6 +13,8 @@ kotlinx-knit = "0.4.0"
 kotlinx-coroutines = "1.6.1"
 kotlinx-kover = "0.5.0"
 
+okio = "3.1.0"
+
 kotest = "5.2.3"
 
 kotlinProcess = "1.3.1"
@@ -35,6 +37,10 @@ kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-cor
 kotlinx-serialization-bom = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-bom", version.ref = "kotlinx-serialization" }
 kotlinx-serialization-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-core" }
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json" }
+kotlinx-serialization-cbor = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-cbor" }
+
+okio-bom = { group = "com.squareup.okio", name = "okio-bom", version.ref = "okio" }
+okio-core = { group = "com.squareup.okio", name = "okio" }
 
 kotlinx-kover-gradlePlugin = { group = "org.jetbrains.kotlinx", name = "kover", version.ref = "kotlinx-kover" }
 
