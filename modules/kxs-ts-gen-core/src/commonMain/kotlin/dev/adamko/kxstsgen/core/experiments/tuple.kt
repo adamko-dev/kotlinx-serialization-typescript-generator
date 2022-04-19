@@ -138,7 +138,7 @@ abstract class TupleSerializer<T>(
 
     val elements = if (decodeSequentially()) {
       tupleElements.asSequence().map {
-        it.decodeElement(this@decodeStructure).also { println("decoded: $it") }
+        it.decodeElement(this@decodeStructure)
       }
     } else {
       generateSequence { decodeElementIndex(descriptor) }
