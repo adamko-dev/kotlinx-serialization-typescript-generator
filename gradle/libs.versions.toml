@@ -3,7 +3,7 @@
 jvmTarget = "1.8"
 kotlinTarget = "1.6"
 
-kotlin = "1.6.20"
+kotlin = "1.6.21"
 
 kotlinSymbolProcessing = "1.6.20-1.0.5"
 kotlinCompileTesting = "1.4.8"
