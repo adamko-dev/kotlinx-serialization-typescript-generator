@@ -25,11 +25,3 @@ dependencies {
     api(libs.kotlinCompileTesting.ksp)
   }
 }
-
-publishing {
-  publications {
-    create<MavenPublication>("versions-platform") {
-      from(components["javaPlatform"])
-    }
-  }
-}
