@@ -1,11 +1,7 @@
-import buildsrc.config.publicationsFromMainHost
-
-
 plugins {
   buildsrc.convention.`kotlin-multiplatform`
   buildsrc.convention.`maven-publish`
   kotlin("plugin.serialization")
-//  id("org.jetbrains.reflekt")
   id("io.kotest.multiplatform")
 }
 
@@ -14,14 +10,15 @@ val kotestVersion = "5.2.3"
 
 kotlin {
 
-//  js(IR) {
-//    binaries.executable()
+  js(IR) {
+    binaries.executable()
 //    browser {
 //      commonWebpackConfig {
 //        cssSupport.enabled = true
 //      }
 //    }
-//  }
+    nodejs()
+  }
 
   jvm {
     compilations.all {
@@ -49,7 +46,7 @@ kotlin {
   sourceSets {
 
     all {
-      languageSettings.apply {
+      languageSettings {
         optIn("kotlin.RequiresOptIn")
         optIn("kotlin.ExperimentalStdlibApi")
         optIn("kotlin.time.ExperimentalTime")
@@ -59,41 +56,56 @@ kotlin {
 
     val commonMain by getting {
       dependencies {
-        implementation(
-          project.dependencies.platform(
-            "org.jetbrains.kotlinx:kotlinx-serialization-bom:${kotlinxSerializationVersion}"
-          )
-        )
-        implementation("org.jetbrains.kotlinx:kotlinx-serialization-core")
-        implementation("org.jetbrains.kotlinx:kotlinx-serialization-json")
-        implementation(kotlin("reflect"))
+        implementation(project.dependencies.platform(projects.modules.versionsPlatform))
+        implementation(libs.kotlinx.serialization.core)
+        implementation(libs.kotlinx.serialization.json)
       }
     }
     val commonTest by getting {
       dependencies {
         implementation(kotlin("test"))
 
-        implementation("io.kotest:kotest-assertions-core:$kotestVersion")
-        implementation("io.kotest:kotest-assertions-json:$kotestVersion")
-        implementation("io.kotest:kotest-property:$kotestVersion")
-        implementation("io.kotest:kotest-framework-engine:$kotestVersion")
-        implementation("io.kotest:kotest-framework-datatest:$kotestVersion")
+        implementation(libs.kotest.assertionsCore)
+        implementation(libs.kotest.assertionsJson)
+        implementation(libs.kotest.property)
+        implementation(libs.kotest.frameworkEngine)
+        implementation(libs.kotest.frameworkDatatest)
+
+        implementation(libs.kotlinx.serialization.cbor)
+        implementation(libs.okio.core)
       }
     }
 //    val nativeMain by getting
 //    val nativeTest by getting
-//    val jsMain by getting
-//    val jsTest by getting
+    val jsMain by getting
+    val jsTest by getting
     val jvmMain by getting {
       dependencies {
+        implementation(project.dependencies.platform(projects.modules.versionsPlatform))
         implementation(kotlin("reflect"))
       }
     }
 
     val jvmTest by getting {
       dependencies {
-        implementation("io.kotest:kotest-runner-junit5-jvm:$kotestVersion")
+        implementation(libs.kotest.frameworkEngine)
+        implementation(libs.kotest.runnerJUnit5)
       }
     }
   }
 }
+
+//
+//val javadocJar by tasks.creating(Jar::class) {
+//  group = JavaBasePlugin.DOCUMENTATION_GROUP
+//  description = "Assembles java doc to jar"
+//  archiveClassifier.set("javadoc")
+//  from(tasks.javadoc)
+//}
+//
+
+//publishing {
+//  publications.withType<MavenPublication>().configureEach {
+////    artifact(javadocJar)
+//  }
+//}

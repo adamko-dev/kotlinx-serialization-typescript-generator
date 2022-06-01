@@ -7,25 +7,24 @@ plugins {
   id("org.jetbrains.kotlinx.knit")
 }
 
-val kotlinxSerializationVersion = "1.3.2"
-
 dependencies {
+  implementation(platform(projects.modules.versionsPlatform))
+
   implementation(projects.modules.kxsTsGenCore)
 
-  implementation(platform("org.jetbrains.kotlinx:kotlinx-serialization-bom:${kotlinxSerializationVersion}"))
-  implementation("org.jetbrains.kotlinx:kotlinx-serialization-core")
-  implementation("org.jetbrains.kotlinx:kotlinx-serialization-json")
+  implementation(libs.kotlinx.serialization.core)
+  implementation(libs.kotlinx.serialization.json)
 
-  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.1")
+  implementation(libs.kotlinx.coroutines.core)
 
-  implementation("org.jetbrains.kotlinx:kotlinx-knit:0.3.0")
+  implementation(libs.kotlinx.knit)
 
   implementation(kotlin("reflect"))
 
   testImplementation(kotlin("test"))
 
-  testImplementation("org.jetbrains.kotlinx:kotlinx-knit-test:0.3.0")
-  testImplementation("com.github.pgreze:kotlin-process:1.3.1")
+  testImplementation(libs.kotlinx.knit.test)
+  testImplementation(libs.kotlinProcess)
 }
 
 tasks.withType<KotlinCompile> {

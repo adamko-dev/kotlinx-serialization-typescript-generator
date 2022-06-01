@@ -10,9 +10,10 @@ import kotlinx.knit.test.*
 class CustomisingOutputTest : FunSpec({
 
   tags(Knit)
-
   context("ExampleCustomisingOutput01") {
-    val actual = captureOutput("ExampleCustomisingOutput01") {
+    val caseName = testCase.name.testName
+
+    val actual = captureOutput(caseName) {
       dev.adamko.kxstsgen.example.exampleCustomisingOutput01.main()
     }.normalizeJoin()
 
@@ -32,12 +33,14 @@ class CustomisingOutputTest : FunSpec({
 
     // TS_COMPILE_OFF
     // test("expect actual compiles").config(tags = tsCompile) {
-    //   actual.shouldTypeScriptCompile()
+    //   actual.shouldTypeScriptCompile(caseName)
     // }
   }
 
   context("ExampleCustomisingOutput02") {
-    val actual = captureOutput("ExampleCustomisingOutput02") {
+    val caseName = testCase.name.testName
+
+    val actual = captureOutput(caseName) {
       dev.adamko.kxstsgen.example.exampleCustomisingOutput02.main()
     }.normalizeJoin()
 
@@ -55,12 +58,14 @@ class CustomisingOutputTest : FunSpec({
 
     // TS_COMPILE_OFF
     // test("expect actual compiles").config(tags = tsCompile) {
-    //   actual.shouldTypeScriptCompile()
+    //   actual.shouldTypeScriptCompile(caseName)
     // }
   }
 
   context("ExampleCustomisingOutput03") {
-    val actual = captureOutput("ExampleCustomisingOutput03") {
+    val caseName = testCase.name.testName
+
+    val actual = captureOutput(caseName) {
       dev.adamko.kxstsgen.example.exampleCustomisingOutput03.main()
     }.normalizeJoin()
 
@@ -84,12 +89,14 @@ class CustomisingOutputTest : FunSpec({
 
     // TS_COMPILE_OFF
     // test("expect actual compiles").config(tags = tsCompile) {
-    //   actual.shouldTypeScriptCompile()
+    //   actual.shouldTypeScriptCompile(caseName)
     // }
   }
 
   context("ExampleCustomisingOutput04") {
-    val actual = captureOutput("ExampleCustomisingOutput04") {
+    val caseName = testCase.name.testName
+
+    val actual = captureOutput(caseName) {
       dev.adamko.kxstsgen.example.exampleCustomisingOutput04.main()
     }.normalizeJoin()
 
@@ -119,7 +126,7 @@ class CustomisingOutputTest : FunSpec({
 
     // TS_COMPILE_OFF
     // test("expect actual compiles").config(tags = tsCompile) {
-    //   actual.shouldTypeScriptCompile()
+    //   actual.shouldTypeScriptCompile(caseName)
     // }
   }
 })

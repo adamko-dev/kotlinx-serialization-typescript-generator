@@ -133,7 +133,6 @@ fun main() {
 
   println(tsGenerator.generate(ItemHolder.serializer()))
 }
-
 ```
 
 > You can get the full code [here](./code/example/example-customising-output-03.kt).
@@ -198,8 +197,6 @@ fun main() {
 
   println(tsGenerator.generate(ItemHolder.serializer()))
 }
-
-
 ```
 
 > You can get the full code [here](./code/example/example-customising-output-04.kt).

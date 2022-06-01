@@ -10,6 +10,7 @@ sealed class Dog {
   abstract val name: String
 
   @Serializable
+  @SerialName("Dog.Mutt")
   class Mutt(override val name: String, val loveable: Boolean = true) : Dog()
 
   @Serializable
@@ -17,6 +18,7 @@ sealed class Dog {
     abstract val colour: String
 
     @Serializable
+    @SerialName("Dog.Retriever.Golden")
     data class Golden(
       override val name: String,
       override val colour: String,
@@ -24,6 +26,7 @@ sealed class Dog {
     ) : Retriever()
 
     @Serializable
+    @SerialName("Dog.Retriever.NovaScotia")
     data class NovaScotia(
       override val name: String,
       override val colour: String,

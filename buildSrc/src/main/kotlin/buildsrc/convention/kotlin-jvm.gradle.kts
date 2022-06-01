@@ -13,7 +13,7 @@ plugins {
 }
 
 dependencies {
-  testImplementation(platform("io.kotest:kotest-bom:5.2.3"))
+  // versions provided by versions-platform subproject
   testImplementation("io.kotest:kotest-runner-junit5")
   testImplementation("io.kotest:kotest-assertions-core")
   testImplementation("io.kotest:kotest-property")
@@ -33,7 +33,7 @@ java {
 
 tasks.withType<KotlinCompile> {
   kotlinOptions {
-    jvmTarget = "11"
+    jvmTarget = "1.8"
     apiVersion = "1.6"
     languageVersion = "1.6"
   }

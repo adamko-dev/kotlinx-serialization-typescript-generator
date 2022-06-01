@@ -67,7 +67,7 @@ sealed interface TsDeclaration : TsElement {
 
   data class TsEnum(
     override val id: TsElementId,
-    val members: Set<String>,
+    val members: Set<TsProperty>,
   ) : TsDeclaration
 
 
@@ -120,6 +120,7 @@ sealed interface TsLiteral : TsElement {
     }
   }
 
+  /** https://www.typescriptlang.org/docs/handbook/2/everyday-types.html#literal-types */
   @JvmInline
   value class Custom(val value: String) : TsLiteral
 }
@@ -157,8 +158,10 @@ sealed interface TsTypeRef {
 
 
 /**
- * A property within an [interface][TsDeclaration.TsInterface]
- * or [tuple][TsDeclaration.TsTuple].
+ * A property within an
+ * [interface][TsDeclaration.TsInterface],
+ * [tuple][TsDeclaration.TsTuple],
+ * or [enum][TsDeclaration.TsEnum].
  */
 data class TsProperty(
   val name: String,

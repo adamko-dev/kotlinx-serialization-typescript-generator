@@ -34,8 +34,8 @@ deserializing.
 
 ### Tuple example
 
-Let's say we have a class, `SimpleTypes`, that we want to serializer. We need to create a bespoke
-tuple serializer for it, so override the plugin-generated serializer.
+Let's say we have a class, `SimpleTypes`, that we want to serialize. We need to create a bespoke
+tuple serializer for it, and override the plugin-generated serializer.
 
 ```kotlin
 @Serializable(with = SimpleTypes.SimpleTypesSerializer::class)
@@ -60,7 +60,7 @@ data class SimpleTypes(
     }
   ) {
     override fun tupleConstructor(elements: Iterator<*>): SimpleTypes {
-      // When deserializing, the elements will be available as a list, in the order defined
+      // When deserializing, the elements will be available as a list, in the order defined above
       return SimpleTypes(
         elements.next() as String,
         elements.next() as Int,
@@ -257,6 +257,7 @@ class GameLocations(
   val homeLocation: Coordinates,
   val allLocations: List<Coordinates>,
   val namedLocations: Map<String, Coordinates>,
+  val locationsInfo: Map<Coordinates, String>,
 )
 
 fun main() {
@@ -272,6 +273,7 @@ export interface GameLocations {
   homeLocation: Coordinates;
   allLocations: Coordinates[];
   namedLocations: { [key: string]: Coordinates };
+  locationsInfo: Map<Coordinates, string>;
 }
 
 export type Coordinates = [

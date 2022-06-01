@@ -170,7 +170,7 @@ export type Project =
 export namespace Project {
   export enum Type {
     OProj = "OProj",
-    DeprecatedProject = "DeprecatedProject",
+    DeprecatedProject = "dev.adamko.kxstsgen.example.examplePolymorphicSealedClass01.DeprecatedProject",
   }
 
   export interface OProj {
@@ -202,6 +202,7 @@ sealed class Dog {
   abstract val name: String
 
   @Serializable
+  @SerialName("Dog.Mutt")
   class Mutt(override val name: String, val loveable: Boolean = true) : Dog()
 
   @Serializable
@@ -209,6 +210,7 @@ sealed class Dog {
     abstract val colour: String
 
     @Serializable
+    @SerialName("Dog.Retriever.Golden")
     data class Golden(
       override val name: String,
       override val colour: String,
@@ -216,6 +218,7 @@ sealed class Dog {
     ) : Retriever()
 
     @Serializable
+    @SerialName("Dog.Retriever.NovaScotia")
     data class NovaScotia(
       override val name: String,
       override val colour: String,
@@ -240,9 +243,9 @@ export type Dog =
 
 export namespace Dog {
   export enum Type {
-    Mutt = "Mutt",
-    Golden = "Golden",
-    NovaScotia = "NovaScotia",
+    Mutt = "Dog.Mutt",
+    Golden = "Dog.Retriever.Golden",
+    NovaScotia = "Dog.Retriever.NovaScotia",
   }
 
   export interface Mutt {
@@ -333,8 +336,8 @@ export type Response =
 
 export namespace Response {
   export enum Type {
-    EmptyResponse = "EmptyResponse",
-    TextResponse = "TextResponse",
+    EmptyResponse = "dev.adamko.kxstsgen.example.examplePolymorphicObjects01.EmptyResponse",
+    TextResponse = "dev.adamko.kxstsgen.example.examplePolymorphicObjects01.TextResponse",
   }
 
   export interface EmptyResponse {

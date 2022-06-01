@@ -70,7 +70,7 @@ fun interface TsElementConverter {
     /**
      * Handle sealed-polymorphic descriptors.
      *
-     * Generate
+     * Generate...
      *
      * 1. a namespace that contains
      *   a. a 'type' enum, for each subclass
@@ -89,39 +89,50 @@ fun interface TsElementConverter {
         .indexOfFirst { it.kind == PrimitiveKind.STRING }
       val discriminatorName = descriptor.elementNames.elementAtOrNull(discriminatorIndex)
 
-      // subclasses details
-      val subclassInterfaces = descriptor
-        .elementDescriptors
-        .firstOrNull { it.kind == SerialKind.CONTEXTUAL }
-        ?.elementDescriptors
-        ?.flatMap { this(it) }
-        ?.filterIsInstance<TsDeclaration.TsInterface>()
-        ?.map { it.copy(id = TsElementId("${descriptor.serialName}.${it.id.name}")) }
-        ?.toSet()
-        ?: emptySet()
-
-      val subInterfaceRefs: Map<TsTypeRef.Declaration, TsDeclaration.TsInterface> =
-        subclassInterfaces.associateBy { subclass ->
-          val subclassId = TsElementId(namespaceId.toString() + "." + subclass.id.name)
-          TsTypeRef.Declaration(subclassId, namespaceRef, false)
-        }
+      val subclassesDescriptorToInterface: Map<SerialDescriptor, TsDeclaration.TsInterface> =
+        descriptor.elementDescriptors
+          .firstOrNull { it.kind == SerialKind.CONTEXTUAL }
+          ?.elementDescriptors
+          ?.associateWith { this(it) }
+          ?.mapValues { (_, v) ->
+            v.filterIsInstance<TsDeclaration.TsInterface>()
+              .map {
+                it.copy(id = TsElementId("${descriptor.serialName}.${it.id.name}"))
+              }.single()
+          } ?: emptyMap()
 
       // verify a discriminated interface can be created
-      if (subInterfaceRefs.isEmpty() || discriminatorName.isNullOrBlank()) {
+      if (subclassesDescriptorToInterface.isEmpty() || discriminatorName.isNullOrBlank()) {
+        // fallback: a type alias to 'any', same as for open-polymorphism
         return setOf(createTypeAliasAny(descriptor))
       } else {
         // discriminator enum
-        val discriminatorEnum = TsDeclaration.TsEnum(
-          TsElementId("${namespaceId.namespace}.${discriminatorName.replaceFirstChar { it.uppercaseChar() }}"),
-          subInterfaceRefs.keys.map { it.id.name }.toSet(),
-        )
+        val discriminatorEnum = run {
+          val id = TsElementId(
+            "${namespaceId.namespace}.${discriminatorName.replaceFirstChar { it.uppercaseChar() }}"
+          )
+
+          val members = subclassesDescriptorToInterface.entries.map { (descriptor, tsInterface) ->
+            val enumMemberName = tsInterface.id.name
+            val enumMemberValue = TsTypeRef.Literal(
+              TsLiteral.Custom(descriptor.serialName),
+              false
+            )
+            TsProperty(enumMemberName, enumMemberValue, false)
+          }.toSet()
+
+          TsDeclaration.TsEnum(id, members)
+        }
+
         val discriminatorEnumRef = TsTypeRef.Declaration(discriminatorEnum.id, namespaceRef, false)
 
         // add discriminator property to subclasses
-        val subInterfacesWithTypeProp = subInterfaceRefs.map { (subInterfaceRef, subclass) ->
+        val subInterfacesWithTypeProp = subclassesDescriptorToInterface.map { (_, subclass) ->
+
+          val subclassId = TsElementId(namespaceId.toString() + "." + subclass.id.name)
 
           val literalTypeRef = TsTypeRef.Declaration(
-            TsElementId("${discriminatorEnum.id.name}.${subInterfaceRef.id.name}"),
+            TsElementId("${discriminatorEnum.id.name}.${subclassId.name}"),
             discriminatorEnumRef,
             false,
           )
@@ -132,10 +143,18 @@ fun interface TsElementConverter {
         }
 
         // create type union and namespace
-        val subInterfaceTypeUnion = TsDeclaration.TsTypeUnion(
-          namespaceId,
-          subInterfaceRefs.keys
-        )
+        val subInterfaceTypeUnion = run {
+          val subInterfaceRefs =
+            subclassesDescriptorToInterface.entries.map { (_, subclass) ->
+              val subclassId = TsElementId(namespaceId.toString() + "." + subclass.id.name)
+              TsTypeRef.Declaration(subclassId, namespaceRef, false)
+            }.toSet()
+
+          TsDeclaration.TsTypeUnion(
+            namespaceId,
+            subInterfaceRefs
+          )
+        }
 
         val namespace = TsDeclaration.TsNamespace(
           namespaceId,
@@ -198,7 +217,8 @@ fun interface TsElementConverter {
       enumDescriptor: SerialDescriptor,
     ): TsDeclaration.TsEnum {
       val resultId = elementIdConverter(enumDescriptor)
-      return TsDeclaration.TsEnum(resultId, enumDescriptor.elementNames.toSet())
+      val members = convertProperties(enumDescriptor)
+      return TsDeclaration.TsEnum(resultId, members)
     }
 
 

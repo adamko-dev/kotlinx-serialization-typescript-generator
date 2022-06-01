@@ -6,7 +6,7 @@ import dev.adamko.kxstsgen.KxsTsConfig
 /**
  * Writes [TsElement]s as TypeScript source code.
  */
-abstract class KxsTsSourceCodeGenerator(
+abstract class TsSourceCodeGenerator(
   val config: KxsTsConfig = KxsTsConfig(),
 ) {
 
@@ -37,7 +37,7 @@ abstract class KxsTsSourceCodeGenerator(
 
   open class Default(
     config: KxsTsConfig,
-  ) : KxsTsSourceCodeGenerator(config) {
+  ) : TsSourceCodeGenerator(config) {
 
 
     override fun groupElementsBy(element: TsElement): String {
@@ -75,8 +75,9 @@ abstract class KxsTsSourceCodeGenerator(
 
       val enumMembers = enum.members.joinToString("\n") { member ->
         """
-          |${config.indent}$member = "$member",
+          |${member.name} = "${generateTypeReference(member.typeRef)}",
         """.trimMargin()
+          .prependIndent(config.indent)
       }
 
       return """

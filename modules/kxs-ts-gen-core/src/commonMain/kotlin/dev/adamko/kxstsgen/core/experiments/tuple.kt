@@ -17,25 +17,25 @@ import kotlinx.serialization.encoding.encodeCollection
 import kotlinx.serialization.serializer
 
 
-open class TupleElement<T, E>(
-  open val name: String,
-  open val index: Int,
-  open val elementSerializer: KSerializer<E>,
-  open val elementAccessor: T.() -> E,
+data class TupleElement<T, E>(
+  val name: String,
+  val index: Int,
+  val elementSerializer: KSerializer<E>,
+  val elementAccessor: T.() -> E,
 ) {
-  val descriptor: SerialDescriptor
+  internal val descriptor: SerialDescriptor
     get() = elementSerializer.descriptor
 
-  open fun encodeElement(encoder: CompositeEncoder, value: T) {
+  fun encodeElement(encoder: CompositeEncoder, value: T) {
     encoder.encodeSerializableElement(
       descriptor,
       index,
       elementSerializer,
-      value.elementAccessor()
+      value.elementAccessor(),
     )
   }
 
-  open fun decodeElement(decoder: CompositeDecoder): E {
+  fun decodeElement(decoder: CompositeDecoder): E {
     return decoder.decodeSerializableElement(
       descriptor,
       index,
@@ -74,7 +74,9 @@ class TupleElementsBuilder<T> {
   private val _elements: ArrayDeque<TupleElement<T, *>> = ArrayDeque()
   val elements: List<TupleElement<T, *>>
     get() = _elements.toList()
-  val elementsSize by _elements::size
+
+  @PublishedApi
+  internal val elementsSize by _elements::size
 
   inline fun <reified E> element(
     property: KProperty1<T, E>
@@ -129,13 +131,32 @@ abstract class TupleSerializer<T>(
     }
   }
 
-  override fun deserialize(decoder: Decoder): T {
-    val elements = decoder.decodeStructure(descriptor) {
-      generateSequence {
-        val index = decodeElementIndex(descriptor)
-        indexedTupleElements[index]?.decodeElement(this)
-      }.iterator()
+  override fun deserialize(decoder: Decoder): T = decoder.decodeStructure(descriptor) {
+
+    // the collection size isn't required here, but we need to decode it to get it out of the way
+    decodeCollectionSize(descriptor)
+
+    val elements = if (decodeSequentially()) {
+      tupleElements.asSequence().map {
+        it.decodeElement(this@decodeStructure)
+      }
+    } else {
+      generateSequence { decodeElementIndex(descriptor) }
+        .takeWhile { index ->
+          when (index) {
+            CompositeDecoder.UNKNOWN_NAME         -> error("unknown name at index:$index")
+            CompositeDecoder.DECODE_DONE          -> false
+            !in indexedTupleElements.keys.indices -> error("unexpected index:$index")
+            else                                  -> true
+          }
+        }.map { index ->
+          val tupleElement = indexedTupleElements.getOrElse(index) {
+            error("no tuple element at index:$index")
+          }
+          tupleElement.decodeElement(this@decodeStructure)
+        }
     }
-    return tupleConstructor(elements)
+    // elements sequence *must* be collected inside 'decodeStructure'
+    tupleConstructor(elements.iterator())
   }
 }

@@ -10,9 +10,10 @@ import kotlinx.knit.test.*
 class TuplesTest : FunSpec({
 
   tags(Knit)
-
   context("ExampleTuple01") {
-    val actual = captureOutput("ExampleTuple01") {
+    val caseName = testCase.name.testName
+
+    val actual = captureOutput(caseName) {
       dev.adamko.kxstsgen.example.exampleTuple01.main()
     }.normalizeJoin()
 
@@ -33,12 +34,14 @@ class TuplesTest : FunSpec({
     }
 
     test("expect actual compiles").config(tags = tsCompile) {
-      actual.shouldTypeScriptCompile()
+      actual.shouldTypeScriptCompile(caseName)
     }
   }
 
   context("ExampleTuple02") {
-    val actual = captureOutput("ExampleTuple02") {
+    val caseName = testCase.name.testName
+
+    val actual = captureOutput(caseName) {
       dev.adamko.kxstsgen.example.exampleTuple02.main()
     }.normalizeJoin()
 
@@ -57,12 +60,14 @@ class TuplesTest : FunSpec({
     }
 
     test("expect actual compiles").config(tags = tsCompile) {
-      actual.shouldTypeScriptCompile()
+      actual.shouldTypeScriptCompile(caseName)
     }
   }
 
   context("ExampleTuple03") {
-    val actual = captureOutput("ExampleTuple03") {
+    val caseName = testCase.name.testName
+
+    val actual = captureOutput(caseName) {
       dev.adamko.kxstsgen.example.exampleTuple03.main()
     }.normalizeJoin()
 
@@ -82,12 +87,14 @@ class TuplesTest : FunSpec({
     }
 
     test("expect actual compiles").config(tags = tsCompile) {
-      actual.shouldTypeScriptCompile()
+      actual.shouldTypeScriptCompile(caseName)
     }
   }
 
   context("ExampleTuple04") {
-    val actual = captureOutput("ExampleTuple04") {
+    val caseName = testCase.name.testName
+
+    val actual = captureOutput(caseName) {
       dev.adamko.kxstsgen.example.exampleTuple04.main()
     }.normalizeJoin()
 
@@ -106,12 +113,14 @@ class TuplesTest : FunSpec({
     }
 
     test("expect actual compiles").config(tags = tsCompile) {
-      actual.shouldTypeScriptCompile()
+      actual.shouldTypeScriptCompile(caseName)
     }
   }
 
   context("ExampleTuple05") {
-    val actual = captureOutput("ExampleTuple05") {
+    val caseName = testCase.name.testName
+
+    val actual = captureOutput(caseName) {
       dev.adamko.kxstsgen.example.exampleTuple05.main()
     }.normalizeJoin()
 
@@ -123,6 +132,7 @@ class TuplesTest : FunSpec({
           |  homeLocation: Coordinates;
           |  allLocations: Coordinates[];
           |  namedLocations: { [key: string]: Coordinates };
+          |  locationsInfo: Map<Coordinates, string>;
           |}
           |
           |export type Coordinates = [
@@ -136,7 +146,7 @@ class TuplesTest : FunSpec({
     }
 
     test("expect actual compiles").config(tags = tsCompile) {
-      actual.shouldTypeScriptCompile()
+      actual.shouldTypeScriptCompile(caseName)
     }
   }
 })

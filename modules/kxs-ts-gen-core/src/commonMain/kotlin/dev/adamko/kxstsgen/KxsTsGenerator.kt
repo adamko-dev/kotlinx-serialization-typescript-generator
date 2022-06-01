@@ -1,6 +1,5 @@
 package dev.adamko.kxstsgen
 
-import dev.adamko.kxstsgen.core.KxsTsSourceCodeGenerator
 import dev.adamko.kxstsgen.core.SerializerDescriptorsExtractor
 import dev.adamko.kxstsgen.core.TsDeclaration
 import dev.adamko.kxstsgen.core.TsElement
@@ -9,6 +8,7 @@ import dev.adamko.kxstsgen.core.TsElementId
 import dev.adamko.kxstsgen.core.TsElementIdConverter
 import dev.adamko.kxstsgen.core.TsLiteral
 import dev.adamko.kxstsgen.core.TsMapTypeConverter
+import dev.adamko.kxstsgen.core.TsSourceCodeGenerator
 import dev.adamko.kxstsgen.core.TsTypeRef
 import dev.adamko.kxstsgen.core.TsTypeRefConverter
 import kotlinx.serialization.KSerializer
@@ -29,7 +29,7 @@ import kotlinx.serialization.descriptors.nullable
 open class KxsTsGenerator(
   open val config: KxsTsConfig = KxsTsConfig(),
 
-  open val sourceCodeGenerator: KxsTsSourceCodeGenerator = KxsTsSourceCodeGenerator.Default(config),
+  open val sourceCodeGenerator: TsSourceCodeGenerator = TsSourceCodeGenerator.Default(config),
 ) {
 
 
@@ -42,6 +42,20 @@ open class KxsTsGenerator(
     return descriptorOverrides.entries.run {
       firstOrNull { it.key == descriptor } ?: firstOrNull { it.key.nullable == descriptor.nullable }
     }?.value
+  }
+
+  open fun findMapTypeOverride(descriptor: SerialDescriptor): TsLiteral.TsMap.Type? {
+    return when (findOverride(descriptor)) {
+      null                         -> null
+
+      is TsDeclaration.TsEnum      -> TsLiteral.TsMap.Type.MAPPED_OBJECT
+
+      is TsLiteral.Custom,
+      TsLiteral.Primitive.TsNumber,
+      TsLiteral.Primitive.TsString -> TsLiteral.TsMap.Type.INDEX_SIGNATURE
+
+      else                         -> TsLiteral.TsMap.Type.MAP
+    }
   }
 
 
@@ -80,7 +94,7 @@ open class KxsTsGenerator(
       valDescriptor: SerialDescriptor,
     ): TsLiteral.TsMap.Type =
       cache.getOrPut(keyDescriptor to valDescriptor) {
-        converter(keyDescriptor, valDescriptor)
+        findMapTypeOverride(keyDescriptor) ?: converter(keyDescriptor, valDescriptor)
       }
   }
 

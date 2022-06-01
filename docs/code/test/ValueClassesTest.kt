@@ -10,9 +10,10 @@ import kotlinx.knit.test.*
 class ValueClassesTest : FunSpec({
 
   tags(Knit)
-
   context("ExampleValueClasses01") {
-    val actual = captureOutput("ExampleValueClasses01") {
+    val caseName = testCase.name.testName
+
+    val actual = captureOutput(caseName) {
       dev.adamko.kxstsgen.example.exampleValueClasses01.main()
     }.normalizeJoin()
 
@@ -27,12 +28,14 @@ class ValueClassesTest : FunSpec({
     }
 
     test("expect actual compiles").config(tags = tsCompile) {
-      actual.shouldTypeScriptCompile()
+      actual.shouldTypeScriptCompile(caseName)
     }
   }
 
   context("ExampleValueClasses02") {
-    val actual = captureOutput("ExampleValueClasses02") {
+    val caseName = testCase.name.testName
+
+    val actual = captureOutput(caseName) {
       dev.adamko.kxstsgen.example.exampleValueClasses02.main()
     }.normalizeJoin()
 
@@ -53,12 +56,14 @@ class ValueClassesTest : FunSpec({
     }
 
     test("expect actual compiles").config(tags = tsCompile) {
-      actual.shouldTypeScriptCompile()
+      actual.shouldTypeScriptCompile(caseName)
     }
   }
 
   context("ExampleValueClasses03") {
-    val actual = captureOutput("ExampleValueClasses03") {
+    val caseName = testCase.name.testName
+
+    val actual = captureOutput(caseName) {
       dev.adamko.kxstsgen.example.exampleValueClasses03.main()
     }.normalizeJoin()
 
@@ -73,12 +78,14 @@ class ValueClassesTest : FunSpec({
     }
 
     test("expect actual compiles").config(tags = tsCompile) {
-      actual.shouldTypeScriptCompile()
+      actual.shouldTypeScriptCompile(caseName)
     }
   }
 
   context("ExampleValueClasses04") {
-    val actual = captureOutput("ExampleValueClasses04") {
+    val caseName = testCase.name.testName
+
+    val actual = captureOutput(caseName) {
       dev.adamko.kxstsgen.example.exampleValueClasses04.main()
     }.normalizeJoin()
 
@@ -95,7 +102,7 @@ class ValueClassesTest : FunSpec({
     }
 
     test("expect actual compiles").config(tags = tsCompile) {
-      actual.shouldTypeScriptCompile()
+      actual.shouldTypeScriptCompile(caseName)
     }
   }
 })
