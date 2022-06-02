@@ -1,13 +1,7 @@
 package buildsrc.config
 
-import org.gradle.api.GradleException
-import org.gradle.api.Project
 import org.gradle.api.file.ProjectLayout
-import org.gradle.kotlin.dsl.findByType
 import org.gradle.plugins.ide.idea.model.IdeaModule
-import org.jetbrains.kotlin.gradle.dsl.KotlinTargetContainerWithPresetFunctions
-import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTargetWithHostTests
-import org.jetbrains.kotlin.gradle.targets.js.yarn.YarnRootExtension
 
 
 /** exclude generated Gradle code, so it doesn't clog up search results */

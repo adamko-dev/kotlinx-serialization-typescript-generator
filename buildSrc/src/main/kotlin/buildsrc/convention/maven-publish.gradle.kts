@@ -2,18 +2,20 @@ package buildsrc.convention
 
 import buildsrc.config.publishing
 import buildsrc.config.signing
-import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinMultiplatformPlugin
 
 plugins {
   `maven-publish`
   signing
 }
 
-
-val sonatypeRepositoryUsername: Provider<String> =
-  providers.gradleProperty("sonatypeRepositoryUsername")
-val sonatypeRepositoryPassword: Provider<String> =
-  providers.gradleProperty("sonatypeRepositoryPassword")
+val sonatypeRepositoryCredentials: Provider<Action<PasswordCredentials>> = providers
+  .credentials(PasswordCredentials::class, "sonatypeRepository")
+  .map { credentials ->
+    Action<PasswordCredentials> {
+      username = credentials.username
+      password = credentials.password
+    }
+  }
 
 val sonatypeRepositoryReleaseUrl: Provider<String> = provider {
   if (version.toString().endsWith("SNAPSHOT")) {
@@ -46,10 +48,7 @@ publishing {
   repositories {
     maven(sonatypeRepositoryReleaseUrl) {
       name = "sonatype"
-      credentials {
-        username = sonatypeRepositoryUsername.get()
-        password = sonatypeRepositoryPassword.get()
-      }
+      credentials(sonatypeRepositoryCredentials.get())
     }
   }
   publications.withType<MavenPublication>().configureEach {
@@ -79,21 +78,22 @@ signing {
 
 plugins.configureEach {
   when (this) {
-    is KotlinMultiplatformPlugin -> {
+    // not necessary? It looks like the plugin creates publications correctly?
+//    is KotlinMultiplatformPlugin -> {
+//
+//      // Stub javadoc.jar artifact (required by Maven Central?)
+//      val javadocJar by tasks.registering(Jar::class) {
+//        archiveClassifier.set("javadoc")
+//      }
+//
+//      publishing.publications.create<MavenPublication>("mavenKotlinMpp") {
+//        from(components["kotlin"])
+//        artifact(javadocJar)
+//        artifact(tasks["sourcesJar"])
+//      }
+//    }
 
-      // Stub javadoc.jar artifact (required by Maven Central?)
-      val javadocJar by tasks.registering(Jar::class) {
-        archiveClassifier.set("javadoc")
-      }
-
-      publishing.publications.create<MavenPublication>("mavenKotlinMpp") {
-        from(components["kotlin"])
-        artifact(javadocJar)
-        artifact(tasks["sourcesJar"])
-      }
-    }
-
-    // clashes with KtMPP plugin?
+    // JavaPlugin clashes with KotlinMultiplatformPlugin?
     // causes error
     // Artifact kxs-ts-gen-core-jvm-maven-publish-SNAPSHOT.jar wasn't produced by this build
 //    is JavaPlugin                -> afterEvaluate {
@@ -105,7 +105,7 @@ plugins.configureEach {
 //      }
 //    }
 
-    is JavaPlatformPlugin        -> {
+    is JavaPlatformPlugin -> {
       publishing.publications.create<MavenPublication>("mavenJavaPlatform") {
         from(components["javaPlatform"])
       }
