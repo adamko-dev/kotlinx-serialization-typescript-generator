@@ -1,12 +1,9 @@
 plugins {
-  buildsrc.convention.`kotlin-multiplatform`
+  buildsrc.convention.`kotlin-mpp`
   buildsrc.convention.`maven-publish`
   kotlin("plugin.serialization")
   id("io.kotest.multiplatform")
 }
-
-val kotlinxSerializationVersion = "1.3.2"
-val kotestVersion = "5.2.3"
 
 kotlin {
 

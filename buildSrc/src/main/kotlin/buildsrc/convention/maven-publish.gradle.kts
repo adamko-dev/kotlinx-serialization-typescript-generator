@@ -2,39 +2,36 @@ package buildsrc.convention
 
 import buildsrc.config.publishing
 import buildsrc.config.signing
-import org.gradle.api.credentials.PasswordCredentials
-import org.gradle.internal.credentials.DefaultPasswordCredentials
 
 plugins {
-  id("buildsrc.convention.subproject")
   `maven-publish`
   signing
 }
 
-
-//val sonatypeRepositoryCredentials: Provider<PasswordCredentials> =
-//  providers.credentials(PasswordCredentials::class, "sonatypeRepositoryCredentials")
-
-val sonatypeRepositoryUsername: String? by project.extra
-val sonatypeRepositoryPassword: String? by project.extra
-val sonatypeRepositoryCredentials: Provider<PasswordCredentials> = providers.provider {
-  if (sonatypeRepositoryUsername.isNullOrBlank() || sonatypeRepositoryPassword.isNullOrBlank()) {
-    null
-  } else {
-    DefaultPasswordCredentials(sonatypeRepositoryUsername, sonatypeRepositoryPassword)
+val sonatypeRepositoryCredentials: Provider<Action<PasswordCredentials>> = providers
+  .credentials(PasswordCredentials::class, "sonatypeRepository")
+  .map { credentials ->
+    Action<PasswordCredentials> {
+      username = credentials.username
+      password = credentials.password
+    }
   }
-}
-
-
-val sonatypeRepositoryId: String by project.extra
 
 val sonatypeRepositoryReleaseUrl: Provider<String> = provider {
   if (version.toString().endsWith("SNAPSHOT")) {
-    "https://oss.sonatype.org/content/repositories/snapshots/"
+    "https://s01.oss.sonatype.org/content/repositories/snapshots/"
   } else {
-    "https://oss.sonatype.org/service/local/staging/deployByRepositoryId/$sonatypeRepositoryId/"
+    "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
   }
 }
+
+
+val signingKeyId: Provider<String> =
+  providers.gradleProperty("signing.keyId")
+val signingPassword: Provider<String> =
+  providers.gradleProperty("signing.password")
+val signingSecretKeyRingFile: Provider<String> =
+  providers.gradleProperty("signing.secretKeyRingFile")
 
 
 tasks.matching {
@@ -47,42 +44,97 @@ tasks.matching {
 }
 
 
-
 publishing {
   repositories {
-    if (sonatypeRepositoryCredentials.isPresent) {
-      maven(sonatypeRepositoryReleaseUrl) {
-        name = "oss"
-        credentials {
-          username = sonatypeRepositoryCredentials.get().username
-          password = sonatypeRepositoryCredentials.get().password
-        }
+    maven(sonatypeRepositoryReleaseUrl) {
+      name = "sonatype"
+      credentials(sonatypeRepositoryCredentials.get())
+    }
+  }
+  publications.withType<MavenPublication>().configureEach {
+    createKxTsGenPom()
+  }
+}
+
+
+signing {
+
+//  if (
+//    signingKeyId.isPresent() &&
+//    signingPassword.isPresent() &&
+//    signingSecretKeyRingFile.isPresent()
+//  ) {
+//  useInMemoryPgpKeys(signingKeyId, signingKey, signingPassword)
+//  } else {
+//    useGpgCmd()
+//  }
+
+  useGpgCmd()
+
+  // sign all publications
+  sign(publishing.publications)
+}
+
+
+plugins.configureEach {
+  when (this) {
+    // not necessary? It looks like the plugin creates publications correctly?
+//    is KotlinMultiplatformPlugin -> {
+//
+//      // Stub javadoc.jar artifact (required by Maven Central?)
+//      val javadocJar by tasks.registering(Jar::class) {
+//        archiveClassifier.set("javadoc")
+//      }
+//
+//      publishing.publications.create<MavenPublication>("mavenKotlinMpp") {
+//        from(components["kotlin"])
+//        artifact(javadocJar)
+//        artifact(tasks["sourcesJar"])
+//      }
+//    }
+
+    // JavaPlugin clashes with KotlinMultiplatformPlugin?
+    // causes error
+    // Artifact kxs-ts-gen-core-jvm-maven-publish-SNAPSHOT.jar wasn't produced by this build
+//    is JavaPlugin                -> afterEvaluate {
+//      if (!plugins.hasPlugin(KotlinMultiplatformPlugin::class)) {
+//        publishing.publications.create<MavenPublication>("mavenJava") {
+//          from(components["java"])
+//          artifact(tasks["sourcesJar"])
+//        }
+//      }
+//    }
+
+    is JavaPlatformPlugin -> {
+      publishing.publications.create<MavenPublication>("mavenJavaPlatform") {
+        from(components["javaPlatform"])
       }
     }
   }
 }
 
-signing {
-  val signingKeyId: String? by project
-  val signingKey: String? by project
-  val signingPassword: String? by project
-  useInMemoryPgpKeys(signingKeyId, signingKey, signingPassword)
-  setRequired(false)
-}
 
+fun MavenPublication.createKxTsGenPom(): Unit = pom {
+  name.set("Kotlinx Serialization Typescript Generator")
+  description.set("KxTsGen creates TypeScript interfaces from Kotlinx Serialization @Serializable classes")
+  url.set("https://github.com/adamko-dev/kotlinx-serialization-typescript-generator")
 
-plugins.withType<JavaPlugin> {
-  if (!plugins.hasPlugin(KotlinMultiplatformPlugin::class)) {
-    val publication = publishing.publications.create<MavenPublication>("mavenJava") {
-      from(components["java"])
+  licenses {
+    license {
+      name.set("The Apache License, Version 2.0")
+      url.set("http://www.apache.org/licenses/LICENSE-2.0.txt")
     }
-    signing { sign(publication) }
   }
-}
 
-plugins.withType<JavaPlatformPlugin> {
-  val publication = publishing.publications.create<MavenPublication>("mavenJavaPlatform") {
-    from(components["javaPlatform"])
+  developers {
+    developer {
+      email.set("adam@adamko.dev")
+    }
   }
-  signing { sign(publication) }
+
+  scm {
+    connection.set("scm:git:git://github.com/adamko-dev/kotlinx-serialization-typescript-generator.git")
+    developerConnection.set("scm:git:ssh://github.com:adamko-dev/kotlinx-serialization-typescript-generator.git")
+    url.set("https://github.com/adamko-dev/kotlinx-serialization-typescript-generator")
+  }
 }
