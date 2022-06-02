@@ -23,6 +23,8 @@ dependencies {
   implementation(libs.kotlinx.knit.gradlePlugin)
 
   implementation(libs.gradleNodePlugin)
+
+  implementation(libs.qoomonGitVersioning)
 }
 
 

@@ -23,6 +23,9 @@ classgraph = "4.8.143"
 
 gradleNodePlugin = "3.3.0"
 
+#qoomonGitVersioning = "6.1.1" // bugged: https://github.com/qoomon/gradle-git-versioning-plugin/issues/76
+qoomonGitVersioning = "5.2.0"
+
 [libraries]
 
 kotlin-bom = { group = "org.jetbrains.kotlin", name = "kotlin-bom", version.ref = "kotlin" }
@@ -67,6 +70,9 @@ kotest-gradlePlugin = { group = "io.kotest", name = "kotest-framework-multiplatf
 kotlinx-knit = { group = "org.jetbrains.kotlinx", name = "kotlinx-knit", version.ref = "kotlinx-knit" }
 kotlinx-knit-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-knit-test", version.ref = "kotlinx-knit" }
 kotlinx-knit-gradlePlugin = { group = "org.jetbrains.kotlinx", name = "kotlinx-knit", version.ref = "kotlinx-knit" }
+
+
+qoomonGitVersioning = { group = "me.qoomon", name = "gradle-git-versioning-plugin", version.ref = "qoomonGitVersioning" }
 
 [bundles]
 
