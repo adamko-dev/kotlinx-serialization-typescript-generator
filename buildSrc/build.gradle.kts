@@ -3,7 +3,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
   idea
   `kotlin-dsl`
-  kotlin("jvm") version "1.6.20"
+  kotlin("jvm") version "1.6.21"
   `project-report`
 }
 
@@ -25,15 +25,13 @@ dependencies {
   implementation(libs.gradleNodePlugin)
 }
 
-val gradleJvmTarget = "11"
-val gradleKotlinTarget = "1.6"
 
 tasks.withType<KotlinCompile>().configureEach {
 
   kotlinOptions {
-    jvmTarget = gradleJvmTarget
-    apiVersion = gradleKotlinTarget
-    languageVersion = gradleKotlinTarget
+    jvmTarget = libs.versions.jvmTarget.get()
+    apiVersion = libs.versions.kotlinTarget.get()
+    languageVersion = libs.versions.kotlinTarget.get()
   }
 
   kotlinOptions.freeCompilerArgs += listOf(
@@ -45,11 +43,17 @@ tasks.withType<KotlinCompile>().configureEach {
 
 kotlin {
   jvmToolchain {
-    (this as JavaToolchainSpec).languageVersion.set(JavaLanguageVersion.of(gradleJvmTarget))
+    (this as JavaToolchainSpec).languageVersion.set(
+      libs.versions.jvmTarget.map {
+        JavaLanguageVersion.of(
+          it.substringAfter(".")
+        )
+      }
+    )
   }
 
   kotlinDslPluginOptions {
-    jvmTarget.set(gradleJvmTarget)
+    jvmTarget.set(libs.versions.jvmTarget)
   }
 }
 
