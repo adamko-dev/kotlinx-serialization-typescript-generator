@@ -12,6 +12,7 @@ project.group = "dev.adamko.kxstsgen"
 project.version = "0.0.0-SNAPSHOT"
 gitVersioning.apply {
   refs {
+    considerTagsOnBranches = true
     branch(".+") { version = "\${ref}-SNAPSHOT" }
     tag("v(?<version>.*)") { version = "\${ref.version}" }
   }
