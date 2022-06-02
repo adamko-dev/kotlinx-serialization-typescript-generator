@@ -3,7 +3,7 @@ import buildsrc.config.excludeGeneratedGradleDsl
 plugins {
   base
   idea
-  id("me.qoomon.git-versioning") version "5.1.5"
+  id("me.qoomon.git-versioning")
   id("org.jetbrains.kotlinx.kover")
 }
 
@@ -12,6 +12,7 @@ project.group = "dev.adamko.kxstsgen"
 project.version = "0.0.0-SNAPSHOT"
 gitVersioning.apply {
   refs {
+    considerTagsOnBranches = true
     branch(".+") { version = "\${ref}-SNAPSHOT" }
     tag("v(?<version>.*)") { version = "\${ref.version}" }
   }
