@@ -2,4 +2,4 @@
 
 # https://jitpack.io/docs/BUILDING/#java-version
 jdk:
-  - openjdk8
+  - openjdk11
