@@ -2,6 +2,10 @@ package buildsrc.convention
 
 import buildsrc.config.publishing
 import buildsrc.config.signing
+import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
+import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinMultiplatformPlugin
+import org.jetbrains.kotlin.gradle.targets.jvm.KotlinJvmTarget
+
 
 plugins {
   `maven-publish`
@@ -28,16 +32,28 @@ val sonatypeRepositoryReleaseUrl: Provider<String> = provider {
 
 val signingKeyId: Provider<String> =
   providers.gradleProperty("signing.keyId")
+val signingKey: Provider<String> =
+  providers.gradleProperty("signing.key")
 val signingPassword: Provider<String> =
   providers.gradleProperty("signing.password")
 val signingSecretKeyRingFile: Provider<String> =
   providers.gradleProperty("signing.secretKeyRingFile")
 
 
+val javadocJarStub by tasks.registering(Jar::class) {
+  group = JavaBasePlugin.DOCUMENTATION_GROUP
+  description = "Stub javadoc.jar artifact (required by Maven Central)"
+  archiveClassifier.set("javadoc")
+}
+
+
 tasks.matching {
   it.name.startsWith(PublishingPlugin.PUBLISH_LIFECYCLE_TASK_NAME)
     && it.group == PublishingPlugin.PUBLISH_TASK_GROUP
 }.configureEach {
+  if (sonatypeRepositoryCredentials.isPresent()) {
+    dependsOn(javadocJarStub)
+  }
   doLast {
     logger.lifecycle("[${this.name}] ${project.group}:${project.name}:${project.version}")
   }
@@ -45,71 +61,58 @@ tasks.matching {
 
 
 publishing {
-  repositories {
-    maven(sonatypeRepositoryReleaseUrl) {
-      name = "sonatype"
-      credentials(sonatypeRepositoryCredentials.get())
+  if (sonatypeRepositoryCredentials.isPresent()) {
+    repositories {
+      maven(sonatypeRepositoryReleaseUrl) {
+        name = "sonatype"
+        credentials(sonatypeRepositoryCredentials.get())
+      }
     }
-  }
-  publications.withType<MavenPublication>().configureEach {
-    createKxTsGenPom()
+    publications.withType<MavenPublication>().configureEach {
+      createKxTsGenPom()
+      artifact(javadocJarStub)
+    }
   }
 }
 
 
 signing {
+  if (sonatypeRepositoryCredentials.isPresent()) {
+    if (signingKeyId.isPresent() && signingKey.isPresent() && signingPassword.isPresent()) {
+      useInMemoryPgpKeys(signingKeyId.get(), signingKey.get(), signingPassword.get())
+    } else {
+      useGpgCmd()
+    }
 
-//  if (
-//    signingKeyId.isPresent() &&
-//    signingPassword.isPresent() &&
-//    signingSecretKeyRingFile.isPresent()
-//  ) {
-//  useInMemoryPgpKeys(signingKeyId, signingKey, signingPassword)
-//  } else {
-//    useGpgCmd()
-//  }
-
-  useGpgCmd()
-
-  // sign all publications
-  sign(publishing.publications)
+    // sign all publications
+    sign(publishing.publications)
+    sign(javadocJarStub.get())
+  }
 }
 
 
-plugins.configureEach {
-  when (this) {
-    // not necessary? It looks like the plugin creates publications correctly?
-//    is KotlinMultiplatformPlugin -> {
-//
-//      // Stub javadoc.jar artifact (required by Maven Central?)
-//      val javadocJar by tasks.registering(Jar::class) {
-//        archiveClassifier.set("javadoc")
-//      }
-//
-//      publishing.publications.create<MavenPublication>("mavenKotlinMpp") {
-//        from(components["kotlin"])
-//        artifact(javadocJar)
-//        artifact(tasks["sourcesJar"])
-//      }
-//    }
+plugins.withType(KotlinMultiplatformPlugin::class).configureEach {
+  publishing.publications.withType<MavenPublication>().configureEach {
+    artifact(javadocJarStub)
+  }
+}
 
-    // JavaPlugin clashes with KotlinMultiplatformPlugin?
-    // causes error
-    // Artifact kxs-ts-gen-core-jvm-maven-publish-SNAPSHOT.jar wasn't produced by this build
-//    is JavaPlugin                -> afterEvaluate {
-//      if (!plugins.hasPlugin(KotlinMultiplatformPlugin::class)) {
-//        publishing.publications.create<MavenPublication>("mavenJava") {
-//          from(components["java"])
-//          artifact(tasks["sourcesJar"])
-//        }
-//      }
-//    }
 
-    is JavaPlatformPlugin -> {
-      publishing.publications.create<MavenPublication>("mavenJavaPlatform") {
-        from(components["javaPlatform"])
+plugins.withType(JavaPlugin::class).configureEach {
+  afterEvaluate {
+    if (!isKotlinMultiplatformJavaEnabled()) {
+      publishing.publications.create<MavenPublication>("mavenJava") {
+        from(components["java"])
+        artifact(tasks["sourcesJar"])
       }
     }
+  }
+}
+
+
+plugins.withType(JavaPlatformPlugin::class).configureEach {
+  publishing.publications.create<MavenPublication>("mavenJavaPlatform") {
+    from(components["javaPlatform"])
   }
 }
 
@@ -122,7 +125,7 @@ fun MavenPublication.createKxTsGenPom(): Unit = pom {
   licenses {
     license {
       name.set("The Apache License, Version 2.0")
-      url.set("http://www.apache.org/licenses/LICENSE-2.0.txt")
+      url.set("https://www.apache.org/licenses/LICENSE-2.0.txt")
     }
   }
 
@@ -137,4 +140,15 @@ fun MavenPublication.createKxTsGenPom(): Unit = pom {
     developerConnection.set("scm:git:ssh://github.com:adamko-dev/kotlinx-serialization-typescript-generator.git")
     url.set("https://github.com/adamko-dev/kotlinx-serialization-typescript-generator")
   }
+}
+
+
+/** Logic from [KotlinJvmTarget.withJava] */
+fun Project.isKotlinMultiplatformJavaEnabled(): Boolean {
+  val multiplatformExtension: KotlinMultiplatformExtension? =
+    extensions.findByType(KotlinMultiplatformExtension::class)
+
+  return multiplatformExtension?.targets
+    ?.any { it is KotlinJvmTarget && it.withJavaEnabled }
+    ?: false
 }
