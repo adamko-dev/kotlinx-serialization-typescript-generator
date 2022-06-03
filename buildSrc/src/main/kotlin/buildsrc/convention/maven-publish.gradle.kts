@@ -62,6 +62,13 @@ tasks.matching {
 }
 
 
+// Gradle warns about some signing tasks using publishing task outputs without explicit
+// dependencies. I'm not going to go through them all and fix them, so here's a quick safety check.
+tasks.matching { it.name.startsWith("publish") }.configureEach {
+  mustRunAfter(tasks.matching { it.name.startsWith("sign") })
+}
+
+
 publishing {
   if (sonatypeRepositoryCredentials.isPresent()) {
     repositories {
