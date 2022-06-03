@@ -12,12 +12,14 @@ plugins {
   signing
 }
 
-val sonatypeRepositoryCredentials: Provider<Action<PasswordCredentials>> = providers
-  .credentials(PasswordCredentials::class, "sonatypeRepository")
-  .map { credentials ->
+val sonatypeRepositoryCredentials: Provider<Action<PasswordCredentials>> =
+  providers.zip(
+    providers.gradleProperty("sonatypeRepositoryUsername"),
+    providers.gradleProperty("sonatypeRepositoryPassword"),
+  ) { user, pass ->
     Action<PasswordCredentials> {
-      username = credentials.username
-      password = credentials.password
+      username = user
+      password = pass
     }
   }
 
@@ -57,6 +59,13 @@ tasks.matching {
   doLast {
     logger.lifecycle("[${this.name}] ${project.group}:${project.name}:${project.version}")
   }
+}
+
+
+// Gradle warns about some signing tasks using publishing task outputs without explicit
+// dependencies. I'm not going to go through them all and fix them, so here's a quick safety check.
+tasks.matching { it.name.startsWith("publish") }.configureEach {
+  mustRunAfter(tasks.matching { it.name.startsWith("sign") })
 }
 
 

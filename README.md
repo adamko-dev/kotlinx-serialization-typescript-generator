@@ -1,4 +1,7 @@
-[![](https://jitpack.io/v/adamko-dev/kotlinx-serialization-typescript-generator.svg)](https://jitpack.io/#adamko-dev/kotlinx-serialization-typescript-generator)
+[![Status](https://img.shields.io/badge/status-proof--of--concept-blueviolet?style=flat-square)](https://github.com/adamko-dev/kotlinx-serialization-typescript-generator#status)
+[![GitHub license](https://img.shields.io/github/license/adamko-dev/kotlinx-serialization-typescript-generator?style=flat-square)](https://github.com/adamko-dev/kotlinx-serialization-typescript-generator/blob/main/LICENSE)
+[![Maven Central](https://img.shields.io/maven-central/v/dev.adamko.txstsgen/kxs-ts-gen-core?style=flat-square)](https://search.maven.org/search?q=g:dev.adamko.txstsgen)
+[![](https://jitpack.io/v/adamko-dev/kotlinx-serialization-typescript-generator.svg?style=flat-square)](https://jitpack.io/#adamko-dev/kotlinx-serialization-typescript-generator)
 
 # Kotlinx Serialization TypeScript Generator
 
@@ -35,7 +38,7 @@ export interface MyClass {
 }
 ```
 
-Only Kotlinx Serialization 
+Only Kotlinx Serialization
 [`SerialDescriptor`s](https://kotlin.github.io/kotlinx.serialization/kotlinx-serialization-core/kotlinx.serialization.descriptors/-serial-descriptor/index.html)
 are used to generate TypeScript. They are flexible and comprehensive enough to allow for accurate TypeScript code, without any deviation.
 
