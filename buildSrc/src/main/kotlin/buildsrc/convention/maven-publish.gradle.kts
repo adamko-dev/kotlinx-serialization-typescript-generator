@@ -12,12 +12,14 @@ plugins {
   signing
 }
 
-val sonatypeRepositoryCredentials: Provider<Action<PasswordCredentials>> = providers
-  .credentials(PasswordCredentials::class, "sonatypeRepository")
-  .map { credentials ->
+val sonatypeRepositoryCredentials: Provider<Action<PasswordCredentials>> =
+  providers.zip(
+    providers.gradleProperty("sonatypeRepositoryUsername"),
+    providers.gradleProperty("sonatypeRepositoryPassword"),
+  ) { user, pass ->
     Action<PasswordCredentials> {
-      username = credentials.username
-      password = credentials.password
+      username = user
+      password = pass
     }
   }
 
