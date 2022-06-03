@@ -23,7 +23,8 @@ dependencies {
   testImplementation(kotlin("test"))
 }
 
-tasks.withType<KotlinCompile> {
+
+tasks.withType<KotlinCompile>().configureEach {
   kotlinOptions.freeCompilerArgs += listOf(
     "-opt-in=kotlinx.serialization.ExperimentalSerializationApi",
   )

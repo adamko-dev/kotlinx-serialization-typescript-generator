@@ -9,11 +9,6 @@ kotlin {
 
   js(IR) {
     binaries.executable()
-//    browser {
-//      commonWebpackConfig {
-//        cssSupport.enabled = true
-//      }
-//    }
     nodejs()
   }
 
@@ -72,10 +67,13 @@ kotlin {
         implementation(libs.okio.core)
       }
     }
+
 //    val nativeMain by getting
 //    val nativeTest by getting
+
     val jsMain by getting
     val jsTest by getting
+
     val jvmMain by getting {
       dependencies {
         implementation(project.dependencies.platform(projects.modules.versionsPlatform))
@@ -91,18 +89,3 @@ kotlin {
     }
   }
 }
-
-//
-//val javadocJar by tasks.creating(Jar::class) {
-//  group = JavaBasePlugin.DOCUMENTATION_GROUP
-//  description = "Assembles java doc to jar"
-//  archiveClassifier.set("javadoc")
-//  from(tasks.javadoc)
-//}
-//
-
-//publishing {
-//  publications.withType<MavenPublication>().configureEach {
-////    artifact(javadocJar)
-//  }
-//}
