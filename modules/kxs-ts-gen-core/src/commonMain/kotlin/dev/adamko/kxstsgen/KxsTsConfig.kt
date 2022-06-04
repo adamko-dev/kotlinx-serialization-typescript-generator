@@ -1,7 +1,7 @@
 package dev.adamko.kxstsgen
 
 import dev.adamko.kxstsgen.core.TsDeclaration
-import dev.adamko.kxstsgen.core.UnimplementedKxTsGenApi
+import dev.adamko.kxstsgen.core.UnimplementedKxsTsGenApi
 import dev.adamko.kxstsgen.core.util.MutableMapWithDefaultPut
 import kotlin.jvm.JvmInline
 import kotlin.reflect.KClass
@@ -25,9 +25,9 @@ import kotlinx.serialization.modules.SerializersModuleCollector
 data class KxsTsConfig(
   val indent: String = "  ",
   val declarationSeparator: String = "\n\n",
-  @UnimplementedKxTsGenApi
+  @UnimplementedKxsTsGenApi
   val namespaceConfig: NamespaceConfig = NamespaceConfig.Disabled,
-  @UnimplementedKxTsGenApi
+  @UnimplementedKxsTsGenApi
   val typeAliasTyping: TypeAliasTypingConfig = TypeAliasTypingConfig.None,
   val serializersModule: SerializersModule = EmptySerializersModule,
 ) {

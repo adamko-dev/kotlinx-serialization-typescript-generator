@@ -23,7 +23,7 @@ import kotlinx.serialization.descriptors.nullable
  * or by setting hardcoded values in [serializerDescriptorOverrides] or [descriptorOverrides],
  * or changed by overriding any converter.
  *
- * @param[config] General settings that affect how KxTsGen works
+ * @param[config] General settings that affect how KxsTsGen works
  * @param[sourceCodeGenerator] Convert [TsElement]s to TypeScript source code
  */
 open class KxsTsGenerator(
