@@ -23,7 +23,7 @@ dependencies {
 
   implementation(libs.gradleNodePlugin)
 
-  implementation(libs.qoomonGitVersioning)
+  implementation(libs.gitVersioningPlugin)
 }
 
 

@@ -1,10 +1,11 @@
 package buildsrc.convention
 
+import buildsrc.config.createKxsTsGenPom
+import buildsrc.config.credentialsAction
+import buildsrc.config.isKotlinMultiplatformJavaEnabled
 import buildsrc.config.publishing
 import buildsrc.config.signing
-import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinMultiplatformPlugin
-import org.jetbrains.kotlin.gradle.targets.jvm.KotlinJvmTarget
 
 
 plugins {
@@ -13,15 +14,8 @@ plugins {
 }
 
 val sonatypeRepositoryCredentials: Provider<Action<PasswordCredentials>> =
-  providers.zip(
-    providers.gradleProperty("sonatypeRepositoryUsername"),
-    providers.gradleProperty("sonatypeRepositoryPassword"),
-  ) { user, pass ->
-    Action<PasswordCredentials> {
-      username = user
-      password = pass
-    }
-  }
+  providers.credentialsAction("sonatypeRepository")
+
 
 val sonatypeRepositoryReleaseUrl: Provider<String> = provider {
   if (version.toString().endsWith("SNAPSHOT")) {
@@ -49,23 +43,18 @@ val javadocJarStub by tasks.registering(Jar::class) {
 }
 
 
-tasks.matching {
-  it.name.startsWith(PublishingPlugin.PUBLISH_LIFECYCLE_TASK_NAME)
-    && it.group == PublishingPlugin.PUBLISH_TASK_GROUP
-}.configureEach {
+tasks.withType<AbstractPublishToMaven>().configureEach {
+  // Gradle warns about some signing tasks using publishing task outputs without explicit
+  // dependencies. I'm not going to go through them all and fix them, so here's a quick fix.
+  dependsOn(tasks.withType<Sign>())
+
   if (sonatypeRepositoryCredentials.isPresent()) {
     dependsOn(javadocJarStub)
   }
+
   doLast {
     logger.lifecycle("[${this.name}] ${project.group}:${project.name}:${project.version}")
   }
-}
-
-
-// Gradle warns about some signing tasks using publishing task outputs without explicit
-// dependencies. I'm not going to go through them all and fix them, so here's a quick safety check.
-tasks.matching { it.name.startsWith("publish") }.configureEach {
-  mustRunAfter(tasks.matching { it.name.startsWith("sign") })
 }
 
 
@@ -76,9 +65,14 @@ publishing {
         name = "sonatype"
         credentials(sonatypeRepositoryCredentials.get())
       }
+      // publish to local dir, for testing
+      // maven {
+      //   name = "maven-internal"
+      //   url = uri(rootProject.layout.buildDirectory.dir("maven-internal"))
+      // }
     }
     publications.withType<MavenPublication>().configureEach {
-      createKxTsGenPom()
+      createKxsTsGenPom()
       artifact(javadocJarStub)
     }
   }
@@ -123,41 +117,4 @@ plugins.withType(JavaPlatformPlugin::class).configureEach {
   publishing.publications.create<MavenPublication>("mavenJavaPlatform") {
     from(components["javaPlatform"])
   }
-}
-
-
-fun MavenPublication.createKxTsGenPom(): Unit = pom {
-  name.set("Kotlinx Serialization Typescript Generator")
-  description.set("KxTsGen creates TypeScript interfaces from Kotlinx Serialization @Serializable classes")
-  url.set("https://github.com/adamko-dev/kotlinx-serialization-typescript-generator")
-
-  licenses {
-    license {
-      name.set("The Apache License, Version 2.0")
-      url.set("https://www.apache.org/licenses/LICENSE-2.0.txt")
-    }
-  }
-
-  developers {
-    developer {
-      email.set("adam@adamko.dev")
-    }
-  }
-
-  scm {
-    connection.set("scm:git:git://github.com/adamko-dev/kotlinx-serialization-typescript-generator.git")
-    developerConnection.set("scm:git:ssh://github.com:adamko-dev/kotlinx-serialization-typescript-generator.git")
-    url.set("https://github.com/adamko-dev/kotlinx-serialization-typescript-generator")
-  }
-}
-
-
-/** Logic from [KotlinJvmTarget.withJava] */
-fun Project.isKotlinMultiplatformJavaEnabled(): Boolean {
-  val multiplatformExtension: KotlinMultiplatformExtension? =
-    extensions.findByType(KotlinMultiplatformExtension::class)
-
-  return multiplatformExtension?.targets
-    ?.any { it is KotlinJvmTarget && it.withJavaEnabled }
-    ?: false
 }

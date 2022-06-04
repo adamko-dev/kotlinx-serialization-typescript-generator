@@ -9,4 +9,4 @@ package dev.adamko.kxstsgen.core
 )
 @RequiresOptIn(level = RequiresOptIn.Level.WARNING)
 @MustBeDocumented
-annotation class UnimplementedKxTsGenApi
+annotation class UnimplementedKxsTsGenApi
