@@ -38,8 +38,8 @@ fun MavenPublication.createKxsTsGenPom(): Unit = pom {
 
 
 /** Configure [PublishingExtension] */
-fun Project.publishing(action: PublishingExtension.() -> Unit): Unit =
-  extensions.configure(action)
+fun Project.publishing(configure: PublishingExtension.() -> Unit): Unit =
+  extensions.configure(configure)
 
 
 val Project.publishing: PublishingExtension
@@ -47,8 +47,8 @@ val Project.publishing: PublishingExtension
 
 
 /** Configure [SigningExtension] */
-fun Project.signing(action: SigningExtension.() -> Unit): Unit =
-  extensions.configure(action)
+fun Project.signing(configure: SigningExtension.() -> Unit): Unit =
+  extensions.configure(configure)
 
 
 val Project.signing: SigningExtension
