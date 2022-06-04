@@ -22,8 +22,7 @@ kotlinProcess = "1.3.1"
 classgraph = "4.8.143"
 
 gradleNodePlugin = "3.3.0"
-
-qoomonGitVersioning = "6.1.2"
+gitVersioningPlugin = "6.1.2"
 
 [libraries]
 
@@ -55,6 +54,7 @@ kotlinProcess = { group = "com.github.pgreze", name = "kotlin-process", version.
 kotlinCompileTesting = { group = "com.github.tschuchortdev", name = "kotlin-compile-testing", version.ref = "kotlinCompileTesting" }
 kotlinCompileTesting-ksp = { group = "com.github.tschuchortdev", name = "kotlin-compile-testing-ksp", version.ref = "kotlinCompileTesting" }
 
+## Kotest ##
 
 kotest-bom = { group = "io.kotest", name = "kotest-bom", version.ref = "kotest" }
 kotest-assertionsCore = { group = "io.kotest", name = "kotest-assertions-core" }
@@ -65,13 +65,16 @@ kotest-frameworkDatatest = { group = "io.kotest", name = "kotest-framework-datat
 kotest-runnerJUnit5 = { group = "io.kotest", name = "kotest-runner-junit5" }
 kotest-gradlePlugin = { group = "io.kotest", name = "kotest-framework-multiplatform-plugin-gradle", version.ref = "kotest" }
 
+## Knit ##
 
 kotlinx-knit = { group = "org.jetbrains.kotlinx", name = "kotlinx-knit", version.ref = "kotlinx-knit" }
 kotlinx-knit-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-knit-test", version.ref = "kotlinx-knit" }
 kotlinx-knit-gradlePlugin = { group = "org.jetbrains.kotlinx", name = "kotlinx-knit", version.ref = "kotlinx-knit" }
 
 
-qoomonGitVersioning = { group = "me.qoomon", name = "gradle-git-versioning-plugin", version.ref = "qoomonGitVersioning" }
+### Gradle Plugins ###
+
+gitVersioningPlugin = { group = "me.qoomon", name = "gradle-git-versioning-plugin", version.ref = "gitVersioningPlugin" }
 
 [bundles]
 
