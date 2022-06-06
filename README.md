@@ -1,6 +1,6 @@
 [![Status](https://img.shields.io/badge/status-proof--of--concept-blueviolet?style=flat-square)](https://github.com/adamko-dev/kotlinx-serialization-typescript-generator#status)
 [![GitHub license](https://img.shields.io/github/license/adamko-dev/kotlinx-serialization-typescript-generator?style=flat-square)](https://github.com/adamko-dev/kotlinx-serialization-typescript-generator/blob/main/LICENSE)
-[![Maven Central](https://img.shields.io/maven-central/v/dev.adamko.txstsgen/kxs-ts-gen-core?style=flat-square)](https://search.maven.org/search?q=g:dev.adamko.kxstsgen)
+[![Maven Central](https://img.shields.io/maven-central/v/dev.adamko.kxstsgen/kxs-ts-gen-core?color=%234c1&style=flat-square)](https://search.maven.org/search?q=g:dev.adamko.kxstsgen)
 [![](https://jitpack.io/v/adamko-dev/kotlinx-serialization-typescript-generator.svg?style=flat-square)](https://jitpack.io/#adamko-dev/kotlinx-serialization-typescript-generator)
 
 # Kotlinx Serialization TypeScript Generator
