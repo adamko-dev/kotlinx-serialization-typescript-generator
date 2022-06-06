@@ -1,7 +1,6 @@
 import buildsrc.config.excludeGeneratedGradleDsl
 
 plugins {
-  base
   idea
   id("me.qoomon.git-versioning")
   id("org.jetbrains.kotlinx.kover")
@@ -26,6 +25,7 @@ tasks.wrapper {
   gradleVersion = "7.4.2"
   distributionType = Wrapper.DistributionType.ALL
 }
+
 
 idea {
   module {

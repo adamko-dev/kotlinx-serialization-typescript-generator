@@ -43,10 +43,6 @@ kotlinx-serialization-cbor = { group = "org.jetbrains.kotlinx", name = "kotlinx-
 okio-bom = { group = "com.squareup.okio", name = "okio-bom", version.ref = "okio" }
 okio-core = { group = "com.squareup.okio", name = "okio" }
 
-kotlinx-kover-gradlePlugin = { group = "org.jetbrains.kotlinx", name = "kover", version.ref = "kotlinx-kover" }
-
-gradleNodePlugin = { group = "com.github.node-gradle", name = "gradle-node-plugin", version.ref = "gradleNodePlugin" }
-
 classgraph = { group = "io.github.classgraph", name = "classgraph", version.ref = "classgraph" }
 
 kotlinProcess = { group = "com.github.pgreze", name = "kotlin-process", version.ref = "kotlinProcess" }
@@ -75,6 +71,10 @@ kotlinx-knit-gradlePlugin = { group = "org.jetbrains.kotlinx", name = "kotlinx-k
 ### Gradle Plugins ###
 
 gitVersioningPlugin = { group = "me.qoomon", name = "gradle-git-versioning-plugin", version.ref = "gitVersioningPlugin" }
+
+gradleNodePlugin = { group = "com.github.node-gradle", name = "gradle-node-plugin", version.ref = "gradleNodePlugin" }
+
+kotlinx-kover-gradlePlugin = { group = "org.jetbrains.kotlinx", name = "kover", version.ref = "kotlinx-kover" }
 
 [bundles]
 

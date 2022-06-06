@@ -36,45 +36,14 @@ val signingSecretKeyRingFile: Provider<String> =
   providers.gradleProperty("signing.secretKeyRingFile")
 
 
-val javadocJarStub by tasks.registering(Jar::class) {
-  group = JavaBasePlugin.DOCUMENTATION_GROUP
-  description = "Stub javadoc.jar artifact (required by Maven Central)"
-  archiveClassifier.set("javadoc")
-}
-
 
 tasks.withType<AbstractPublishToMaven>().configureEach {
   // Gradle warns about some signing tasks using publishing task outputs without explicit
   // dependencies. I'm not going to go through them all and fix them, so here's a quick fix.
   dependsOn(tasks.withType<Sign>())
 
-  if (sonatypeRepositoryCredentials.isPresent()) {
-    dependsOn(javadocJarStub)
-  }
-
   doLast {
     logger.lifecycle("[${this.name}] ${project.group}:${project.name}:${project.version}")
-  }
-}
-
-
-publishing {
-  if (sonatypeRepositoryCredentials.isPresent()) {
-    repositories {
-      maven(sonatypeRepositoryReleaseUrl) {
-        name = "sonatype"
-        credentials(sonatypeRepositoryCredentials.get())
-      }
-      // publish to local dir, for testing
-      // maven {
-      //   name = "maven-internal"
-      //   url = uri(rootProject.layout.buildDirectory.dir("maven-internal"))
-      // }
-    }
-    publications.withType<MavenPublication>().configureEach {
-      createKxsTsGenPom()
-      artifact(javadocJarStub)
-    }
   }
 }
 
@@ -86,22 +55,51 @@ signing {
     } else {
       useGpgCmd()
     }
-
-    // sign all publications
-    sign(publishing.publications)
-    sign(javadocJarStub.get())
   }
 }
 
 
-plugins.withType(KotlinMultiplatformPlugin::class).configureEach {
+afterEvaluate {
+  // Register signatures afterEvaluate, otherwise the signing plugin creates the signing tasks
+  // too early, before all the publications are added.
+  // Use .all { }, not .configureEach { }, otherwise the signing plugin doesn't create the tasks
+  // soon enough.
+  publishing.publications.withType<MavenPublication>().all {
+    signing.sign(this)
+    logger.lifecycle("configuring signature for publication ${this.name}")
+  }
+}
+
+val javadocJarStub = javadocStubTask()
+
+publishing {
+  if (sonatypeRepositoryCredentials.isPresent()) {
+    repositories {
+      maven(sonatypeRepositoryReleaseUrl) {
+        name = "sonatype"
+        credentials(sonatypeRepositoryCredentials.get())
+      }
+//      // publish to local dir, for testing
+//      maven(rootProject.layout.buildDirectory.dir("maven-internal")) {
+//        name = "maven-internal"
+//      }
+    }
+    publications.withType<MavenPublication>().configureEach {
+      createKxsTsGenPom()
+      artifact(javadocJarStub)
+    }
+  }
+}
+
+
+plugins.withType<KotlinMultiplatformPlugin>().configureEach {
   publishing.publications.withType<MavenPublication>().configureEach {
-    artifact(javadocJarStub)
+//    artifact(javadocJarStub)
   }
 }
 
 
-plugins.withType(JavaPlugin::class).configureEach {
+plugins.withType<JavaPlugin>().configureEach {
   afterEvaluate {
     if (!isKotlinMultiplatformJavaEnabled()) {
       publishing.publications.create<MavenPublication>("mavenJava") {
@@ -113,8 +111,30 @@ plugins.withType(JavaPlugin::class).configureEach {
 }
 
 
-plugins.withType(JavaPlatformPlugin::class).configureEach {
+plugins.withType<JavaPlatformPlugin>().configureEach {
+//  val javadocJarStub = javadocStubTask()
   publishing.publications.create<MavenPublication>("mavenJavaPlatform") {
     from(components["javaPlatform"])
+//    artifact(javadocJarStub)
   }
+}
+
+
+fun Project.javadocStubTask(): Jar {
+
+  // use creating, not registering, because the signing plugin sucks
+  val javadocJarStub by tasks.creating(Jar::class) {
+    group = JavaBasePlugin.DOCUMENTATION_GROUP
+    description = "Stub javadoc.jar artifact (required by Maven Central)"
+    archiveClassifier.set("javadoc")
+  }
+
+  val signingTasks = signing.sign(javadocJarStub)
+
+  tasks.withType<AbstractPublishToMaven>().all {
+    dependsOn(javadocJarStub)
+    signingTasks.forEach { dependsOn(it) }
+  }
+
+  return javadocJarStub
 }
