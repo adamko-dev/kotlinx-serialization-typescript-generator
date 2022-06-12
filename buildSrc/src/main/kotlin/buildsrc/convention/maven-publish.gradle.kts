@@ -129,11 +129,16 @@ fun Project.javadocStubTask(): Jar {
     archiveClassifier.set("javadoc")
   }
 
-  val signingTasks = signing.sign(javadocJarStub)
 
   tasks.withType<AbstractPublishToMaven>().all {
     dependsOn(javadocJarStub)
-    signingTasks.forEach { dependsOn(it) }
+  }
+
+  if (sonatypeRepositoryCredentials.isPresent()) {
+    val signingTasks = signing.sign(javadocJarStub)
+    tasks.withType<AbstractPublishToMaven>().all {
+      signingTasks.forEach { dependsOn(it) }
+    }
   }
 
   return javadocJarStub
