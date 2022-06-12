@@ -20,6 +20,8 @@ dependencyResolutionManagement {
       metadataSources { artifact() }
       content { includeModule("com.yarnpkg", "yarn") }
     }
+
+    sonatypeSnapshots()
   }
 
   pluginManagement {
@@ -28,6 +30,7 @@ dependencyResolutionManagement {
       jitpack()
       gradlePluginPortal()
       mavenCentral()
+      sonatypeSnapshots()
     }
   }
 }
@@ -35,6 +38,13 @@ dependencyResolutionManagement {
 
 fun RepositoryHandler.jitpack() {
   maven("https://jitpack.io")
+}
+
+
+fun RepositoryHandler.sonatypeSnapshots() {
+  maven("https://oss.sonatype.org/content/repositories/snapshots") {
+    mavenContent { snapshotsOnly() }
+  }
 }
 
 

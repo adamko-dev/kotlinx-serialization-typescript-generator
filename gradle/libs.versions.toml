@@ -3,26 +3,27 @@
 jvmTarget = "1.8"
 kotlinTarget = "1.6"
 
-kotlin = "1.6.21"
+kotlin = "1.7.0"                       # https://github.com/JetBrains/kotlin/releases
 
-kotlinSymbolProcessing = "1.6.21-1.0.5"
-kotlinCompileTesting = "1.4.8"
+kotlinSymbolProcessing = "1.7.0-1.0.6" # https://github.com/google/ksp/releases
+kotlinCompileTesting = "1.4.8"         # https://github.com/tschuchortdev/kotlin-compile-testing/releases
 
-kotlinx-serialization = "1.3.3"
-kotlinx-knit = "0.4.0"
-kotlinx-coroutines = "1.6.1"
-kotlinx-kover = "0.5.0"
+kotlinx-serialization = "1.3.3"        # https://github.com/Kotlin/kotlinx.serialization/releases/tag/v1.3.3
+kotlinx-knit = "0.4.0"                 # https://github.com/Kotlin/kotlinx-knit/releases
+kotlinx-coroutines = "1.6.1"           # https://github.com/Kotlin/kotlinx.coroutines/releases
+kotlinx-kover = "0.5.1"                # https://github.com/Kotlin/kotlinx-kover/releases
 
-okio = "3.1.0"
+okio = "3.1.0"                         # https://search.maven.org/artifact/com.squareup.okio/okio
 
-kotest = "5.3.0"
+kotest = "5.3.0"                       # https://github.com/kotest/kotest/releases
+kotestSnapshot = "5.3.0.1010-SNAPSHOT"
 
-kotlinProcess = "1.3.1"
+kotlinProcess = "1.3.1"                # https://github.com/pgreze/kotlin-process/releases
 
-classgraph = "4.8.143"
+classgraph = "4.8.147"                 # https://github.com/classgraph/classgraph/releases
 
-gradleNodePlugin = "3.3.0"
-gitVersioningPlugin = "6.1.2"
+gradleNodePlugin = "3.3.0"             # https://github.com/node-gradle/gradle-node-plugin/releases
+gitVersioningPlugin = "6.1.4"          # https://github.com/qoomon/gradle-git-versioning-plugin/releases
 
 [libraries]
 
@@ -52,7 +53,7 @@ kotlinCompileTesting-ksp = { group = "com.github.tschuchortdev", name = "kotlin-
 
 ## Kotest ##
 
-kotest-bom = { group = "io.kotest", name = "kotest-bom", version.ref = "kotest" }
+kotest-bom = { group = "io.kotest", name = "kotest-bom", version.ref = "kotestSnapshot" }
 kotest-assertionsCore = { group = "io.kotest", name = "kotest-assertions-core" }
 kotest-assertionsJson = { group = "io.kotest", name = "kotest-assertions-json" }
 kotest-property = { group = "io.kotest", name = "kotest-property" }
