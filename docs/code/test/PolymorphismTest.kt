@@ -110,20 +110,20 @@ class PolymorphismTest : FunSpec({
           |
           |export namespace Project {
           |  export enum Type {
-          |    OProj = "OProj",
           |    DeprecatedProject = "dev.adamko.kxstsgen.example.examplePolymorphicSealedClass01.DeprecatedProject",
-          |  }
-          |
-          |  export interface OProj {
-          |    type: Project.Type.OProj;
-          |    name: string;
-          |    owner: string;
+          |    OProj = "OProj",
           |  }
           |
           |  export interface DeprecatedProject {
           |    type: Project.Type.DeprecatedProject;
           |    name: string;
           |    reason: string;
+          |  }
+          |
+          |  export interface OProj {
+          |    type: Project.Type.OProj;
+          |    name: string;
+          |    owner: string;
           |  }
           |}
         """.trimMargin()
