@@ -41,6 +41,7 @@ tasks.withType<AbstractPublishToMaven>().configureEach {
   // Gradle warns about some signing tasks using publishing task outputs without explicit
   // dependencies. I'm not going to go through them all and fix them, so here's a quick fix.
   dependsOn(tasks.withType<Sign>())
+  mustRunAfter(tasks.withType<Sign>())
 
   doLast {
     logger.lifecycle("[${this.name}] ${project.group}:${project.name}:${project.version}")
