@@ -6,13 +6,11 @@ import dev.adamko.kxstsgen.KxsTsConfig
 /**
  * Writes [TsElement]s as TypeScript source code.
  */
-abstract class TsSourceCodeGenerator(
-  val config: KxsTsConfig = KxsTsConfig(),
-) {
+interface TsSourceCodeGenerator {
 
-  abstract fun groupElementsBy(element: TsElement): String?
+  fun groupElementsBy(element: TsElement): String?
 
-  open fun generateDeclaration(element: TsDeclaration): String {
+  fun generateDeclaration(element: TsDeclaration): String {
     return when (element) {
       is TsDeclaration.TsEnum      -> generateEnum(element)
       is TsDeclaration.TsInterface -> generateInterface(element)
@@ -23,21 +21,21 @@ abstract class TsSourceCodeGenerator(
     }
   }
 
-  abstract fun generateEnum(enum: TsDeclaration.TsEnum): String
-  abstract fun generateInterface(element: TsDeclaration.TsInterface): String
-  abstract fun generateNamespace(namespace: TsDeclaration.TsNamespace): String
-  abstract fun generateTypeAlias(element: TsDeclaration.TsTypeAlias): String
-  abstract fun generateTypeUnion(element: TsDeclaration.TsTypeUnion): String
-  abstract fun generateTuple(tuple: TsDeclaration.TsTuple): String
+  fun generateEnum(enum: TsDeclaration.TsEnum): String
+  fun generateInterface(element: TsDeclaration.TsInterface): String
+  fun generateNamespace(namespace: TsDeclaration.TsNamespace): String
+  fun generateTypeAlias(element: TsDeclaration.TsTypeAlias): String
+  fun generateTypeUnion(element: TsDeclaration.TsTypeUnion): String
+  fun generateTuple(tuple: TsDeclaration.TsTuple): String
 
-  abstract fun generateMapTypeReference(tsMap: TsLiteral.TsMap): String
+  fun generateMapTypeReference(tsMap: TsLiteral.TsMap): String
 
-  abstract fun generatePrimitive(primitive: TsLiteral.Primitive): String
-  abstract fun generateTypeReference(typeRef: TsTypeRef): String
+  fun generatePrimitive(primitive: TsLiteral.Primitive): String
+  fun generateTypeReference(typeRef: TsTypeRef): String
 
   open class Default(
-    config: KxsTsConfig,
-  ) : TsSourceCodeGenerator(config) {
+    private val config: KxsTsConfig,
+  ) : TsSourceCodeGenerator {
 
 
     override fun groupElementsBy(element: TsElement): String {
