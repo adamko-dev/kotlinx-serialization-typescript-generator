@@ -65,9 +65,12 @@ afterEvaluate {
   // too early, before all the publications are added.
   // Use .all { }, not .configureEach { }, otherwise the signing plugin doesn't create the tasks
   // soon enough.
-  publishing.publications.withType<MavenPublication>().all {
-    signing.sign(this)
-    logger.lifecycle("configuring signature for publication ${this.name}")
+
+  if (sonatypeRepositoryCredentials.isPresent()) {
+    publishing.publications.withType<MavenPublication>().all {
+      signing.sign(this)
+      logger.lifecycle("configuring signature for publication ${this.name}")
+    }
   }
 }
 
