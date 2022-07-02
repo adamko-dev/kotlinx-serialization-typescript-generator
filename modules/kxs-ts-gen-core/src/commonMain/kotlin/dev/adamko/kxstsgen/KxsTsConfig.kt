@@ -19,7 +19,7 @@ import kotlinx.serialization.modules.SerializersModuleCollector
  * @param[indent] Define the indentation that is used when generating source code
  * @param[declarationSeparator] The string that is used when joining [TsDeclaration]s
  * @param[namespaceConfig] (UNIMPLEMENTED) How elements are grouped into [TsDeclaration.TsNamespace]s.
- * @param[typeAliasTyping] (UNIMPLEMENTED) Control if type aliases are simple, or 'branded'.
+ * @param[typeAliasTyping] Control whether type aliases are simple, or 'branded'.
  * @param[serializersModule] Used to obtain contextual and polymorphic information.
  */
 data class KxsTsConfig(
@@ -27,7 +27,6 @@ data class KxsTsConfig(
   val declarationSeparator: String = "\n\n",
   @UnimplementedKxsTsGenApi
   val namespaceConfig: NamespaceConfig = NamespaceConfig.Disabled,
-  @UnimplementedKxsTsGenApi
   val typeAliasTyping: TypeAliasTypingConfig = TypeAliasTypingConfig.None,
   val serializersModule: SerializersModule = EmptySerializersModule,
 ) {
