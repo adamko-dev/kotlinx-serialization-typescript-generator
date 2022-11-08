@@ -1,5 +1,6 @@
 package dev.adamko.kxstsgen.core
 
+import dev.adamko.kxstsgen.KxsTsRequired
 import kotlinx.serialization.descriptors.PolymorphicKind
 import kotlinx.serialization.descriptors.PrimitiveKind
 import kotlinx.serialization.descriptors.SerialDescriptor
@@ -207,7 +208,9 @@ fun interface TsElementConverter {
       return descriptor.elementDescriptors.mapIndexed { index, fieldDescriptor ->
         val name = descriptor.getElementName(index)
         val fieldTypeRef = typeRefConverter(fieldDescriptor)
-        val optional = descriptor.isElementOptional(index)
+        val optional =
+          descriptor.getElementAnnotations(index).none { it is KxsTsRequired }
+            && descriptor.isElementOptional(index)
         TsProperty(name, fieldTypeRef, optional)
       }.toSet()
     }
