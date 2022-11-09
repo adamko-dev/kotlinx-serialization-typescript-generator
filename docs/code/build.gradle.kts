@@ -57,7 +57,11 @@ tasks.withType<Test>().configureEach { dependsOn(tasks.knit) }
 
 tasks.test {
   // TSCompile tests are slow, they don't need to run every time
-  if (!kxsTsGenSettings.enableTsCompileTests.get()) {
+  if (kxsTsGenSettings.enableTsCompileTests.get()) {
+    val npmInstallDir = tasks.npmSetup.map { it.npmDir.get().asFile.canonicalPath }
+    inputs.dir(npmInstallDir)
+    environment("NPM_INSTALL_DIR", npmInstallDir.get())
+  } else {
     systemProperty("kotest.tags", "!TSCompile")
   }
 }
