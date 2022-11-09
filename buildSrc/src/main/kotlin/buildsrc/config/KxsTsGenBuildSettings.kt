@@ -8,7 +8,7 @@ abstract class KxsTsGenBuildSettings(
 ) {
   val enableTsCompileTests: Provider<Boolean> =
     providers
-      .gradleProperty("kxs_ts_gen_enableTsCompileTests")
+      .gradleProperty("kxstsgen_enableTsCompileTests")
       .map { it.toBoolean() }
       .orElse(false)
 

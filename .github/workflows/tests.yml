@@ -32,4 +32,4 @@ jobs:
     uses: ./.github/workflows/gradle_task.yml
     with:
       runs-on: ubuntu-latest
-      gradle-task: ":docs:code:test -Pkxs_ts_gen_enableTsCompileTests=true"
+      gradle-task: ":docs:code:test -Pkxstsgen_enableTsCompileTests=true"
