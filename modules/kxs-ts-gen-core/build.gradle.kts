@@ -2,7 +2,7 @@ plugins {
   buildsrc.convention.`kotlin-mpp`
   buildsrc.convention.`maven-publish`
   kotlin("plugin.serialization")
-  id("io.kotest.multiplatform")
+  // id("io.kotest.multiplatform") // Kotest does not support nested JS tests https://github.com/kotest/kotest/issues/3141
 }
 
 kotlin {
