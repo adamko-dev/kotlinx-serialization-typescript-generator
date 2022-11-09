@@ -21,18 +21,10 @@ jobs:
     strategy:
       matrix:
         os: [ ubuntu-latest, macos-11, windows-latest ]
+        tsCompileTests: [ true, false ]
       fail-fast: false
     uses: ./.github/workflows/gradle_task.yml
     with:
       runs-on: ${{ matrix.os }}
       gradle-task: >-
-        check --info --stacktrace
-
-
-  test-typescript-compile:
-    name: "./gradlew ${{ matrix.target }} @ ${{ matrix.os }}"
-    uses: ./.github/workflows/gradle_task.yml
-    with:
-      runs-on: ubuntu-latest
-      gradle-task: >-
-        :docs:code:test -Pkxstsgen_enableTsCompileTests=true  --info --stacktrace
+        check -Pkxstsgen_enableTsCompileTests=${{ matrix.tsCompileTests }} --info --stacktrace
