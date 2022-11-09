@@ -47,10 +47,13 @@ suspend fun String?.shouldTypeScriptCompile(
   file.writeText(src)
 
   val (process, output) = typescriptCompile(file)
-  output.joinToString("\n").asClue { log ->
+
+  val outputPretty = output.joinToString("\n").prependIndent(" > ")
+
+  outputPretty.asClue { log ->
     withClue("exit code should be 0") { process shouldBeExactly 0 }
-    log.shouldNotBeEmpty()
-    log shouldContainIgnoringCase "npx: installed"
+    withClue("log should not be empty") { log.shouldNotBeEmpty() }
+//    log shouldContainIgnoringCase "npx: installed"
     log shouldNotContain "error TS"
   }
 

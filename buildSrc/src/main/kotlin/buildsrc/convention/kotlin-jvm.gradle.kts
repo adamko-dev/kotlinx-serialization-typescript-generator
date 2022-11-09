@@ -31,11 +31,11 @@ java {
   withSourcesJar()
 }
 
-tasks.withType<KotlinCompile> {
+tasks.withType<KotlinCompile>().configureEach {
   kotlinOptions {
-    jvmTarget = "1.8"
-    apiVersion = "1.6"
-    languageVersion = "1.6"
+    jvmTarget = "11"
+    apiVersion = "1.7"
+    languageVersion = "1.7"
   }
 
   kotlinOptions.freeCompilerArgs += listOf(

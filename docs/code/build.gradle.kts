@@ -5,41 +5,44 @@ plugins {
   buildsrc.convention.node
   kotlin("plugin.serialization")
   id("org.jetbrains.kotlinx.knit")
+  `java-test-fixtures`
 }
 
 dependencies {
   implementation(platform(projects.modules.versionsPlatform))
-
   implementation(projects.modules.kxsTsGenCore)
-
   implementation(libs.kotlinx.serialization.core)
   implementation(libs.kotlinx.serialization.json)
-
   implementation(libs.kotlinx.coroutines.core)
-
   implementation(libs.kotlinx.knit)
-
   implementation(kotlin("reflect"))
 
   testImplementation(kotlin("test"))
-
   testImplementation(libs.kotlinx.knit.test)
-  testImplementation(libs.kotlinProcess)
+
+  testFixturesImplementation(platform(projects.modules.versionsPlatform))
+  testFixturesImplementation(libs.kotlinProcess)
+  testFixturesImplementation(libs.kotest.frameworkEngine)
+  testFixturesImplementation(libs.kotest.assertionsCore)
 }
 
-tasks.withType<KotlinCompile> {
+tasks.withType<KotlinCompile>().configureEach {
   mustRunAfter(tasks.knit)
   kotlinOptions.freeCompilerArgs += listOf(
     "-opt-in=kotlinx.serialization.ExperimentalSerializationApi",
   )
 }
 
+sourceSets.main {
+  java.srcDirs("example")
+}
+
 sourceSets.test {
-  java.srcDirs(
-    "example",
-    "test",
-    "util",
-  )
+  java.srcDirs("test")
+}
+
+sourceSets.testFixtures {
+  java.srcDirs("util")
 }
 
 knit {
@@ -54,5 +57,11 @@ tasks.withType<Test>().configureEach { dependsOn(tasks.knit) }
 
 tasks.test {
   // TSCompile tests are slow, they don't need to run every time
-  systemProperty("kotest.tags", "!TSCompile")
+  if (kxsTsGenSettings.enableTsCompileTests.get()) {
+    val npmInstallDir = tasks.npmSetup.map { it.npmDir.get().asFile.canonicalPath }
+    inputs.dir(npmInstallDir)
+    environment("NPM_INSTALL_DIR", npmInstallDir.get())
+  } else {
+    systemProperty("kotest.tags", "!TSCompile")
+  }
 }

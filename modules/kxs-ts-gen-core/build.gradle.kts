@@ -2,26 +2,18 @@ plugins {
   buildsrc.convention.`kotlin-mpp`
   buildsrc.convention.`maven-publish`
   kotlin("plugin.serialization")
-  id("io.kotest.multiplatform")
+  // id("io.kotest.multiplatform") // Kotest does not support nested JS tests https://github.com/kotest/kotest/issues/3141
 }
 
 kotlin {
 
   js(IR) {
-    binaries.executable()
+    browser()
     nodejs()
   }
 
   jvm {
-    compilations.all {
-      kotlinOptions {
-        jvmTarget = "1.8"
-      }
-    }
     withJava()
-    testRuns["test"].executionTask.configure {
-      useJUnitPlatform()
-    }
   }
 
 //  publishing {
