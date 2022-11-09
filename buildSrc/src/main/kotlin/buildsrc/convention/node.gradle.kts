@@ -19,7 +19,7 @@ node {
   yarnWorkDir.set(rootGradleDir.dir("yarn"))
 }
 
-tasks.withType<Test> {
+tasks.withType<Test>().configureEach {
   val npmInstallDir = tasks.npmSetup.map { it.npmDir.get().asFile.canonicalPath }
   inputs.dir(npmInstallDir)
 
