@@ -33,8 +33,8 @@ private val npxCmd: String by lazy {
   // this is untested on non-Windows
   val hostOS = System.getProperty("os.name").lowercase()
   val cmd = when {
-    "windows" in hostOS -> "npx.cmd"
-    else                -> "npx"
+    "win" in hostOS -> "npx.cmd"
+    else            -> "bin/npx"
   }
   npmInstallDir.resolve(cmd).invariantSeparatorsPathString
 }
@@ -42,5 +42,7 @@ private val npxCmd: String by lazy {
 
 // must be set by Gradle
 private val npmInstallDir: Path by lazy {
-  Path.of(System.getenv("NPM_INSTALL_DIR"))
+  Path.of(
+    System.getenv()["NPM_INSTALL_DIR"] ?: error("NPM_INSTALL_DIR is not set")
+  )
 }
