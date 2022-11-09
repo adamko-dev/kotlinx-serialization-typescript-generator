@@ -11,7 +11,7 @@ kotlinCompileTesting = "1.4.8"           # https://github.com/tschuchortdev/kotl
 kotlinx-serialization = "1.4.0"          # https://github.com/Kotlin/kotlinx.serialization/releases/
 kotlinx-knit = "0.4.0"                   # https://github.com/Kotlin/kotlinx-knit/releases
 kotlinx-coroutines = "1.6.4"             # https://github.com/Kotlin/kotlinx.coroutines/releases
-kotlinx-kover = "0.5.1"                  # https://github.com/Kotlin/kotlinx-kover/releases
+kotlinx-kover = "0.6.1"                  # https://github.com/Kotlin/kotlinx-kover/releases
 
 okio = "3.2.0"                           # https://search.maven.org/artifact/com.squareup.okio/okio
 
