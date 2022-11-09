@@ -9,7 +9,6 @@ import org.jetbrains.kotlin.gradle.targets.jvm.KotlinJvmTarget
 plugins {
   id("buildsrc.convention.subproject")
   kotlin("multiplatform")
-  `java-library`
 }
 
 
