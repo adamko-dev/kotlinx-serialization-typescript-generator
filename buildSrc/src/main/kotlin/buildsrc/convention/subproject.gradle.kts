@@ -1,6 +1,6 @@
 package buildsrc.convention
 
-import org.gradle.kotlin.dsl.base
+import buildsrc.config.KxsTsGenBuildSettings
 
 plugins {
   base
@@ -10,3 +10,6 @@ if (project != rootProject) {
   project.group = rootProject.group
   project.version = rootProject.version
 }
+
+
+extensions.create<KxsTsGenBuildSettings>(KxsTsGenBuildSettings.NAME)

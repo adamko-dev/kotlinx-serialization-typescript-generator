@@ -27,7 +27,7 @@ dependencies {
   testImplementation(libs.kotlinProcess)
 }
 
-tasks.withType<KotlinCompile> {
+tasks.withType<KotlinCompile>().configureEach {
   mustRunAfter(tasks.knit)
   kotlinOptions.freeCompilerArgs += listOf(
     "-opt-in=kotlinx.serialization.ExperimentalSerializationApi",
@@ -54,5 +54,7 @@ tasks.withType<Test>().configureEach { dependsOn(tasks.knit) }
 
 tasks.test {
   // TSCompile tests are slow, they don't need to run every time
-  systemProperty("kotest.tags", "!TSCompile")
+  if (!kxsTsGenSettings.enableTsCompileTests.get()) {
+    systemProperty("kotest.tags", "!TSCompile")
+  }
 }
