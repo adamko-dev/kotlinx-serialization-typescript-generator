@@ -5,26 +5,25 @@ plugins {
   buildsrc.convention.node
   kotlin("plugin.serialization")
   id("org.jetbrains.kotlinx.knit")
+  `java-test-fixtures`
 }
 
 dependencies {
   implementation(platform(projects.modules.versionsPlatform))
-
   implementation(projects.modules.kxsTsGenCore)
-
   implementation(libs.kotlinx.serialization.core)
   implementation(libs.kotlinx.serialization.json)
-
   implementation(libs.kotlinx.coroutines.core)
-
   implementation(libs.kotlinx.knit)
-
   implementation(kotlin("reflect"))
 
   testImplementation(kotlin("test"))
-
   testImplementation(libs.kotlinx.knit.test)
-  testImplementation(libs.kotlinProcess)
+
+  testFixturesImplementation(platform(projects.modules.versionsPlatform))
+  testFixturesImplementation(libs.kotlinProcess)
+  testFixturesImplementation(libs.kotest.frameworkEngine)
+  testFixturesImplementation(libs.kotest.assertionsCore)
 }
 
 tasks.withType<KotlinCompile>().configureEach {
@@ -34,12 +33,16 @@ tasks.withType<KotlinCompile>().configureEach {
   )
 }
 
+sourceSets.main {
+  java.srcDirs("example")
+}
+
 sourceSets.test {
-  java.srcDirs(
-    "example",
-    "test",
-    "util",
-  )
+  java.srcDirs("test")
+}
+
+sourceSets.testFixtures {
+  java.srcDirs("util")
 }
 
 knit {
