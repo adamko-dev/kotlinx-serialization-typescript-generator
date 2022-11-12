@@ -8,6 +8,7 @@
   * [Default values](#default-values)
   * [Nullable values](#nullable-values)
   * [Default and nullable](#default-and-nullable)
+  * [Override optional properties](#override-optional-properties)
 
 <!--- END -->
 
@@ -102,6 +103,49 @@ export interface ContactDetails {
   email: string | null;
   active?: boolean;
   phoneNumber?: string | null;
+}
+```
+
+<!--- TEST -->
+
+### Override optional properties
+
+Properties with default values can be set as required using the Kotlinx Serialization annotation,
+[`@kotlinx.serialization.Required`](https://kotlinlang.org/api/kotlinx.serialization/kotlinx-serialization-core/kotlinx.serialization/-required/)
+.
+
+For demonstration purposes, let's see what happens when `@Required` is added to all properties.
+
+```kotlin
+@Serializable
+data class ContactDetails(
+  @Required
+  val name: String,
+  @Required
+  val email: String?,
+  @Required
+  val active: Boolean = true,
+  @Required
+  val phoneNumber: String? = null,
+)
+
+fun main() {
+  val tsGenerator = KxsTsGenerator()
+  println(tsGenerator.generate(ContactDetails.serializer()))
+}
+```
+
+> You can get the full code [here](./code/example/example-default-values-primitive-fields-02.kt).
+
+`active` and `phoneNumber` are now required properties. Note that `@Required` had no effect
+on `name` or `email`; because they do not have default values, they were already required.
+
+```typescript
+export interface ContactDetails {
+  name: string;
+  email: string | null;
+  active: boolean;
+  phoneNumber: string | null;
 }
 ```
 
