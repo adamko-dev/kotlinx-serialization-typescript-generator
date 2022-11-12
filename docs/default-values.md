@@ -138,7 +138,7 @@ fun main() {
 > You can get the full code [here](./code/example/example-default-values-primitive-fields-02.kt).
 
 `active` and `phoneNumber` are now required properties. Note that `@Required` had no effect
-on `name` or `email`. Because they do not have default values, they were already required.
+on `name` or `email`; because they do not have default values, they were already required.
 
 ```typescript
 export interface ContactDetails {
