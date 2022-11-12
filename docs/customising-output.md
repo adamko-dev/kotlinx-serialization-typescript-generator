@@ -7,7 +7,7 @@
 
 * [Introduction](#introduction)
   * [Overriding output](#overriding-output)
-  * [Override nullable elements](#override-nullable-elements)
+  * [Override nullable properties](#override-nullable-properties)
   * [Override both nullable and non-nullable descriptors](#override-both-nullable-and-non-nullable-descriptors)
 
 <!--- END -->
@@ -101,7 +101,7 @@ export interface Item {
 
 <!--- TEST TS_COMPILE_OFF -->
 
-### Override nullable elements
+### Override nullable properties
 
 Even though UInt is nullable, it should be overridden by the UInt defined in `descriptorOverrides`.
 

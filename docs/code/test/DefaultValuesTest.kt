@@ -84,4 +84,31 @@ class DefaultValuesTest : FunSpec({
       actual.shouldTypeScriptCompile(caseName)
     }
   }
+
+  context("ExampleDefaultValuesPrimitiveFields02") {
+    val caseName = testCase.name.testName
+
+    val actual = captureOutput(caseName) {
+      dev.adamko.kxstsgen.example.exampleDefaultValuesPrimitiveFields02.main()
+    }.normalizeJoin()
+
+    test("expect actual matches TypeScript") {
+      actual.shouldBe(
+        // language=TypeScript
+        """
+          |export interface ContactDetails {
+          |  name: string;
+          |  email: string | null;
+          |  active: boolean;
+          |  phoneNumber: string | null;
+          |}
+        """.trimMargin()
+        .normalize()
+      )
+    }
+
+    test("expect actual compiles").config(tags = tsCompile) {
+      actual.shouldTypeScriptCompile(caseName)
+    }
+  }
 })
