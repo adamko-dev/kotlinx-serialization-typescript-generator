@@ -1,5 +1,5 @@
-<!--- TEST_NAME AbstractClassesTest -->
-
+<!--- TEST_NAME PolymorphismOpenTest -->
+]
 **Table of contents**
 
 <!--- TOC -->
@@ -18,6 +18,8 @@ import dev.adamko.kxstsgen.*
 -->
 
 ## Introduction
+
+Support for abstract classes is
 
 ### Abstract class with a single field
 
