@@ -1,34 +1,29 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-  idea
   `kotlin-dsl`
-  kotlin("jvm") version embeddedKotlinVersion
 }
 
 
 dependencies {
-  implementation(enforcedPlatform(libs.kotlin.bom))
-  implementation("org.jetbrains.kotlin:kotlin-serialization")
-//  implementation("org.jetbrains.kotlin:kotlin-reflect")
+  implementation(platform(libs.kotlin.bom))
 
-  implementation(libs.kotlin.gradlePlugin)
-  implementation(libs.kotlinSymbolProcessing.gradlePlugin)
+  implementation(libs.gradlePlugin.kotlin)
+  implementation(libs.gradlePlugin.kotlinSerialization)
+  implementation(libs.gradlePlugin.gitVersioning)
+  implementation(libs.gradlePlugin.gradleNode)
+  implementation(libs.gradlePlugin.kotlinxKover)
+  implementation(libs.gradlePlugin.kotlinxKnit)
+  implementation(libs.gradlePlugin.kotest)
+  implementation(libs.gradlePlugin.kotlinSymbolProcessing)
+  implementation(libs.gradlePlugin.githubPages)
 
-  implementation(libs.kotest.gradlePlugin)
-
-  implementation(libs.kotlinx.kover.gradlePlugin)
-
-  implementation(libs.kotlinx.knit.gradlePlugin)
-
-  implementation(libs.gradleNodePlugin)
-
-  implementation(libs.gitVersioningPlugin)
+  implementation("org.jetbrains:markdown:0.3.5")
+  implementation("org.jetbrains.kotlinx:kotlinx-html:0.8.0")
 }
 
 
 tasks.withType<KotlinCompile>().configureEach {
-
   kotlinOptions {
     jvmTarget = libs.versions.jvmTarget.get()
     apiVersion = libs.versions.kotlinTarget.get()
@@ -42,25 +37,17 @@ tasks.withType<KotlinCompile>().configureEach {
   )
 }
 
+
 kotlin {
   jvmToolchain {
-    (this as JavaToolchainSpec).languageVersion.set(
+    languageVersion.set(
       libs.versions.jvmTarget.map {
-        JavaLanguageVersion.of(
-          it.substringAfter(".")
-        )
+        JavaLanguageVersion.of(it)
       }
     )
   }
-
-  kotlinDslPluginOptions {
-    jvmTarget.set(libs.versions.jvmTarget)
-  }
 }
 
-idea {
-  module {
-    isDownloadSources = true
-    isDownloadJavadoc = true
-  }
+kotlinDslPluginOptions {
+  jvmTarget.set(libs.versions.jvmTarget)
 }
