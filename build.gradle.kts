@@ -22,8 +22,8 @@ gitVersioning.apply {
 
 
 tasks.wrapper {
-  gradleVersion = "7.5.1"
-  distributionType = Wrapper.DistributionType.ALL
+  gradleVersion = "7.6"
+  distributionType = Wrapper.DistributionType.BIN
 }
 
 
