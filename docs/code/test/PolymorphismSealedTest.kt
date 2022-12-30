@@ -7,7 +7,7 @@ import io.kotest.core.spec.style.*
 import io.kotest.matchers.*
 import kotlinx.knit.test.*
 
-class PolymorphismTest : FunSpec({
+class PolymorphismSealedTest : FunSpec({
 
   tags(Knit)
   context("ExamplePolymorphicStaticTypes01") {

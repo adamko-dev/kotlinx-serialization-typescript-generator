@@ -4,7 +4,7 @@
 
 <!--- TOC -->
 
-* [Introduction](#introduction)
+* [Edge cases](#edge-cases)
   * [Recursive references](#recursive-references)
     * [Classes](#classes)
     * [Lists](#lists)
@@ -17,9 +17,9 @@ import kotlinx.serialization.*
 import dev.adamko.kxstsgen.*
 -->
 
-## Introduction
+## Edge cases
 
-Lorem ipsum...
+Demonstrations of how edge cases are handled.
 
 ### Recursive references
 

@@ -1,4 +1,4 @@
-// This file was automatically generated from abstract-classes.md by Knit tool. Do not edit.
+// This file was automatically generated from polymorphism-open.md by Knit tool. Do not edit.
 @file:Suppress("PackageDirectoryMismatch", "unused")
 package dev.adamko.kxstsgen.example.exampleAbstractClassSingleField01
 

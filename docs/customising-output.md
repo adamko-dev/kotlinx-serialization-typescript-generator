@@ -5,7 +5,7 @@
 
 <!--- TOC -->
 
-* [Introduction](#introduction)
+* [Customising Output](#customising-output)
   * [Overriding output](#overriding-output)
   * [Override nullable properties](#override-nullable-properties)
   * [Override both nullable and non-nullable descriptors](#override-both-nullable-and-non-nullable-descriptors)
@@ -18,7 +18,7 @@ import kotlinx.serialization.*
 import dev.adamko.kxstsgen.*
 -->
 
-## Introduction
+## Customising Output
 
 ### Overriding output
 

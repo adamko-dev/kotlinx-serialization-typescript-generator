@@ -1,11 +1,9 @@
-<!--- TEST_NAME PolymorphismTest -->
+<!--- TEST_NAME PolymorphismSealedTest -->
 
 **Table of contents**
 
 <!--- TOC -->
 
-* [Introduction](#introduction)
-  * [Abstract class with primitive fields](#abstract-class-with-primitive-fields)
 * [Closed Polymorphism](#closed-polymorphism)
   * [Static types](#static-types)
   * [Sealed classes](#sealed-classes)
@@ -22,41 +20,6 @@
 import kotlinx.serialization.*
 import dev.adamko.kxstsgen.*
 -->
-
-## Introduction
-
-### Abstract class with primitive fields
-
-```kotlin
-@Serializable
-abstract class SimpleTypes(
-  val aString: String,
-  var anInt: Int,
-  val aDouble: Double,
-  val bool: Boolean,
-  private val privateMember: String,
-)
-
-fun main() {
-  val tsGenerator = KxsTsGenerator()
-  println(tsGenerator.generate(SimpleTypes.serializer()))
-}
-```
-
-> You can get the full code [here](./code/example/example-polymorphic-abstract-class-primitive-fields-01.kt).
-
-```typescript
-export type SimpleTypes = any;
-// export interface SimpleTypes {
-//   aString: string;
-//   anInt: number;
-//   aDouble: number;
-//   bool: boolean;
-//   privateMember: string;
-// }
-```
-
-<!--- TEST -->
 
 ## Closed Polymorphism
 

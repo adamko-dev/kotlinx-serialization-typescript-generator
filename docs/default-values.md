@@ -4,7 +4,7 @@
 
 <!--- TOC -->
 
-* [Introduction](#introduction)
+* [Default values](#default-values)
   * [Default values](#default-values)
   * [Nullable values](#nullable-values)
   * [Default and nullable](#default-and-nullable)
@@ -18,7 +18,7 @@ import kotlinx.serialization.*
 import dev.adamko.kxstsgen.*
 -->
 
-## Introduction
+## Default values
 
 Some properties of a class are optional, or nullable, or both.
 
