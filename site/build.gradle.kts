@@ -17,10 +17,6 @@ tasks.assemble {
   dependsOn(tasks.npmInstall)
 }
 
-tasks.build {
-  dependsOn(docusaurusBuild)
-}
-
 val docusaurusRun by tasks.registering(NpmTask::class) {
   group = "documentation"
   args("run start")
