@@ -74,6 +74,7 @@ To make value classes a little more strict, we can use brand typing
 
 ```kotlin
 import dev.adamko.kxstsgen.KxsTsConfig.TypeAliasTypingConfig.BrandTyping
+import kotlinx.serialization.builtins.serializer
 
 fun main() {
 

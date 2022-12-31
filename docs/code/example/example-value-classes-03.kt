@@ -6,6 +6,7 @@ import kotlinx.serialization.*
 import dev.adamko.kxstsgen.*
 
 import dev.adamko.kxstsgen.KxsTsConfig.TypeAliasTypingConfig.BrandTyping
+import kotlinx.serialization.builtins.serializer
 
 fun main() {
 
