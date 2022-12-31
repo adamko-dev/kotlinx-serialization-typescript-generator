@@ -16,7 +16,6 @@ dependencies {
   implementation(libs.gradlePlugin.kotlinxKnit)
   implementation(libs.gradlePlugin.kotest)
   implementation(libs.gradlePlugin.kotlinSymbolProcessing)
-  implementation(libs.gradlePlugin.githubPages)
 
   implementation("org.jetbrains:markdown:0.3.5")
   implementation("org.jetbrains.kotlinx:kotlinx-html:0.8.0")
