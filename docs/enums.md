@@ -1,23 +1,11 @@
+# Enums
+
 <!--- TEST_NAME EnumClassTest -->
-
-
-**Table of contents**
-
-<!--- TOC -->
-
-* [Introduction](#introduction)
-  * [Simple enum](#simple-enum)
-  * [Enum with properties](#enum-with-properties)
-
-<!--- END -->
-
 
 <!--- INCLUDE .*\.kt
 import kotlinx.serialization.*
 import dev.adamko.kxstsgen.*
 -->
-
-## Introduction
 
 ### Simple enum
 

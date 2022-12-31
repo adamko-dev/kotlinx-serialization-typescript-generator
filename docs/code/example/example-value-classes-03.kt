@@ -5,9 +5,7 @@ package dev.adamko.kxstsgen.example.exampleValueClasses03
 import kotlinx.serialization.*
 import dev.adamko.kxstsgen.*
 
-import kotlinx.serialization.builtins.serializer
 import dev.adamko.kxstsgen.KxsTsConfig.TypeAliasTypingConfig.BrandTyping
-
 
 fun main() {
 

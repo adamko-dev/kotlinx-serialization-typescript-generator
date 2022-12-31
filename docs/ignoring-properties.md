@@ -1,20 +1,11 @@
+# Ignoring Properties
+
 <!--- TEST_NAME IgnoringPropertiesTest -->
-
-
-**Table of contents**
-
-<!--- TOC -->
-
-  * [Ignoring fields](#ignoring-fields)
-
-<!--- END -->
-
 <!--- INCLUDE .*\.kt
 import kotlinx.serialization.*
 import dev.adamko.kxstsgen.*
 -->
 
-### Ignoring fields
 
 Just like in Kotlinx.Serialization,
 [fields can be ignored](https://github.com/Kotlin/kotlinx.serialization/blob/master/docs/basic-serialization.md#transient-properties)

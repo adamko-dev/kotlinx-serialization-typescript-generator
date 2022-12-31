@@ -1,23 +1,11 @@
+# Lists
+
 <!--- TEST_NAME ListsTests -->
-
-**Table of contents**
-
-<!--- TOC -->
-
-* [Introduction](#introduction)
-  * [Primitive lists](#primitive-lists)
-  * [Lists of objects](#lists-of-objects)
-  * [Lists of collections](#lists-of-collections)
-
-<!--- END -->
-
-
 <!--- INCLUDE .*\.kt
 import kotlinx.serialization.*
 import dev.adamko.kxstsgen.*
 -->
 
-## Introduction
 
 ### Primitive lists
 

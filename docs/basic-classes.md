@@ -1,24 +1,12 @@
+# Basic classes
+
 <!--- TEST_NAME BasicClassesTest -->
-
-**Table of contents**
-
-<!--- TOC -->
-
-* [Basic classes](#basic-classes)
-  * [Plain class with a single field](#plain-class-with-a-single-field)
-  * [Plain class with primitive fields](#plain-class-with-primitive-fields)
-  * [Data class with primitive fields](#data-class-with-primitive-fields)
-
-<!--- END -->
-
-## Basic classes
-
-### Plain class with a single field
-
 <!--- INCLUDE .*\.kt
 import kotlinx.serialization.*
 import dev.adamko.kxstsgen.*
 -->
+
+### Plain class with a single field
 
 ```kotlin
 @Serializable

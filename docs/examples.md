@@ -1,4 +1,4 @@
-### Introduction
+# Examples
 
 [kxs-ts-gen](https://github.com/adamko-dev/kotlinx-serialization-typescript-generator)
 can convert `@Serializable` Kotlin classes to TypeScript interfaces.

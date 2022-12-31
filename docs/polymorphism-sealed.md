@@ -1,27 +1,10 @@
+# Closed Polymorphism
+
 <!--- TEST_NAME PolymorphismSealedTest -->
-
-**Table of contents**
-
-<!--- TOC -->
-
-* [Closed Polymorphism](#closed-polymorphism)
-  * [Static types](#static-types)
-  * [Sealed classes](#sealed-classes)
-  * [Nested sealed classes](#nested-sealed-classes)
-  * [Objects](#objects)
-* [Open Polymorphism](#open-polymorphism)
-  * [Generics](#generics)
-  * [JSON content polymorphism](#json-content-polymorphism)
-
-<!--- END -->
-
-
 <!--- INCLUDE .*\.kt
 import kotlinx.serialization.*
 import dev.adamko.kxstsgen.*
 -->
-
-## Closed Polymorphism
 
 https://github.com/Kotlin/kotlinx.serialization/blob/master/docs/polymorphism.md#closed-polymorphism
 
@@ -41,7 +24,7 @@ fun main() {
 
 > You can get the full code [here](./code/example/example-polymorphic-static-types-01.kt).
 
-Only the Project class properties are generated.
+Since `OwnedProject` is not `@Serializable`, only the properties of `Project` generated.
 
 ```typescript
 export interface Project {
@@ -312,84 +295,6 @@ export namespace Response {
     text: string;
   }
 }
-```
-
-<!--- TEST -->
-
-## Open Polymorphism
-
-### Generics
-
-Kotlinx Serialization doesn't have 'generic' SerialDescriptors, so KxsTsGen can't generate generic
-TypeScript classes.
-
-```kotlin
-import kotlinx.serialization.builtins.serializer
-
-@Serializable
-class Box<T : Number>(
-  val value: T,
-)
-
-fun main() {
-  val tsGenerator = KxsTsGenerator()
-
-  println(
-    tsGenerator.generate(
-      Box.serializer(Double.serializer()),
-    )
-  )
-}
-```
-
-> You can get the full code [here](./code/example/example-generics-01.kt).
-
-```typescript
-export interface Box {
-  value: number;
-}
-```
-
-<!--- TEST -->
-
-### JSON content polymorphism
-
-Using a
-[`JsonContentPolymorphicSerializer`](https://kotlin.github.io/kotlinx.serialization/kotlinx-serialization-json/kotlinx.serialization.json/-json-content-polymorphic-serializer/index.html)
-means there's not enough data in the `SerialDescriptor` to generate a TypeScript interface. Instead,
-a named type alias to 'any' will be created instead.
-
-```kotlin
-import kotlinx.serialization.json.*
-
-@Serializable
-abstract class Project {
-  abstract val name: String
-}
-
-@Serializable
-data class BasicProject(override val name: String) : Project()
-
-@Serializable
-data class OwnedProject(override val name: String, val owner: String) : Project()
-
-object ProjectSerializer : JsonContentPolymorphicSerializer<Project>(Project::class) {
-  override fun selectDeserializer(element: JsonElement) = when {
-    "owner" in element.jsonObject -> OwnedProject.serializer()
-    else                          -> BasicProject.serializer()
-  }
-}
-
-fun main() {
-  val tsGenerator = KxsTsGenerator()
-  println(tsGenerator.generate(ProjectSerializer))
-}
-```
-
-> You can get the full code [here](./code/example/example-json-polymorphic-01.kt).
-
-```typescript
-export type Project = any;
 ```
 
 <!--- TEST -->
