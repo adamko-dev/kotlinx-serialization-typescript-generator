@@ -14,13 +14,11 @@ import org.jetbrains.kotlin.gradle.targets.js.yarn.YarnRootExtension
  * gradle dir, next to the version-catalog.
  */
 fun Project.relocateKotlinJsStore() {
-
   afterEvaluate {
     rootProject.extensions.findByType<YarnRootExtension>()?.apply {
       lockFileDirectory = project.rootDir.resolve("gradle/kotlin-js-store")
     }
   }
-
 }
 
 

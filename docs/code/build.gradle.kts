@@ -3,8 +3,8 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
   buildsrc.convention.`kotlin-jvm`
   buildsrc.convention.node
+  buildsrc.convention.`knit-tests`
   kotlin("plugin.serialization")
-  id("org.jetbrains.kotlinx.knit")
   `java-test-fixtures`
 }
 
@@ -27,7 +27,6 @@ dependencies {
 }
 
 tasks.withType<KotlinCompile>().configureEach {
-  mustRunAfter(tasks.knit)
   kotlinOptions.freeCompilerArgs += listOf(
     "-opt-in=kotlinx.serialization.ExperimentalSerializationApi",
   )
@@ -63,5 +62,19 @@ tasks.test {
     environment("NPM_INSTALL_DIR", npmInstallDir.get())
   } else {
     systemProperty("kotest.tags", "!TSCompile")
+  }
+}
+
+val prepOutgoingKnitDocs by tasks.registering(Sync::class) {
+  description = "prepares Knit Markdown files for sharing with other subprojects"
+  dependsOn(tasks.knit, tasks.knitCheck)
+
+  from(knit.files)
+  into(temporaryDir)
+}
+
+configurations.knitDocsElements.configure {
+  outgoing {
+    artifact(prepOutgoingKnitDocs.map { it.destinationDir })
   }
 }
