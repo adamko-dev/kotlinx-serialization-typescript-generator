@@ -37,6 +37,7 @@ idea {
       ".idea",
       "gradle/kotlin-js-store",
       "gradle/wrapper",
+      "site/.docusaurus",
     )
   }
 }

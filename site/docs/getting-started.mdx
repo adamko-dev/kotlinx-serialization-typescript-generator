@@ -1,0 +1,79 @@
+---
+id: getting-started
+title: Getting Started
+description: Installing kxs-ts-gen
+sidebar_position: 1
+slug: /
+---
+
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+kxs-ts-gen is published to [Maven Central](https://search.maven.org/search?q=g:dev.adamko.kxstsgen).
+
+Be sure to apply the [Kotlinx Serialization](https://github.com/Kotlin/kotlinx.serialization) plugin.
+
+### Adding a dependency
+
+<!-- [//]: # (@formatter:off) -->
+
+<Tabs
+  values={[
+    { label: 'Gradle Kotlin DSL', value: 'kts', },
+    { label: 'Gradle Groovy DSL', value: 'groovy', },
+    { label: 'Maven', value: 'maven', },
+  ]}
+>
+<TabItem value="kts">
+
+```kts
+plugins {
+  kotlin("jvm") version "1.8.0"
+  kotlin("plugin.serialization") version "1.8.0"
+}
+
+dependencies {
+  implementation("dev.adamko.kxstsgen:kxs-ts-gen-core:0.2.1")
+}
+```
+
+</TabItem>
+<TabItem value="groovy">
+
+```groovy
+plugins {
+  id "org.jetbrains.kotlin.jvm" version "1.8.0"
+  id "org.jetbrains.kotlin.plugin.serialization" version "1.8.0"
+}
+
+dependencies {
+  implementation("dev.adamko.kxstsgen:kxs-ts-gen-core:0.2.1")
+}
+```
+
+</TabItem>
+<TabItem value="maven">
+
+:::info
+
+Maven must postfix the module name with the target variant, for example: `-jvm`
+
+:::
+
+```xml
+<dependency>
+  <groupId>dev.adamko.kxstsgen</groupId>
+  <artifactId>kxs-ts-gen-core-jvm</artifactId>
+  <version>0.2.1</version>
+</dependency>
+```
+
+</TabItem>
+</Tabs>
+
+<!-- [//]: # (@formatter:on) -->
+
+### Usage
+
+See [Docs](/docs) for examples of how to generate TypeScript interfaces from Kotlin classes.
