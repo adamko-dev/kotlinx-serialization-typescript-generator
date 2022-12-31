@@ -9,7 +9,7 @@ const config = /** @type {import("@docusaurus/types").Config} */ {
   baseUrl: "/",
   onBrokenLinks: "throw",
   onBrokenMarkdownLinks: "warn",
-  favicon: "img/logo.svg",
+  favicon: "img/icon.svg",
 
   // GitHub pages deployment config
   organizationName: "adamko-dev",
@@ -52,7 +52,7 @@ const config = /** @type {import("@docusaurus/types").Config} */ {
     }],
     navbar: {
       title: "kxs-ts-gen",
-      logo: {alt: "kxs-ts-gen logo", src: "img/logo.svg"},
+      logo: {alt: "kxs-ts-gen logo", src: "img/icon.svg"},
       items: [
         // {to: "/getting-started", label: "Getting started", position: "left"},
         {type: "doc", docId: "getting-started", label: "Docs", position: "left"},
