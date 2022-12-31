@@ -27,4 +27,4 @@ jobs:
     with:
       runs-on: ${{ matrix.os }}
       gradle-task: >-
-        check -Pkxstsgen_enableTsCompileTests=${{ matrix.tsCompileTests }} --info --stacktrace
+        check -Pkxstsgen_enableTsCompileTests=${{ matrix.tsCompileTests }} --stacktrace
