@@ -89,27 +89,4 @@ class BasicClassesTest : FunSpec({
       actual.shouldTypeScriptCompile(caseName)
     }
   }
-
-  context("ExamplePlainClassPrimitiveFields02") {
-    val caseName = testCase.name.testName
-
-    val actual = captureOutput(caseName) {
-      dev.adamko.kxstsgen.example.examplePlainClassPrimitiveFields02.main()
-    }.normalizeJoin()
-
-    test("expect actual matches TypeScript") {
-      actual.shouldBe(
-        // language=TypeScript
-        """
-          |export interface SimpleTypes {
-          |}
-        """.trimMargin()
-        .normalize()
-      )
-    }
-
-    test("expect actual compiles").config(tags = tsCompile) {
-      actual.shouldTypeScriptCompile(caseName)
-    }
-  }
 })

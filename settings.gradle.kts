@@ -8,6 +8,7 @@ include(
   ":modules:kxs-ts-gen-processor",
   ":modules:versions-platform",
   ":docs:code",
+  ":site",
 )
 
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")

@@ -4,6 +4,7 @@ plugins {
   idea
   id("me.qoomon.git-versioning")
   id("org.jetbrains.kotlinx.kover")
+  buildsrc.convention.base
 }
 
 
@@ -22,8 +23,8 @@ gitVersioning.apply {
 
 
 tasks.wrapper {
-  gradleVersion = "7.5.1"
-  distributionType = Wrapper.DistributionType.ALL
+  gradleVersion = "7.6"
+  distributionType = Wrapper.DistributionType.BIN
 }
 
 
@@ -36,6 +37,7 @@ idea {
       ".idea",
       "gradle/kotlin-js-store",
       "gradle/wrapper",
+      "site/.docusaurus",
     )
   }
 }

@@ -1,27 +1,10 @@
+# Inline value classes
+
 <!--- TEST_NAME ValueClassesTest -->
-
-
-**Table of contents**
-
-<!--- TOC -->
-
-* [Introduction](#introduction)
-  * [Inline value classes](#inline-value-classes)
-  * [Brand typing](#brand-typing)
-  * [Nested value classes](#nested-value-classes)
-
-<!--- END -->
-
-
 <!--- INCLUDE .*\.kt
 import kotlinx.serialization.*
 import dev.adamko.kxstsgen.*
 -->
-
-## Introduction
-
-
-### Inline value classes
 
 Value classes are transformed to type aliases. The type of the value class is used.
 
@@ -78,22 +61,20 @@ export type UInt = number;
 export type ULong = number;
 ```
 
-<!--- TEST -->
+This weakens the unsigned numbers, and the generated TypeScript could be used to produce
+incompatible numeric values.
 
+<!--- TEST -->
 
 ### Brand typing
 
 To make value classes a little more strict, we can use brand typing
 
-
-```kotlin
-import kotlinx.serialization.builtins.serializer
-import dev.adamko.kxstsgen.KxsTsConfig.TypeAliasTypingConfig.BrandTyping
-```
-
 <!-- IMPORT -->
 
 ```kotlin
+import dev.adamko.kxstsgen.KxsTsConfig.TypeAliasTypingConfig.BrandTyping
+import kotlinx.serialization.builtins.serializer
 
 fun main() {
 
@@ -116,8 +97,11 @@ fun main() {
 export type ULong = number & { __ULong__: void };
 ```
 
-<!--- TEST -->
+Now numeric types must be manually converted type aliases.
 
+This does not mean
+
+<!--- TEST -->
 
 ### Nested value classes
 

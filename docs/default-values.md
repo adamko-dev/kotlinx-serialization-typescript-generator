@@ -1,26 +1,13 @@
+# Default values
+
+Some properties of a class are optional, or nullable, or both.
+
 <!--- TEST_NAME DefaultValuesTest -->
-
-**Table of contents**
-
-<!--- TOC -->
-
-* [Introduction](#introduction)
-  * [Default values](#default-values)
-  * [Nullable values](#nullable-values)
-  * [Default and nullable](#default-and-nullable)
-  * [Override optional properties](#override-optional-properties)
-
-<!--- END -->
-
-
 <!--- INCLUDE .*\.kt
 import kotlinx.serialization.*
 import dev.adamko.kxstsgen.*
 -->
 
-## Introduction
-
-Some properties of a class are optional, or nullable, or both.
 
 ### Default values
 

@@ -1,24 +1,10 @@
+# Customising Output
+
 <!--- TEST_NAME CustomisingOutputTest -->
-
-
-**Table of contents**
-
-<!--- TOC -->
-
-* [Introduction](#introduction)
-  * [Overriding output](#overriding-output)
-  * [Override nullable properties](#override-nullable-properties)
-  * [Override both nullable and non-nullable descriptors](#override-both-nullable-and-non-nullable-descriptors)
-
-<!--- END -->
-
-
 <!--- INCLUDE .*\.kt
 import kotlinx.serialization.*
 import dev.adamko.kxstsgen.*
 -->
-
-## Introduction
 
 ### Overriding output
 

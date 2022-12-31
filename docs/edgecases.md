@@ -1,29 +1,16 @@
+# Edge cases
+
+Demonstrations of how edge cases are handled.
+
 <!--- TEST_NAME EdgeCasesTest -->
-
-**Table of contents**
-
-<!--- TOC -->
-
-* [Introduction](#introduction)
-  * [Recursive references](#recursive-references)
-    * [Classes](#classes)
-    * [Lists](#lists)
-    * [Map](#map)
-
-<!--- END -->
-
 <!--- INCLUDE .*\.kt
 import kotlinx.serialization.*
 import dev.adamko.kxstsgen.*
 -->
 
-## Introduction
-
-Lorem ipsum...
-
 ### Recursive references
 
-A references B which references A which references B... should be handled properly
+`A` references `B` which references `A` which references `B`... should be handled properly
 
 #### Classes
 

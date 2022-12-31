@@ -1,32 +1,15 @@
+# Maps
+
 <!--- TEST_NAME MapsTests -->
-
-**Table of contents**
-
-<!--- TOC -->
-
-* [Introduction](#introduction)
-  * [Primitive maps](#primitive-maps)
-  * [Enum keys](#enum-keys)
-  * [Maps with Collections](#maps-with-collections)
-  * [Maps with value classes](#maps-with-value-classes)
-  * [Nullable keys and values](#nullable-keys-and-values)
-  * [Type alias keys](#type-alias-keys)
-  * [Maps with complex keys](#maps-with-complex-keys)
-    * [ES6 Map](#es6-map)
-    * [Maps with complex keys - Map Key class](#maps-with-complex-keys---map-key-class)
-    * [Maps with complex keys - custom serializer workaround](#maps-with-complex-keys---custom-serializer-workaround)
-
-<!--- END -->
-
-
 <!--- INCLUDE .*\.kt
 import kotlinx.serialization.*
 import dev.adamko.kxstsgen.*
 -->
 
-## Introduction
-
 ### Primitive maps
+
+Maps with primitive keys and values will be converted to
+a [mapped type](https://www.typescriptlang.org/docs/handbook/2/mapped-types.html).
 
 ```kotlin
 @Serializable
@@ -141,7 +124,7 @@ export type Data = string;
 
 ### Nullable keys and values
 
-Nullable keys are not allowed, so are convert to an ES6 Map.
+Nullable keys are not allowed in mapped types, so Maps of this type are convert to an ES6 Map.
 
 > An index signature parameter type must be 'string', 'number', 'symbol', or a template literal type
 

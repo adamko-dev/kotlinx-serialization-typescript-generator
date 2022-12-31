@@ -1,4 +1,4 @@
-// This file was automatically generated from polymorphism.md by Knit tool. Do not edit.
+// This file was automatically generated from polymorphism-open.md by Knit tool. Do not edit.
 @file:Suppress("PackageDirectoryMismatch", "unused")
 package dev.adamko.kxstsgen.example.exampleJsonPolymorphic01
 

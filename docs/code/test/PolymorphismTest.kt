@@ -1,4 +1,4 @@
-// This file was automatically generated from polymorphism.md by Knit tool. Do not edit.
+// This file was automatically generated from polymorphism-sealed.md by Knit tool. Do not edit.
 @file:Suppress("JSUnusedLocalSymbols")
 package dev.adamko.kxstsgen.example.test
 
@@ -10,35 +10,6 @@ import kotlinx.knit.test.*
 class PolymorphismTest : FunSpec({
 
   tags(Knit)
-  context("ExamplePolymorphicAbstractClassPrimitiveFields01") {
-    val caseName = testCase.name.testName
-
-    val actual = captureOutput(caseName) {
-      dev.adamko.kxstsgen.example.examplePolymorphicAbstractClassPrimitiveFields01.main()
-    }.normalizeJoin()
-
-    test("expect actual matches TypeScript") {
-      actual.shouldBe(
-        // language=TypeScript
-        """
-          |export type SimpleTypes = any;
-          |// export interface SimpleTypes {
-          |//   aString: string;
-          |//   anInt: number;
-          |//   aDouble: number;
-          |//   bool: boolean;
-          |//   privateMember: string;
-          |// }
-        """.trimMargin()
-        .normalize()
-      )
-    }
-
-    test("expect actual compiles").config(tags = tsCompile) {
-      actual.shouldTypeScriptCompile(caseName)
-    }
-  }
-
   context("ExamplePolymorphicStaticTypes01") {
     val caseName = testCase.name.testName
 

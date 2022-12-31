@@ -1,27 +1,4 @@
-<!--- TEST_NAME TuplesTest -->
-
-
-**Table of contents**
-
-<!--- TOC -->
-
-* [Tuples](#tuples)
-  * [Tuple example](#tuple-example)
-  * [Tuple labels](#tuple-labels)
-  * [Optional elements in tuples](#optional-elements-in-tuples)
-  * [Properties all the same type](#properties-all-the-same-type)
-  * [Tuples as interface properties](#tuples-as-interface-properties)
-
-<!--- END -->
-
-
-<!--- INCLUDE .*\.kt
-import dev.adamko.kxstsgen.*
-import dev.adamko.kxstsgen.core.experiments.TupleSerializer
-import kotlinx.serialization.*
--->
-
-## Tuples
+# Tuples
 
 In TypeScript, tuples are a compact format for data structures. They're like fixed-length arrays
 that only contain the type. This is especially useful when using JSON, as including property names
@@ -31,6 +8,13 @@ Tuples are a bit difficult to create in Kotlinx Serialization, but KxsTsGen incl
 [TupleSerializer](../modules/kxs-ts-gen-core/src/commonMain/kotlin/dev/adamko/kxstsgen/core/experiments/tuple.kt)
 which can help. It requires a name, an ordered list of elements, and a constructor for
 deserializing.
+
+<!--- TEST_NAME TuplesTest -->
+<!--- INCLUDE .*\.kt
+import dev.adamko.kxstsgen.*
+import dev.adamko.kxstsgen.core.experiments.TupleSerializer
+import kotlinx.serialization.*
+-->
 
 ### Tuple example
 

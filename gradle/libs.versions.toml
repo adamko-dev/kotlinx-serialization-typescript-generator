@@ -3,7 +3,7 @@
 jvmTarget = "11"
 kotlinTarget = "1.7"
 
-kotlin = "1.7.21"                        # https://github.com/JetBrains/kotlin/releases
+kotlin = "1.7.22"                        # https://github.com/JetBrains/kotlin/releases
 
 kotlinSymbolProcessing = "1.7.20-1.0.8"  # https://github.com/google/ksp/releases
 kotlinCompileTesting = "1.4.8"           # https://github.com/tschuchortdev/kotlin-compile-testing/releases
@@ -21,61 +21,61 @@ kotlinProcess = "1.4"                    # https://github.com/pgreze/kotlin-proc
 
 classgraph = "4.8.147"                   # https://github.com/classgraph/classgraph/releases
 
-gradleNodePlugin = "3.5.0"               # https://github.com/node-gradle/gradle-node-plugin/releases
+gradleNodePlugin = "3.5.1"               # https://github.com/node-gradle/gradle-node-plugin/releases
 gitVersioningPlugin = "6.3.6"            # https://github.com/qoomon/gradle-git-versioning-plugin/releases
 
 [libraries]
 
-kotlin-bom = { group = "org.jetbrains.kotlin", name = "kotlin-bom", version.ref = "kotlin" }
-kotlin-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
+kotlin-bom = { module = "org.jetbrains.kotlin:kotlin-bom", version.ref = "kotlin" }
 
-kotlinSymbolProcessing = { group = "com.google.devtools.ksp", name = "symbol-processing-api", version.ref = "kotlinSymbolProcessing" }
-kotlinSymbolProcessing-gradlePlugin = { group = "com.google.devtools.ksp", name = "com.google.devtools.ksp.gradle.plugin", version.ref = "kotlinSymbolProcessing" }
+kotlinSymbolProcessing = { module = "com.google.devtools.ksp:symbol-processing-api", version.ref = "kotlinSymbolProcessing" }
 
-kotlinx-coroutines-bom = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-bom", version.ref = "kotlinx-coroutines" }
-kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core" }
+kotlinx-coroutines-bom = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-bom", version.ref = "kotlinx-coroutines" }
+kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core" }
 
-kotlinx-serialization-bom = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-bom", version.ref = "kotlinx-serialization" }
-kotlinx-serialization-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-core" }
-kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json" }
-kotlinx-serialization-cbor = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-cbor" }
+kotlinx-serialization-bom = { module = "org.jetbrains.kotlinx:kotlinx-serialization-bom", version.ref = "kotlinx-serialization" }
+kotlinx-serialization-core = { module = "org.jetbrains.kotlinx:kotlinx-serialization-core" }
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json" }
+kotlinx-serialization-cbor = { module = "org.jetbrains.kotlinx:kotlinx-serialization-cbor" }
 
-okio-bom = { group = "com.squareup.okio", name = "okio-bom", version.ref = "okio" }
-okio-core = { group = "com.squareup.okio", name = "okio" }
+okio-bom = { module = "com.squareup.okio:okio-bom", version.ref = "okio" }
+okio-core = { module = "com.squareup.okio:okio" }
 
-classgraph = { group = "io.github.classgraph", name = "classgraph", version.ref = "classgraph" }
+classgraph = { module = "io.github.classgraph:classgraph", version.ref = "classgraph" }
 
-kotlinProcess = { group = "com.github.pgreze", name = "kotlin-process", version.ref = "kotlinProcess" }
+kotlinProcess = { module = "com.github.pgreze:kotlin-process", version.ref = "kotlinProcess" }
 
-kotlinCompileTesting = { group = "com.github.tschuchortdev", name = "kotlin-compile-testing", version.ref = "kotlinCompileTesting" }
-kotlinCompileTesting-ksp = { group = "com.github.tschuchortdev", name = "kotlin-compile-testing-ksp", version.ref = "kotlinCompileTesting" }
+kotlinCompileTesting = { module = "com.github.tschuchortdev:kotlin-compile-testing", version.ref = "kotlinCompileTesting" }
+kotlinCompileTesting-ksp = { module = "com.github.tschuchortdev:kotlin-compile-testing-ksp", version.ref = "kotlinCompileTesting" }
 
 ## Kotest ##
 
-kotest-bom = { group = "io.kotest", name = "kotest-bom", version.ref = "kotest" }
-kotest-assertionsCore = { group = "io.kotest", name = "kotest-assertions-core" }
-kotest-assertionsJson = { group = "io.kotest", name = "kotest-assertions-json" }
-kotest-property = { group = "io.kotest", name = "kotest-property" }
-kotest-frameworkEngine = { group = "io.kotest", name = "kotest-framework-engine" }
-kotest-frameworkDatatest = { group = "io.kotest", name = "kotest-framework-datatest" }
-kotest-runnerJUnit5 = { group = "io.kotest", name = "kotest-runner-junit5" }
-kotest-gradlePlugin = { group = "io.kotest", name = "kotest-framework-multiplatform-plugin-gradle", version.ref = "kotest" }
+kotest-bom = { module = "io.kotest:kotest-bom", version.ref = "kotest" }
+kotest-assertionsCore = { module = "io.kotest:kotest-assertions-core" }
+kotest-assertionsJson = { module = "io.kotest:kotest-assertions-json" }
+kotest-property = { module = "io.kotest:kotest-property" }
+kotest-frameworkEngine = { module = "io.kotest:kotest-framework-engine" }
+kotest-frameworkDatatest = { module = "io.kotest:kotest-framework-datatest" }
+kotest-runnerJUnit5 = { module = "io.kotest:kotest-runner-junit5" }
 
 ## Knit ##
 
-kotlinx-knit = { group = "org.jetbrains.kotlinx", name = "kotlinx-knit", version.ref = "kotlinx-knit" }
-kotlinx-knit-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-knit-test", version.ref = "kotlinx-knit" }
-kotlinx-knit-gradlePlugin = { group = "org.jetbrains.kotlinx", name = "kotlinx-knit", version.ref = "kotlinx-knit" }
+kotlinx-knit = { module = "org.jetbrains.kotlinx:kotlinx-knit", version.ref = "kotlinx-knit" }
+kotlinx-knit-test = { module = "org.jetbrains.kotlinx:kotlinx-knit-test", version.ref = "kotlinx-knit" }
 
 
 ### Gradle Plugins ###
 
-gitVersioningPlugin = { group = "me.qoomon", name = "gradle-git-versioning-plugin", version.ref = "gitVersioningPlugin" }
-
-gradleNodePlugin = { group = "com.github.node-gradle", name = "gradle-node-plugin", version.ref = "gradleNodePlugin" }
-
-kotlinx-kover-gradlePlugin = { group = "org.jetbrains.kotlinx", name = "kover", version.ref = "kotlinx-kover" }
-
-[bundles]
+gradlePlugin-kotlin = {  module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
+gradlePlugin-kotlinSerialization = {  module = "org.jetbrains.kotlin:kotlin-serialization", version.ref = "kotlin" }
+gradlePlugin-gitVersioning = { module = "me.qoomon:gradle-git-versioning-plugin", version.ref = "gitVersioningPlugin" }
+gradlePlugin-gradleNode = { module = "com.github.node-gradle:gradle-node-plugin", version.ref = "gradleNodePlugin" }
+gradlePlugin-kotlinxKover = { module = "org.jetbrains.kotlinx:kover", version.ref = "kotlinx-kover" }
+gradlePlugin-kotlinxKnit = { module = "org.jetbrains.kotlinx:kotlinx-knit", version.ref = "kotlinx-knit" }
+gradlePlugin-kotest = { module = "io.kotest:kotest-framework-multiplatform-plugin-gradle", version.ref = "kotest" }
+gradlePlugin-kotlinSymbolProcessing = { module = "com.google.devtools.ksp:com.google.devtools.ksp.gradle.plugin", version.ref = "kotlinSymbolProcessing" }
 
 [plugins]
+# Gradle Plugin versions are set in buildSrc/build.gradle.kts as regular dependencies, not via aliases
+
+[bundles]
