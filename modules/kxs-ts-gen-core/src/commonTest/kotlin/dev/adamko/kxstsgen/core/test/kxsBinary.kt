@@ -20,7 +20,7 @@ val kxsBinary: KxsBinary = KxsBinary()
 
 /** [`https://github.com/Kotlin/kotlinx.serialization/blob/master/docs/formats.md#efficient-binary-format`](https://github.com/Kotlin/kotlinx.serialization/blob/master/docs/formats.md#efficient-binary-format) */
 class KxsBinary(
-  override val serializersModule: SerializersModule = EmptySerializersModule
+  override val serializersModule: SerializersModule = EmptySerializersModule()
 ) : BinaryFormat {
 
   override fun <T> encodeToByteArray(serializer: SerializationStrategy<T>, value: T): ByteArray {
@@ -44,7 +44,7 @@ private val byteArraySerializer = ByteArraySerializer()
 
 class KxsDataOutputEncoder(
   private val output: BufferedSink,
-  override val serializersModule: SerializersModule = EmptySerializersModule,
+  override val serializersModule: SerializersModule = EmptySerializersModule(),
 ) : AbstractEncoder() {
 
   private operator fun BufferedSink.invoke(action: BufferedSink.() -> Unit): Unit = action()
@@ -99,7 +99,7 @@ class KxsDataOutputEncoder(
 
 class KxsDataInputDecoder(
   private val input: BufferedSource,
-  override val serializersModule: SerializersModule = EmptySerializersModule,
+  override val serializersModule: SerializersModule = EmptySerializersModule(),
   private var elementsCount: Int = 0,
 ) : AbstractDecoder() {
 
