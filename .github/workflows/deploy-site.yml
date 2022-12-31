@@ -31,8 +31,8 @@ jobs:
         with:
           gradle-home-cache-cleanup: true
 
-      - name: Run :site:build
-        run: ./gradlew :site:build
+      - name: docusaurus build
+        run: ./gradlew docusaurusBuild
 
       - uses: actions/upload-pages-artifact@v1
         with:
