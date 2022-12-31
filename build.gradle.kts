@@ -4,6 +4,7 @@ plugins {
   idea
   id("me.qoomon.git-versioning")
   id("org.jetbrains.kotlinx.kover")
+  buildsrc.convention.base
 }
 
 

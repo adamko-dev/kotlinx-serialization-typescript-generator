@@ -2,7 +2,7 @@ package buildsrc.convention
 
 plugins {
   id("com.github.node-gradle.node")
-  id("buildsrc.convention.subproject")
+  id("buildsrc.convention.base")
 }
 
 val rootGradleDir: Directory by extra {

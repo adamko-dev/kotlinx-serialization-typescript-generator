@@ -7,7 +7,7 @@ import org.jetbrains.kotlin.gradle.targets.jvm.KotlinJvmTarget
 
 
 plugins {
-  id("buildsrc.convention.subproject")
+  id("buildsrc.convention.base")
   kotlin("multiplatform")
 }
 
