@@ -15,6 +15,12 @@ if (project != rootProject) {
 
 extensions.create<KxsTsGenBuildSettings>(KxsTsGenBuildSettings.NAME)
 
+tasks.withType<AbstractArchiveTask>().configureEach {
+  // https://docs.gradle.org/current/userguide/working_with_files.html#sec:reproducible_archives
+  isPreserveFileTimestamps = false
+  isReproducibleFileOrder = true
+}
+
 tasks.withType<Test>().configureEach {
   timeout.set(Duration.ofMinutes(10))
 
