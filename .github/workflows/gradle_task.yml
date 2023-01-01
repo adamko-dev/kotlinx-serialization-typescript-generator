@@ -50,9 +50,16 @@ jobs:
 
       - name: Cache NPM
         uses: actions/cache@v3
+        env:
+          cache-name: cache-npm
         with:
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
           path: |
             ./site/node_modules
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
 
       - name: Run ${{ inputs.gradle-task }}
         run: >-
