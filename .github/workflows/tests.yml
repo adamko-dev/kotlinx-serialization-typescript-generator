@@ -29,3 +29,9 @@ jobs:
       runs-on: ${{ matrix.os }}
       gradle-task: >-
         check -Pkxstsgen_enableTsCompileTests=true --stacktrace
+
+  build-site:
+    uses: ./.github/workflows/gradle_task.yml
+    with:
+      runs-on: ubuntu-latest
+      gradle-task: docusaurusBuild
