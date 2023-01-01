@@ -36,7 +36,7 @@ const config = /** @type {import("@docusaurus/types").Config} */ {
   // scripts: [],
 
   clientModules: [
-    require.resolve("./src/modules/global.scss"),
+    require.resolve("./src/css/global.scss"),
   ],
 
   themeConfig: /** @type {import("@docusaurus/preset-classic").ThemeConfig} */ ({
