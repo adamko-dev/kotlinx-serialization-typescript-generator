@@ -12,6 +12,7 @@ include(
 )
 
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
+enableFeaturePreview("STABLE_CONFIGURATION_CACHE")
 
 dependencyResolutionManagement {
   @Suppress("UnstableApiUsage") // Central declaration of repositories is an incubating feature
