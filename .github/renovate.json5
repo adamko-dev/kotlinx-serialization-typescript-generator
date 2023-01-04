@@ -13,8 +13,8 @@
 
   // will auto-merge directly, without a PR, if tests pass - else, makes a PR
   automergeType: "branch",
-//  platformAutomerge: true,
 
+  // platformAutomerge: true,
   packageRules: [
     {
       // automerge all but major releases
@@ -42,4 +42,5 @@
     //    "prIgnoreNotification",
   ],
   prCreation: "status-success",
+  semanticCommits: "disabled",
 }
