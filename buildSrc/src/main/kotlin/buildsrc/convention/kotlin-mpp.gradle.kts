@@ -2,7 +2,6 @@ package buildsrc.convention
 
 import buildsrc.config.relocateKotlinJsStore
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
-import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinJvmCompilation
 import org.jetbrains.kotlin.gradle.targets.jvm.KotlinJvmTarget
 
 
@@ -22,8 +21,6 @@ extensions.configure<KotlinMultiplatformExtension> {
       kotlinOptions {
         languageVersion = "1.7"
         apiVersion = "1.7"
-      }
-      if (this is KotlinJvmCompilation) {
       }
     }
   }
