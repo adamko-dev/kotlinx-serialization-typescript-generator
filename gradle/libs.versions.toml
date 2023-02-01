@@ -22,7 +22,7 @@ kotlinProcess = "1.4.1"                    # https://github.com/pgreze/kotlin-pr
 classgraph = "4.8.154"                   # https://github.com/classgraph/classgraph/releases
 
 gradleNodePlugin = "3.5.1"               # https://github.com/node-gradle/gradle-node-plugin/releases
-gitVersioningPlugin = "6.3.6"            # https://github.com/qoomon/gradle-git-versioning-plugin/releases
+gitVersioningPlugin = "6.3.8"            # https://github.com/qoomon/gradle-git-versioning-plugin/releases
 
 [libraries]
 
