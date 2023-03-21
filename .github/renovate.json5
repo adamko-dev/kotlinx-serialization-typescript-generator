@@ -8,13 +8,13 @@
     "npm",
     "gradle",
     "gradle-wrapper",
-    "github-actions"
+    "github-actions",
   ],
 
   // will auto-merge directly, without a PR, if tests pass - else, makes a PR
   automergeType: "branch",
-
-  // platformAutomerge: true,
+  platformAutomerge: true,
+  ignoreTests: false,
   packageRules: [
     {
       // automerge all but major releases
@@ -22,9 +22,9 @@
         "minor",
         "patch",
         "pin",
-        "digest"
+        "digest",
       ],
-      "automerge": true
+      "automerge": true,
     }
   ],
   schedule: [
