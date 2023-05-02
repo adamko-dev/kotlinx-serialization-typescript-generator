@@ -1,4 +1,5 @@
 import com.github.gradle.node.npm.task.NpmTask
+import java.net.URI
 
 plugins {
   buildsrc.convention.base
@@ -37,7 +38,8 @@ val updateSiteKnitDocs by tasks.registering(Sync::class) {
     filter { line ->
       line.replace(Regex("""\((?<file>(?:.\/|..\/)\S+[^.md])\)""")) { match ->
         val (file) = match.destructured
-        val uri = uri("https://github.com/adamko-dev/kotlinx-serialization-typescript-generator/blob/main/docs/$file")
+        val uri = URI
+          .create("https://github.com/adamko-dev/kotlinx-serialization-typescript-generator/blob/main/docs/$file")
           .normalize()
         "($uri)"
       }
