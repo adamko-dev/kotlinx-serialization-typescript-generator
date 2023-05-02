@@ -32,24 +32,3 @@ fun MavenPublication.createKxsTsGenPom(): Unit = pom {
     url.set("https://github.com/adamko-dev/kotlinx-serialization-typescript-generator")
   }
 }
-
-
-// hacks because IntelliJ still doesn't properly load DSL accessors for buildSrc
-
-
-/** Configure [PublishingExtension] */
-fun Project.publishing(configure: PublishingExtension.() -> Unit): Unit =
-  extensions.configure(configure)
-
-
-val Project.publishing: PublishingExtension
-  get() = extensions.getByType<PublishingExtension>()
-
-
-/** Configure [SigningExtension] */
-fun Project.signing(configure: SigningExtension.() -> Unit): Unit =
-  extensions.configure(configure)
-
-
-val Project.signing: SigningExtension
-  get() = extensions.getByType<SigningExtension>()

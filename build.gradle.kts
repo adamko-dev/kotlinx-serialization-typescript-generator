@@ -21,17 +21,8 @@ gitVersioning.apply {
   rev { version = "\${commit}" }
 }
 
-
-tasks.wrapper {
-  gradleVersion = "7.6"
-  distributionType = Wrapper.DistributionType.BIN
-}
-
-
 idea {
   module {
-    isDownloadSources = true
-    isDownloadJavadoc = true
     excludeGeneratedGradleDsl(layout)
     excludeDirs = excludeDirs + layout.files(
       ".idea",

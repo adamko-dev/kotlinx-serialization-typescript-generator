@@ -1,14 +1,14 @@
 [versions]
 
 jvmTarget = "11"
-kotlinTarget = "1.7"
+kotlinTarget = "1.8"
 
-kotlin = "1.7.22"                        # https://github.com/JetBrains/kotlin/releases
+kotlin = "1.8.21"                        # https://github.com/JetBrains/kotlin/releases
 
 kotlinSymbolProcessing = "1.7.20-1.0.8"  # https://github.com/google/ksp/releases
 kotlinCompileTesting = "1.4.8"           # https://github.com/tschuchortdev/kotlin-compile-testing/releases
 
-kotlinx-serialization = "1.4.0"          # https://github.com/Kotlin/kotlinx.serialization/releases/
+kotlinx-serialization = "1.5.0"          # https://github.com/Kotlin/kotlinx.serialization/releases/
 kotlinx-knit = "0.4.0"                   # https://github.com/Kotlin/kotlinx-knit/releases
 kotlinx-coroutines = "1.6.4"             # https://github.com/Kotlin/kotlinx.coroutines/releases
 kotlinx-kover = "0.6.1"                  # https://github.com/Kotlin/kotlinx-kover/releases

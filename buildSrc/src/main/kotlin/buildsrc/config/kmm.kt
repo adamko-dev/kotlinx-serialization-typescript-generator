@@ -20,26 +20,3 @@ fun Project.relocateKotlinJsStore() {
     }
   }
 }
-
-
-fun KotlinMultiplatformExtension.currentHostTarget(
-  targetName: String = "native",
-  configure: KotlinNativeTargetWithHostTests.() -> Unit,
-): KotlinNativeTargetWithHostTests {
-  val hostOs = System.getProperty("os.name")
-  val hostTarget = when {
-    hostOs == "Mac OS X"         -> macosX64(targetName)
-    hostOs == "Linux"            -> linuxX64(targetName)
-    hostOs.startsWith("Windows") -> mingwX64(targetName)
-    else                         -> throw GradleException("Preset for host OS '$hostOs' is undefined")
-  }
-
-  println("Current host target ${hostTarget.targetName}/${hostTarget.preset?.name}")
-  hostTarget.configure()
-  return hostTarget
-}
-
-
-fun KotlinMultiplatformExtension.publicationsFromMainHost(): List<String> {
-  return listOf(jvm(), js()).map { it.name } + "kotlinMultiplatform"
-}
