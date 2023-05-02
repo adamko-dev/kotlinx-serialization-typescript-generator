@@ -5,8 +5,8 @@ kotlinTarget = "1.8"
 
 kotlin = "1.8.21"                        # https://github.com/JetBrains/kotlin/releases
 
-kotlinSymbolProcessing = "1.7.20-1.0.8"  # https://github.com/google/ksp/releases
-kotlinCompileTesting = "1.4.8"           # https://github.com/tschuchortdev/kotlin-compile-testing/releases
+kotlinSymbolProcessing = "1.8.21-1.0.11" # https://github.com/google/ksp/releases
+kotlinCompileTesting = "1.5.0"           # https://github.com/tschuchortdev/kotlin-compile-testing/releases
 
 kotlinx-serialization = "1.5.0"          # https://github.com/Kotlin/kotlinx.serialization/releases/
 kotlinx-knit = "0.4.0"                   # https://github.com/Kotlin/kotlinx-knit/releases
@@ -15,14 +15,14 @@ kotlinx-kover = "0.6.1"                  # https://github.com/Kotlin/kotlinx-kov
 
 okio = "3.2.0"                           # https://search.maven.org/artifact/com.squareup.okio/okio
 
-kotest = "5.5.4"                         # https://github.com/kotest/kotest/releases
+kotest = "5.6.1"                         # https://github.com/kotest/kotest/releases
 
-kotlinProcess = "1.4.1"                    # https://github.com/pgreze/kotlin-process/releases
+kotlinProcess = "1.4.1"                  # https://github.com/pgreze/kotlin-process/releases
 
 classgraph = "4.8.154"                   # https://github.com/classgraph/classgraph/releases
 
-gradleNodePlugin = "3.5.1"               # https://github.com/node-gradle/gradle-node-plugin/releases
-gitVersioningPlugin = "6.3.8"            # https://github.com/qoomon/gradle-git-versioning-plugin/releases
+gradleNodePlugin = "4.0.0"               # https://github.com/node-gradle/gradle-node-plugin/releases
+gitVersioningPlugin = "6.4.1"            # https://github.com/qoomon/gradle-git-versioning-plugin/releases
 
 [libraries]
 
