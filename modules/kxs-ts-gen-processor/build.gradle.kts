@@ -1,11 +1,8 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-
 plugins {
   buildsrc.convention.`kotlin-jvm`
 }
 
 description = "Experimental alternative to Kotlinx Serialization. Currently unused."
-
 
 dependencies {
   implementation(platform(projects.modules.versionsPlatform))
@@ -23,9 +20,12 @@ dependencies {
   testImplementation(kotlin("test"))
 }
 
-
-tasks.withType<KotlinCompile>().configureEach {
-  kotlinOptions.freeCompilerArgs += listOf(
-    "-opt-in=kotlinx.serialization.ExperimentalSerializationApi",
-  )
+kotlin {
+  sourceSets {
+    configureEach {
+      languageSettings {
+//        optIn("kotlinx.serialization.ExperimentalSerializationApi")
+      }
+    }
+  }
 }

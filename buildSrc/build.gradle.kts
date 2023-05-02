@@ -1,9 +1,6 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-
 plugins {
   `kotlin-dsl`
 }
-
 
 dependencies {
   implementation(platform(libs.kotlin.bom))
@@ -21,22 +18,6 @@ dependencies {
   implementation("org.jetbrains.kotlinx:kotlinx-html:0.8.0")
 }
 
-
-tasks.withType<KotlinCompile>().configureEach {
-  kotlinOptions {
-    jvmTarget = libs.versions.jvmTarget.get()
-    apiVersion = libs.versions.kotlinTarget.get()
-    languageVersion = libs.versions.kotlinTarget.get()
-  }
-
-  kotlinOptions.freeCompilerArgs += listOf(
-    "-opt-in=kotlin.RequiresOptIn",
-    "-opt-in=kotlin.ExperimentalStdlibApi",
-    "-opt-in=kotlin.time.ExperimentalTime",
-  )
-}
-
-
 kotlin {
   jvmToolchain {
     languageVersion.set(
@@ -45,8 +26,4 @@ kotlin {
       }
     )
   }
-}
-
-kotlinDslPluginOptions {
-  jvmTarget.set(libs.versions.jvmTarget)
 }

@@ -1,10 +1,6 @@
 package buildsrc.convention
 
-import buildsrc.config.createKxsTsGenPom
-import buildsrc.config.credentialsAction
-import buildsrc.config.isKotlinMultiplatformJavaEnabled
-import buildsrc.config.publishing
-import buildsrc.config.signing
+import buildsrc.config.*
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinMultiplatformPlugin
 
 
@@ -44,7 +40,7 @@ tasks.withType<AbstractPublishToMaven>().configureEach {
   mustRunAfter(tasks.withType<Sign>())
 
   doLast {
-    logger.lifecycle("[${this.name}] ${project.group}:${project.name}:${project.version}")
+    logger.lifecycle("[${path}] ${publication?.groupId}:${publication?.artifactId}:${publication?.version}")
   }
 }
 
@@ -132,7 +128,6 @@ fun Project.javadocStubTask(): Jar {
     description = "Stub javadoc.jar artifact (required by Maven Central)"
     archiveClassifier.set("javadoc")
   }
-
 
   tasks.withType<AbstractPublishToMaven>().all {
     dependsOn(javadocJarStub)

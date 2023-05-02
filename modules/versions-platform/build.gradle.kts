@@ -10,7 +10,6 @@ javaPlatform {
 }
 
 dependencies {
-
   api(platform(libs.kotlin.bom))
   api(platform(libs.kotlinx.serialization.bom))
   api(platform(libs.kotlinx.coroutines.bom))

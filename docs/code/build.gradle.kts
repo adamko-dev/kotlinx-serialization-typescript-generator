@@ -1,5 +1,3 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-
 plugins {
   buildsrc.convention.`kotlin-jvm`
   buildsrc.convention.node
@@ -26,10 +24,16 @@ dependencies {
   testFixturesImplementation(libs.kotest.assertionsCore)
 }
 
-tasks.withType<KotlinCompile>().configureEach {
-  kotlinOptions.freeCompilerArgs += listOf(
-    "-opt-in=kotlinx.serialization.ExperimentalSerializationApi",
-  )
+kotlin {
+  sourceSets {
+    configureEach {
+      languageSettings {
+//        optIn("kotlin.ExperimentalStdlibApi")
+//        optIn("kotlin.time.ExperimentalTime")
+//        optIn("kotlinx.serialization.ExperimentalSerializationApi")
+      }
+    }
+  }
 }
 
 sourceSets.main {
@@ -52,7 +56,9 @@ knit {
   }
 }
 
-tasks.withType<Test>().configureEach { dependsOn(tasks.knit) }
+tasks.withType<Test>().configureEach {
+  dependsOn(tasks.knit)
+}
 
 tasks.test {
   // TSCompile tests are slow, they don't need to run every time

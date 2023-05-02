@@ -7,45 +7,15 @@ plugins {
 
 kotlin {
 
-  js(IR) {
-    browser()
-    nodejs()
-  }
-
-  jvm {
-    withJava()
-  }
-
-//  publishing {
-//    publications {
-//      matching { it.name in publicationsFromMainHost() }.all {
-//        val targetPublication = this@all
-//        tasks.withType<AbstractPublishToMaven>()
-//          .matching { it.publication == targetPublication }
-//          .configureEach { onlyIf { findProperty("isMainHost") == "true" } }
-//      }
-//    }
-//  }
-
   sourceSets {
-
-    all {
-      languageSettings {
-        optIn("kotlin.RequiresOptIn")
-        optIn("kotlin.ExperimentalStdlibApi")
-        optIn("kotlin.time.ExperimentalTime")
-        optIn("kotlinx.serialization.ExperimentalSerializationApi")
-      }
-    }
-
-    val commonMain by getting {
+    commonMain {
       dependencies {
         implementation(project.dependencies.platform(projects.modules.versionsPlatform))
         implementation(libs.kotlinx.serialization.core)
         implementation(libs.kotlinx.serialization.json)
       }
     }
-    val commonTest by getting {
+    commonTest {
       dependencies {
         implementation(kotlin("test"))
 
@@ -63,17 +33,14 @@ kotlin {
 //    val nativeMain by getting
 //    val nativeTest by getting
 
-    val jsMain by getting
-    val jsTest by getting
-
-    val jvmMain by getting {
+    jvmMain {
       dependencies {
         implementation(project.dependencies.platform(projects.modules.versionsPlatform))
         implementation(kotlin("reflect"))
       }
     }
 
-    val jvmTest by getting {
+    jvmTest {
       dependencies {
         implementation(libs.kotest.frameworkEngine)
         implementation(libs.kotest.runnerJUnit5)
