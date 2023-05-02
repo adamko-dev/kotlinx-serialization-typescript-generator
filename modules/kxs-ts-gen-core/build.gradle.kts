@@ -8,15 +8,6 @@ plugins {
 kotlin {
 
   sourceSets {
-    configureEach {
-      languageSettings {
-//        optIn("kotlin.RequiresOptIn")
-//        optIn("kotlin.ExperimentalStdlibApi")
-//        optIn("kotlin.time.ExperimentalTime")
-//        optIn("kotlinx.serialization.ExperimentalSerializationApi")
-      }
-    }
-
     commonMain {
       dependencies {
         implementation(project.dependencies.platform(projects.modules.versionsPlatform))
