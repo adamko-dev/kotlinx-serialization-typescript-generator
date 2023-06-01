@@ -17,21 +17,21 @@
   ignoreTests: false,
   packageRules: [
     {
-      // automerge all but major releases
-      "matchUpdateTypes": [
+      description: "automerge all but major releases",
+      matchUpdateTypes: [
         "minor",
         "patch",
         "pin",
         "digest",
       ],
-      "automerge": true,
+      automerge: true,
     }
   ],
   schedule: [
     "after 10am on the first day of the month",
   ],
   stabilityDays: 14,
-  "suppressNotifications": [
+  suppressNotifications: [
     //    "artifactErrors",
     //    "branchAutomergeFailure",
     //    "configErrorIssue",
