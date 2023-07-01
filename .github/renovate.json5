@@ -1,6 +1,5 @@
 {
   $schema: "https://docs.renovatebot.com/renovate-schema.json",
-  timezone: "Europe/Amsterdam",
   extends: [
     "config:base"
   ],
@@ -12,7 +11,9 @@
     "github-actions",
   ],
 
-  // will auto-merge directly, without a PR, if tests pass - else, makes a PR
+  // Will auto-merge directly, without a PR, if tests pass - else, makes a PR.
+  // Must add Renovate to 'Allow specified actors to bypass required pull requests'
+  // in branch protection rule
   automergeType: "branch",
   platformAutomerge: true,
   ignoreTests: false,
@@ -28,10 +29,13 @@
       automerge: true,
     }
   ],
+
+  timezone: "Etc/UTC",
   schedule: [
-    //"after 10am on the first day of the month",
-    "after 6am"
+    //"on the first day of the month",
+    "after 10am",
   ],
+
   stabilityDays: 14,
   //  suppressNotifications: [
   //    "artifactErrors",
