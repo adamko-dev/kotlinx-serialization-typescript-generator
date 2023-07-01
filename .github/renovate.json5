@@ -1,5 +1,6 @@
 {
   $schema: "https://docs.renovatebot.com/renovate-schema.json",
+  timezone: "Europe/Amsterdam",
   extends: [
     "config:base"
   ],
@@ -17,7 +18,7 @@
   ignoreTests: false,
   packageRules: [
     {
-      description: "automerge all but major releases",
+      description: "auto-merge all but major releases",
       matchUpdateTypes: [
         "minor",
         "patch",
@@ -28,19 +29,20 @@
     }
   ],
   schedule: [
-    "after 10am on the first day of the month",
+    //"after 10am on the first day of the month",
+    "after 6am"
   ],
   stabilityDays: 14,
-  suppressNotifications: [
-    //    "artifactErrors",
-    //    "branchAutomergeFailure",
-    //    "configErrorIssue",
-    //    "deprecationWarningIssues",
-    //    "lockFileErrors",
-    //    "onboardingClose",
-    //    "prEditedNotification",
-    //    "prIgnoreNotification",
-  ],
+  //  suppressNotifications: [
+  //    "artifactErrors",
+  //    "branchAutomergeFailure",
+  //    "configErrorIssue",
+  //    "deprecationWarningIssues",
+  //    "lockFileErrors",
+  //    "onboardingClose",
+  //    "prEditedNotification",
+  //    "prIgnoreNotification",
+  //  ],
   prCreation: "status-success",
   semanticCommits: "disabled",
 }
