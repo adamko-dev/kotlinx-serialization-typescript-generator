@@ -3,7 +3,6 @@ name: Deploy Site
 on:
   workflow_dispatch:
   workflow_call:
-  merge_group:
   push:
     tags:
       - "v[0-9]+.[0-9]+.[0-9]+"
