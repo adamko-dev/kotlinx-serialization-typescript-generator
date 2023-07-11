@@ -14,7 +14,7 @@
   // Will auto-merge directly, without a PR, if tests pass - else, makes a PR.
   // Must add Renovate to 'Allow specified actors to bypass required pull requests'
   // in branch protection rule
-  automergeType: "pr",
+  automergeType: "branch",
   platformAutomerge: true,
   ignoreTests: false,
   packageRules: [
