@@ -15,7 +15,7 @@ dependencies {
   implementation(libs.gradlePlugin.kotlinSymbolProcessing)
 
   implementation("org.jetbrains:markdown:0.3.5")
-  implementation("org.jetbrains.kotlinx:kotlinx-html:0.8.0")
+  implementation("org.jetbrains.kotlinx:kotlinx-html:0.9.0")
 }
 
 kotlin {
