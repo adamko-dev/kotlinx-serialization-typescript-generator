@@ -1,3 +1,5 @@
+@file:Suppress("UnstableApiUsage")
+
 rootProject.name = "kotlinx-serialization-typescript-generator"
 
 pluginManagement {
@@ -7,7 +9,6 @@ pluginManagement {
   }
 }
 
-@Suppress("UnstableApiUsage")
 dependencyResolutionManagement {
   repositoriesMode.set(RepositoriesMode.PREFER_SETTINGS)
 
@@ -53,3 +54,65 @@ include(
 
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 enableFeaturePreview("STABLE_CONFIGURATION_CACHE")
+
+//region git versioning
+val gitDescribe: Provider<String> =
+  providers
+    .exec {
+      workingDir(rootDir)
+      commandLine(
+        "git",
+        "describe",
+        "--always",
+        "--tags",
+        "--dirty=-SNAPSHOT",
+        "--broken=-SNAPSHOT",
+        "--match=v[0-9]*\\.[0-9]*\\.[0-9]*",
+      )
+      isIgnoreExitValue = true
+    }.standardOutput.asText.map { it.trim() }
+
+val currentBranchName: Provider<String> =
+  providers
+    .exec {
+      workingDir(rootDir)
+      commandLine(
+        "git",
+        "branch",
+        "--show-current",
+      )
+      isIgnoreExitValue = true
+    }.standardOutput.asText.map { it.trim() }
+
+val currentCommitHash: Provider<String> =
+  providers.exec {
+    workingDir(rootDir)
+    commandLine(
+      "git",
+      "rev-parse",
+      "--short",
+      "HEAD",
+    )
+    isIgnoreExitValue = true
+  }.standardOutput.asText.map { it.trim() }
+
+val gitVersion: Provider<String> =
+  gitDescribe.zip(currentBranchName) { described, branch ->
+    val snapshot = if ("SNAPSHOT" in described) "-SNAPSHOT" else ""
+
+    val descriptions = described.split("-")
+
+    if (branch.isNullOrBlank() && descriptions.size in 1..2) {
+      // detached if there's no current branch, or if 'git described' indicates additional commits
+      val tag = descriptions.getOrNull(0)
+      "$tag$snapshot"
+    } else {
+      // current commit is attached
+      "$branch$snapshot"
+    }
+  }.orElse(currentCommitHash)
+
+gradle.allprojects {
+  extensions.add<Provider<String>>("gitVersion", gitVersion)
+}
+//endregion

@@ -5,7 +5,7 @@ kotlinTarget = "1.8"
 
 kotlin = "1.8.22"                        # https://github.com/JetBrains/kotlin/releases
 
-kotlinSymbolProcessing = "1.9.0-1.0.13" # https://github.com/google/ksp/releases
+kotlinSymbolProcessing = "1.9.0-1.0.13"  # https://github.com/google/ksp/releases
 kotlinCompileTesting = "1.5.0"           # https://github.com/tschuchortdev/kotlin-compile-testing/releases
 
 kotlinx-serialization = "1.5.1"          # https://github.com/Kotlin/kotlinx.serialization/releases/
@@ -22,7 +22,6 @@ kotlinProcess = "1.4.1"                  # https://github.com/pgreze/kotlin-proc
 classgraph = "4.8.162"                   # https://github.com/classgraph/classgraph/releases
 
 gradleNodePlugin = "4.0.0"               # https://github.com/node-gradle/gradle-node-plugin/releases
-gitVersioningPlugin = "6.4.2"            # https://github.com/qoomon/gradle-git-versioning-plugin/releases
 
 [libraries]
 
@@ -68,7 +67,6 @@ kotlinx-knit-test = { module = "org.jetbrains.kotlinx:kotlinx-knit-test", versio
 
 gradlePlugin-kotlin = {  module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
 gradlePlugin-kotlinSerialization = {  module = "org.jetbrains.kotlin:kotlin-serialization", version.ref = "kotlin" }
-gradlePlugin-gitVersioning = { module = "me.qoomon:gradle-git-versioning-plugin", version.ref = "gitVersioningPlugin" }
 gradlePlugin-gradleNode = { module = "com.github.node-gradle:gradle-node-plugin", version.ref = "gradleNodePlugin" }
 gradlePlugin-kotlinxKover = { module = "org.jetbrains.kotlinx:kover", version.ref = "kotlinx-kover" }
 gradlePlugin-kotlinxKnit = { module = "org.jetbrains.kotlinx:kotlinx-knit", version.ref = "kotlinx-knit" }

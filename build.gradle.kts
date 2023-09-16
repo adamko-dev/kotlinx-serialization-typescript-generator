@@ -2,23 +2,15 @@ import buildsrc.config.excludeGeneratedGradleDsl
 
 plugins {
   idea
-  id("me.qoomon.git-versioning")
   id("org.jetbrains.kotlinx.kover")
   buildsrc.convention.base
 }
 
 
 project.group = "dev.adamko.kxstsgen"
-project.version = "0.0.0-SNAPSHOT"
-gitVersioning.apply {
-  refs {
-    considerTagsOnBranches = true
-    branch(".+") { version = "\${ref}-SNAPSHOT" }
-    tag("v(?<version>.*)") { version = "\${ref.version}" }
-  }
-
-  // optional fallback configuration in case of no matching ref configuration
-  rev { version = "\${commit}" }
+project.version = object {
+  val gitVersion = project.gitVersion
+  override fun toString(): String = gitVersion.get()
 }
 
 idea {
@@ -30,5 +22,14 @@ idea {
       "gradle/wrapper",
       "site/.docusaurus",
     )
+  }
+}
+
+val projectVersion by tasks.registering {
+  description = "prints the project version"
+  group = "help"
+  val version = providers.provider { project.version }
+  doLast {
+    logger.quiet("${version.orNull}")
   }
 }
