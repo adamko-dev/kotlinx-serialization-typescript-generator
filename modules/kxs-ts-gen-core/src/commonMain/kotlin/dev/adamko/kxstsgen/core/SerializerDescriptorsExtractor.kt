@@ -2,12 +2,7 @@ package dev.adamko.kxstsgen.core
 
 import dev.adamko.kxstsgen.core.util.MutableMapWithDefaultPut
 import kotlinx.serialization.KSerializer
-import kotlinx.serialization.descriptors.PolymorphicKind
-import kotlinx.serialization.descriptors.PrimitiveKind
-import kotlinx.serialization.descriptors.SerialDescriptor
-import kotlinx.serialization.descriptors.SerialKind
-import kotlinx.serialization.descriptors.StructureKind
-import kotlinx.serialization.descriptors.elementDescriptors
+import kotlinx.serialization.descriptors.*
 
 
 /**
@@ -26,6 +21,8 @@ fun interface SerializerDescriptorsExtractor {
       serializer: KSerializer<*>
     ): Set<SerialDescriptor> {
       return extractDescriptors(serializer.descriptor)
+        .distinctBy { it.nullable }
+        .toSet()
     }
 
 

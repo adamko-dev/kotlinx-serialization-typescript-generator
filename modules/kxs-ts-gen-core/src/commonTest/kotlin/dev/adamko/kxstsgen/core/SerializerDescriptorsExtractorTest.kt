@@ -5,6 +5,7 @@ import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.builtins.serializer
+import kotlinx.serialization.descriptors.SerialDescriptor
 
 class SerializerDescriptorsExtractorTest : FunSpec({
 
@@ -18,14 +19,7 @@ class SerializerDescriptorsExtractorTest : FunSpec({
 
     val actual = SerializerDescriptorsExtractor.Default(Example1.Parent.serializer())
 
-    withClue(
-      """
-        expected: ${expected.map { it.serialName }.sorted().joinToString()}
-        actual:   ${actual.map { it.serialName }.sorted().joinToString()}
-      """.trimIndent()
-    ) {
-      actual shouldContainExactlyInAnyOrder expected
-    }
+    actual shouldHaveDescriptors expected
   }
 
   test("Example2: given parent class, expect subclass property descriptor extracted") {
@@ -38,17 +32,36 @@ class SerializerDescriptorsExtractorTest : FunSpec({
 
     val actual = SerializerDescriptorsExtractor.Default(Example2.Parent.serializer())
 
-    withClue(
-      """
+    actual shouldHaveDescriptors expected
+  }
+
+  test("Example3: expect nullable/non-nullable SerialDescriptors be de-duplicated") {
+
+    val expected = listOf(
+      Example3.SealedType.serializer().descriptor,
+      Example3.TypeHolder.serializer().descriptor,
+      String.serializer().descriptor,
+    )
+
+    val actual = SerializerDescriptorsExtractor.Default(Example3.TypeHolder.serializer())
+
+    actual shouldHaveDescriptors expected
+  }
+}) {
+  companion object {
+    private infix fun Collection<SerialDescriptor>.shouldHaveDescriptors(expected: Collection<SerialDescriptor>) {
+      val actual = this
+      withClue(
+        """
         expected: ${expected.map { it.serialName }.sorted().joinToString()}
         actual:   ${actual.map { it.serialName }.sorted().joinToString()}
       """.trimIndent()
-    ) {
-      actual shouldContainExactlyInAnyOrder expected
+      ) {
+        actual shouldContainExactlyInAnyOrder expected
+      }
     }
   }
-
-})
+}
 
 
 @Suppress("unused")
@@ -77,4 +90,22 @@ private object Example2 {
 
   @Serializable
   class SubClass1(val n: Nested) : SealedSub()
+}
+
+@Suppress("unused")
+private object Example3 {
+
+  @Serializable
+  sealed class SealedType {
+    @Serializable
+    class A(val a: String) : SealedType()
+    @Serializable
+    class B(val b: String) : SealedType()
+  }
+
+  @Serializable
+  class TypeHolder(
+    val required: SealedType,
+    val optional: SealedType?,
+  )
 }
