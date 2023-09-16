@@ -1,9 +1,8 @@
 package buildsrc.convention
 
-import org.gradle.kotlin.dsl.`java-library`
-import org.gradle.kotlin.dsl.dependencies
 import org.gradle.kotlin.dsl.kotlin
-import org.gradle.kotlin.dsl.withType
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
@@ -32,21 +31,25 @@ java {
 }
 
 tasks.withType<KotlinCompile>().configureEach {
-  kotlinOptions {
-    jvmTarget = "11"
-    apiVersion = "1.7"
-    languageVersion = "1.7"
-  }
+  compilerOptions {
+    jvmTarget = JvmTarget.JVM_11
+    apiVersion = KotlinVersion.KOTLIN_1_7
+    languageVersion = KotlinVersion.KOTLIN_1_7
 
-  kotlinOptions.freeCompilerArgs += listOf(
-    "-opt-in=kotlin.RequiresOptIn",
-    "-opt-in=kotlin.ExperimentalStdlibApi",
-    "-opt-in=kotlin.time.ExperimentalTime",
-  )
+    freeCompilerArgs.addAll(
+      "-opt-in=kotlin.RequiresOptIn",
+      "-opt-in=kotlin.ExperimentalStdlibApi",
+      "-opt-in=kotlin.time.ExperimentalTime",
+    )
+  }
 }
 
 tasks.compileTestKotlin {
-  kotlinOptions.freeCompilerArgs += "-opt-in=io.kotest.common.ExperimentalKotest"
+  compilerOptions {
+    freeCompilerArgs.addAll(
+      "-opt-in=io.kotest.common.ExperimentalKotest",
+    )
+  }
 }
 
 tasks.withType<Test>().configureEach {

@@ -1,5 +1,6 @@
 import com.github.gradle.node.npm.task.NpmTask
 import java.net.URI
+import buildsrc.config.*
 
 plugins {
   buildsrc.convention.base

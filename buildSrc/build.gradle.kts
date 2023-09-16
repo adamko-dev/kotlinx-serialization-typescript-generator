@@ -17,13 +17,3 @@ dependencies {
   implementation("org.jetbrains:markdown:0.3.5")
   implementation("org.jetbrains.kotlinx:kotlinx-html:0.9.1")
 }
-
-kotlin {
-  jvmToolchain {
-    languageVersion.set(
-      libs.versions.jvmTarget.map {
-        JavaLanguageVersion.of(it)
-      }
-    )
-  }
-}

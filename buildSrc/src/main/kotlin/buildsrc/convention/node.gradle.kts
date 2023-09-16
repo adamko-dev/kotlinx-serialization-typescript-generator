@@ -5,9 +5,7 @@ plugins {
   id("buildsrc.convention.base")
 }
 
-val rootGradleDir: Directory by extra {
-  rootProject.layout.projectDirectory.dir(".gradle")
-}
+val rootGradleDir: Directory = rootProject.layout.projectDirectory.dir(".gradle")
 
 node {
   download.set(true)

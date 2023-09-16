@@ -1,6 +1,8 @@
 package buildsrc.convention
 
-import buildsrc.config.*
+import buildsrc.config.createKxsTsGenPom
+import buildsrc.config.credentialsAction
+import buildsrc.config.isKotlinMultiplatformJavaEnabled
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinMultiplatformPlugin
 
 
@@ -32,19 +34,6 @@ val signingSecretKeyRingFile: Provider<String> =
   providers.gradleProperty("signing.secretKeyRingFile")
 
 
-
-tasks.withType<AbstractPublishToMaven>().configureEach {
-  // Gradle warns about some signing tasks using publishing task outputs without explicit
-  // dependencies. I'm not going to go through them all and fix them, so here's a quick fix.
-  dependsOn(tasks.withType<Sign>())
-  mustRunAfter(tasks.withType<Sign>())
-
-  doLast {
-    logger.lifecycle("[${path}] ${publication?.groupId}:${publication?.artifactId}:${publication?.version}")
-  }
-}
-
-
 signing {
   if (sonatypeRepositoryCredentials.isPresent()) {
     if (signingKeyId.isPresent() && signingKey.isPresent() && signingPassword.isPresent()) {
@@ -70,7 +59,25 @@ afterEvaluate {
   }
 }
 
-val javadocJarStub = javadocStubTask()
+//region Javadoc JAR stub
+// use creating, not registering, because the signing plugin doesn't accept task providers
+val javadocJarStub by tasks.creating(Jar::class) {
+  group = JavaBasePlugin.DOCUMENTATION_GROUP
+  description = "Stub javadoc.jar artifact (required by Maven Central)"
+  archiveClassifier.set("javadoc")
+}
+
+tasks.withType<AbstractPublishToMaven>().all {
+  dependsOn(javadocJarStub)
+}
+
+if (sonatypeRepositoryCredentials.isPresent()) {
+  val signingTasks = signing.sign(javadocJarStub)
+  tasks.withType<AbstractPublishToMaven>().all {
+    signingTasks.forEach { dependsOn(it) }
+  }
+}
+//endregion
 
 publishing {
   if (sonatypeRepositoryCredentials.isPresent()) {
@@ -119,26 +126,36 @@ plugins.withType<JavaPlatformPlugin>().configureEach {
   }
 }
 
+//region Fix Gradle warning about signing tasks using publishing task outputs without explicit dependencies
+// https://youtrack.jetbrains.com/issue/KT-46466 https://github.com/gradle/gradle/issues/26091
+tasks.withType<AbstractPublishToMaven>().configureEach {
+  val signingTasks = tasks.withType<Sign>()
+  mustRunAfter(signingTasks)
+}
+//endregion
 
-fun Project.javadocStubTask(): Jar {
-
-  // use creating, not registering, because the signing plugin sucks
-  val javadocJarStub by tasks.creating(Jar::class) {
-    group = JavaBasePlugin.DOCUMENTATION_GROUP
-    description = "Stub javadoc.jar artifact (required by Maven Central)"
-    archiveClassifier.set("javadoc")
-  }
-
-  tasks.withType<AbstractPublishToMaven>().all {
-    dependsOn(javadocJarStub)
-  }
-
-  if (sonatypeRepositoryCredentials.isPresent()) {
-    val signingTasks = signing.sign(javadocJarStub)
-    tasks.withType<AbstractPublishToMaven>().all {
-      signingTasks.forEach { dependsOn(it) }
+//region publishing logging
+tasks.withType<AbstractPublishToMaven>().configureEach {
+  val publicationGAV = provider { publication?.run { "$group:$artifactId:$version" } }
+  doLast("log publication GAV") {
+    if (publicationGAV.isPresent) {
+      logger.lifecycle("[task: ${path}] ${publicationGAV.get()}")
     }
   }
-
-  return javadocJarStub
 }
+//endregion
+
+//region IJ workarounds
+// manually define the Kotlin DSL accessors because IntelliJ _still_ doesn't load them properly
+fun Project.publishing(configure: PublishingExtension.() -> Unit): Unit =
+  extensions.configure(configure)
+
+val Project.publishing: PublishingExtension
+  get() = extensions.getByType()
+
+fun Project.signing(configure: SigningExtension.() -> Unit): Unit =
+  extensions.configure(configure)
+
+val Project.signing: SigningExtension
+  get() = extensions.getByType()
+//endregion
