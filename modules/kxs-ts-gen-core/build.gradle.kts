@@ -8,6 +8,10 @@ plugins {
 kotlin {
 
   sourceSets {
+    configureEach {
+      languageSettings.optIn("kotlinx.serialization.ExperimentalSerializationApi")
+    }
+
     commonMain {
       dependencies {
         implementation(project.dependencies.platform(projects.modules.versionsPlatform))
