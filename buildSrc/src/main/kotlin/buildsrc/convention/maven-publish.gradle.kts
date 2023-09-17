@@ -16,11 +16,11 @@ val sonatypeRepositoryCredentials: Provider<Action<PasswordCredentials>> =
 val projectVersion: Provider<String> = provider { project.version.toString() }
 
 val sonatypeRepositoryReleaseUrl: Provider<String> = projectVersion.map { version ->
-  val isRelease = version.endsWith("SNAPSHOT")
-  if (isRelease) {
-    "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
-  } else {
+  val isSnapshot = version.endsWith("SNAPSHOT")
+  if (isSnapshot) {
     "https://s01.oss.sonatype.org/content/repositories/snapshots/"
+  } else {
+    "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
   }
 }
 
