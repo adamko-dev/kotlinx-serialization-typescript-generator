@@ -1,15 +1,18 @@
-[![GitHub license](https://img.shields.io/github/license/adamko-dev/kotlinx-serialization-typescript-generator?style=flat-square)](https://github.com/adamko-dev/kotlinx-serialization-typescript-generator/blob/main/LICENSE)
-[![Maven Central](https://img.shields.io/maven-central/v/dev.adamko.kxstsgen/kxs-ts-gen-core?color=%234c1&style=flat-square)](https://search.maven.org/search?q=g:dev.adamko.kxstsgen)
-[![Jitpack.io](https://jitpack.io/v/adamko-dev/kotlinx-serialization-typescript-generator.svg?style=flat-square)](https://jitpack.io/#adamko-dev/kotlinx-serialization-typescript-generator)
+[![GitHub license](https://img.shields.io/github/license/adamko-dev/kotlinx-serialization-typescript-generator?style=for-the-badge)](https://github.com/adamko-dev/kxstsgen/blob/main/LICENSE)
+[![Maven Central](https://img.shields.io/maven-central/v/dev.adamko.kxstsgen/kxs-ts-gen-core?style=for-the-badge&logo=apache-maven&color=6545e7&link=https%3A%2F%2Fsearch.maven.org%2Fsearch%3Fq%3Dg%3Adev.adamko.kxstsgen)](https://search.maven.org/search?q=g:dev.adamko.kxstsgen)
+[![Maven metadata URL](https://img.shields.io/maven-metadata/v?label=MAVEN%20SNAPSHOT&metadataUrl=https%3A%2F%2Fs01.oss.sonatype.org%2Fcontent%2Frepositories%2Fsnapshots%2Fdev%2Fadamko%2Fkxstsgen%2Fkxs-ts-gen-core%2Fmaven-metadata.xml&style=for-the-badge&logo=apache-maven)](https://s01.oss.sonatype.org/content/repositories/snapshots/dev/adamko/kxstsgen/kxs-ts-gen-core/)
 
 # Kotlinx Serialization TypeScript Generator
 
 [Kotlinx Serialization TypeScript Generator](https://github.com/adamko-dev/kotlinx-serialization-typescript-generator)
-creates TypeScript interfaces from
+(or **kxs-ts-gen** for short) creates TypeScript interfaces from
 [Kotlinx Serialization](https://github.com/Kotlin/kotlinx.serialization/)
-classes.
+classes, allowing for quick and easy communication via JSON with a Kotlin-first approach.
 
 ```kotlin
+import kotlinx.serialization.*
+import dev.adamko.kxstsgen.*
+
 @Serializable
 class MyClass(
   val aString: String,
@@ -39,16 +42,15 @@ export interface MyClass {
 
 Only Kotlinx Serialization
 [`SerialDescriptor`s](https://kotlin.github.io/kotlinx.serialization/kotlinx-serialization-core/kotlinx.serialization.descriptors/-serial-descriptor/index.html)
-are used to generate TypeScript. They are flexible and comprehensive enough to allow for accurate TypeScript code, without any deviation.
+are used to generate TypeScript.
+They are flexible and comprehensive enough to allow for accurate TypeScript code, without any
+surprises.
 
-See [the docs](./docs) for working examples.
+See
+[the docs](https://adamko-dev.github.io/kotlinx-serialization-typescript-generator/)
+for working examples.
 
 ## Status
-
-This is a proof-of-concept.
-
-The aim is to create TypeScript interfaces that can accurately produce Kotlinx Serialization
-compatible JSON.
 
 |                                       | Status                                                          | Notes                                                                                                          |
 |---------------------------------------|-----------------------------------------------------------------|:---------------------------------------------------------------------------------------------------------------|
