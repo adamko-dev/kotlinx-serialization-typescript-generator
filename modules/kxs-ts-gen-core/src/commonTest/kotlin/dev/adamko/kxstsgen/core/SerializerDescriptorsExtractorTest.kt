@@ -19,7 +19,7 @@ class SerializerDescriptorsExtractorTest : FunSpec({
 
     val actual = SerializerDescriptorsExtractor.Default(Example1.Parent.serializer())
 
-    actual shouldHaveDescriptors expected
+    actual shouldContainDescriptors expected
   }
 
   test("Example2: given parent class, expect subclass property descriptor extracted") {
@@ -32,30 +32,30 @@ class SerializerDescriptorsExtractorTest : FunSpec({
 
     val actual = SerializerDescriptorsExtractor.Default(Example2.Parent.serializer())
 
-    actual shouldHaveDescriptors expected
+    actual shouldContainDescriptors expected
   }
 
   test("Example3: expect nullable/non-nullable SerialDescriptors be de-duplicated") {
 
     val expected = listOf(
-      Example3.SealedType.serializer().descriptor,
+      Example3.SomeType.serializer().descriptor,
       Example3.TypeHolder.serializer().descriptor,
       String.serializer().descriptor,
     )
 
     val actual = SerializerDescriptorsExtractor.Default(Example3.TypeHolder.serializer())
 
-    actual shouldHaveDescriptors expected
+    actual shouldContainDescriptors expected
   }
 }) {
   companion object {
-    private infix fun Collection<SerialDescriptor>.shouldHaveDescriptors(expected: Collection<SerialDescriptor>) {
+    private infix fun Collection<SerialDescriptor>.shouldContainDescriptors(expected: Collection<SerialDescriptor>) {
       val actual = this
       withClue(
         """
-        expected: ${expected.map { it.serialName }.sorted().joinToString()}
-        actual:   ${actual.map { it.serialName }.sorted().joinToString()}
-      """.trimIndent()
+          expected: ${expected.map { it.serialName }.sorted().joinToString()}
+          actual:   ${actual.map { it.serialName }.sorted().joinToString()}
+        """.trimIndent()
       ) {
         actual shouldContainExactlyInAnyOrder expected
       }
@@ -92,20 +92,16 @@ private object Example2 {
   class SubClass1(val n: Nested) : SealedSub()
 }
 
+
 @Suppress("unused")
 private object Example3 {
 
   @Serializable
-  sealed class SealedType {
-    @Serializable
-    class A(val a: String) : SealedType()
-    @Serializable
-    class B(val b: String) : SealedType()
-  }
+  class SomeType(val a: String)
 
   @Serializable
   class TypeHolder(
-    val required: SealedType,
-    val optional: SealedType?,
+    val required: SomeType,
+    val optional: SomeType?,
   )
 }
