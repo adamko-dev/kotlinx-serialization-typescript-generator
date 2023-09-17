@@ -1,8 +1,36 @@
 # Tuples
 
-In TypeScript, tuples are a compact format for data structures. They're like fixed-length arrays
-that only contain the type. This is especially useful when using JSON, as including property names
-means the messages are much larger.
+In TypeScript,
+[tuples](https://www.typescriptlang.org/docs/handbook/2/objects.html#tuple-types)
+are a compact format for data structures. They're like fixed-length arrays that only contain the
+type, not the property names. Excluding the property names is especially useful when size and speed
+is important, because the JSON will be much more compact.
+
+### Tuple example
+
+Here's an example of a tuple definition in TypeScript:
+
+```typescript
+type StringNumberPair = [str: string, num: number];
+```
+
+This would get serialized to a JSON array
+
+[//]: # (@formatter:off)
+```json
+["some string value", 123]
+```
+[//]: # (@formatter:on)
+
+which is more compact than an equivalent JSON object, which requires property names.
+
+[//]: # (@formatter:off)
+```json
+{ "str": "some string value", "num": 123 }
+```
+[//]: # (@formatter:on)
+
+## Tuples in KxsTsGen
 
 Tuples are a bit difficult to create in Kotlinx Serialization, but KxsTsGen includes
 [TupleSerializer](../modules/kxs-ts-gen-core/src/commonMain/kotlin/dev/adamko/kxstsgen/core/experiments/tuple.kt)
