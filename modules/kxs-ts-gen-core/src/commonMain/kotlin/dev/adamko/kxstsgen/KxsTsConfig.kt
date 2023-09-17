@@ -28,7 +28,7 @@ data class KxsTsConfig(
   @UnimplementedKxsTsGenApi
   val namespaceConfig: NamespaceConfig = NamespaceConfig.Disabled,
   val typeAliasTyping: TypeAliasTypingConfig = TypeAliasTypingConfig.None,
-  val serializersModule: SerializersModule = EmptySerializersModule,
+  val serializersModule: SerializersModule = EmptySerializersModule(),
 ) {
 
   sealed interface NamespaceConfig {
@@ -79,7 +79,7 @@ data class KxsTsConfig(
     @ExperimentalSerializationApi
     override fun <Base : Any> polymorphicDefaultDeserializer(
       baseClass: KClass<Base>,
-      defaultDeserializerProvider: (className: String?) -> DeserializationStrategy<out Base>?
+      defaultDeserializerProvider: (className: String?) -> DeserializationStrategy<Base>?
     ) {
     }
 
