@@ -51,9 +51,9 @@ signing {
   setRequired({
     signingKeysPresent
       ||
-      gradle.taskGraph.allTasks.filterIsInstance<PublishToMavenRepository>().any {
-        it.repository.name == "SonatypeRelease"
-      }
+      gradle.taskGraph.allTasks
+        .filterIsInstance<PublishToMavenRepository>()
+        .any { it.repository.name == "SonatypeRelease" }
   })
 }
 
@@ -63,6 +63,7 @@ afterEvaluate {
   signing.sign(publishing.publications)
 }
 //endregion
+
 
 //region Javadoc JAR stub
 // use creating, not registering, because the signing plugin doesn't accept task providers
@@ -120,7 +121,7 @@ publishing {
 
 plugins.withType<KotlinMultiplatformPlugin>().configureEach {
   publishing.publications.withType<MavenPublication>().configureEach {
-//    artifact(javadocJarStub)
+    //artifact(javadocJarStub)
   }
 }
 
@@ -141,7 +142,7 @@ plugins.withType<JavaPlatformPlugin>().configureEach {
 //  val javadocJarStub = javadocStubTask()
   publishing.publications.create<MavenPublication>("mavenJavaPlatform") {
     from(components["javaPlatform"])
-//    artifact(javadocJarStub)
+    //artifact(javadocJarStub)
   }
 }
 
@@ -158,7 +159,8 @@ tasks.withType<AbstractPublishToMaven>().configureEach {
 //region publishing logging
 tasks.withType<AbstractPublishToMaven>().configureEach {
   val publicationGAV = provider { publication?.run { "$group:$artifactId:$version" } }
-  doLast("log publication GAV") {
+  inputs.property("publicationGAV", publicationGAV).optional(true)
+  doFirst("log publication GAV") {
     if (publicationGAV.isPresent) {
       logger.lifecycle("[task: ${path}] ${publicationGAV.get()}")
     }
