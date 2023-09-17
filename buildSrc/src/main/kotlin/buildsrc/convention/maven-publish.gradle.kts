@@ -160,7 +160,7 @@ tasks.withType<AbstractPublishToMaven>().configureEach {
 tasks.withType<AbstractPublishToMaven>().configureEach {
   val publicationGAV = provider { publication?.run { "$group:$artifactId:$version" } }
   inputs.property("publicationGAV", publicationGAV).optional(true)
-  doFirst("log publication GAV") {
+  doLast("log publication GAV") {
     if (publicationGAV.isPresent) {
       logger.lifecycle("[task: ${path}] ${publicationGAV.get()}")
     }
