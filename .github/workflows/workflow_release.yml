@@ -15,6 +15,11 @@ concurrency:
 
 
 jobs:
+  log-project-version: # log the project version for manual verification since it's inferred from the git status
+    uses: ./.github/workflows/run_gradle_task.yml
+    with:
+      runs-on: ubuntu-latest
+      gradle-task: projectVersion
 
   tests:
     uses: ./.github/workflows/run_tests.yml

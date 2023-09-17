@@ -40,28 +40,27 @@ signing {
   val key = signingKey.orNull
   val password = signingPassword.orNull
 
-  if (!keyId.isNullOrBlank() && !key.isNullOrBlank() && !password.isNullOrBlank()) {
+  val signingKeysPresent =
+    !keyId.isNullOrBlank() && !key.isNullOrBlank() && !password.isNullOrBlank()
+
+  if (signingKeysPresent) {
     useInMemoryPgpKeys(keyId, key, password)
   }
 
   // only require signing when publishing to Sonatype
   setRequired({
-    gradle.taskGraph.allTasks.filterIsInstance<PublishToMavenRepository>().any {
-      it.repository.name == "SonatypeRelease"
-    }
+    signingKeysPresent
+      ||
+      gradle.taskGraph.allTasks.filterIsInstance<PublishToMavenRepository>().any {
+        it.repository.name == "SonatypeRelease"
+      }
   })
 }
 
 afterEvaluate {
   // Register signatures afterEvaluate, otherwise the signing plugin creates the signing tasks
   // too early, before all the publications are added.
-  // Use .all { }, not .configureEach { }, otherwise the signing plugin doesn't create the tasks
-  // soon enough.
-
-  publishing.publications.withType<MavenPublication>().all {
-    signing.sign(this)
-    logger.lifecycle("configuring signature for publication ${this.name}")
-  }
+  signing.sign(publishing.publications)
 }
 //endregion
 
@@ -76,44 +75,45 @@ val javadocJarStub by tasks.creating(Jar::class) {
 
 
 publishing {
-  if (sonatypeRepositoryCredentials.isPresent()) {
-    repositories {
+  repositories {
+    // publish to local dir, for testing
+    maven(rootProject.layout.buildDirectory.dir("maven-internal")) {
+      name = "MavenInternal"
+    }
+
+    if (sonatypeRepositoryCredentials.isPresent()) {
       maven(sonatypeRepositoryReleaseUrl) {
         name = "SonatypeRelease"
         credentials(sonatypeRepositoryCredentials.get())
       }
-//      // publish to local dir, for testing
-//      maven(rootProject.layout.buildDirectory.dir("maven-internal")) {
-//        name = "maven-internal"
-//      }
     }
-    publications.withType<MavenPublication>().configureEach {
-      pom {
-        name.set("Kotlinx Serialization Typescript Generator")
-        description.set("KxsTsGen creates TypeScript interfaces from Kotlinx Serialization @Serializable classes")
-        url.set("https://github.com/adamko-dev/kotlinx-serialization-typescript-generator")
+  }
+  publications.withType<MavenPublication>().configureEach {
+    pom {
+      name.set("Kotlinx Serialization Typescript Generator")
+      description.set("KxsTsGen creates TypeScript interfaces from Kotlinx Serialization @Serializable classes")
+      url.set("https://github.com/adamko-dev/kotlinx-serialization-typescript-generator")
 
-        licenses {
-          license {
-            name.set("The Apache License, Version 2.0")
-            url.set("https://www.apache.org/licenses/LICENSE-2.0.txt")
-          }
-        }
-
-        developers {
-          developer {
-            email.set("adam@adamko.dev")
-          }
-        }
-
-        scm {
-          connection.set("scm:git:git://github.com/adamko-dev/kotlinx-serialization-typescript-generator.git")
-          developerConnection.set("scm:git:ssh://github.com:adamko-dev/kotlinx-serialization-typescript-generator.git")
-          url.set("https://github.com/adamko-dev/kotlinx-serialization-typescript-generator")
+      licenses {
+        license {
+          name.set("The Apache License, Version 2.0")
+          url.set("https://www.apache.org/licenses/LICENSE-2.0.txt")
         }
       }
-      artifact(javadocJarStub)
+
+      developers {
+        developer {
+          email.set("adam@adamko.dev")
+        }
+      }
+
+      scm {
+        connection.set("scm:git:git://github.com/adamko-dev/kotlinx-serialization-typescript-generator.git")
+        developerConnection.set("scm:git:ssh://github.com:adamko-dev/kotlinx-serialization-typescript-generator.git")
+        url.set("https://github.com/adamko-dev/kotlinx-serialization-typescript-generator")
+      }
     }
+    artifact(javadocJarStub)
   }
 }
 

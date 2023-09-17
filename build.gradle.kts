@@ -9,7 +9,7 @@ plugins {
 
 project.group = "dev.adamko.kxstsgen"
 project.version = object {
-  val gitVersion = project.gitVersion
+  private val gitVersion = project.gitVersion
   override fun toString(): String = gitVersion.get()
 }
 
