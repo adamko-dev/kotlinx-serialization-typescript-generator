@@ -65,8 +65,8 @@ val gitDescribe: Provider<String> =
         "describe",
         "--always",
         "--tags",
-        "--dirty=-SNAPSHOT",
-        "--broken=-SNAPSHOT",
+        "--dirty=-DIRTY",
+        "--broken=-BROKEN",
         "--match=v[0-9]*\\.[0-9]*\\.[0-9]*",
       )
       isIgnoreExitValue = true
@@ -96,21 +96,21 @@ val currentCommitHash: Provider<String> =
     isIgnoreExitValue = true
   }.standardOutput.asText.map { it.trim() }
 
+val semverRegex = Regex("""v[0-9]+\.[0-9]+\.[0-9]+""")
+
 val gitVersion: Provider<String> =
   gitDescribe.zip(currentBranchName) { described, branch ->
-    val snapshot = if ("SNAPSHOT" in described) "-SNAPSHOT" else ""
+    val detached = branch.isNullOrBlank()
 
-    val descriptions = described.split("-")
-
-    if (branch.isNullOrBlank() && descriptions.size in 1..2) {
-      // detached if there's no current branch, or if 'git described' indicates additional commits
-      val tag = descriptions.getOrNull(0)
-      "$tag$snapshot"
+    if (!detached) {
+      "$branch-SNAPSHOT"
     } else {
-      // current commit is attached
-      "$branch$snapshot"
+      val descriptions = described.split("-")
+      val head = descriptions.singleOrNull() ?: ""
+      val headIsVersioned = head.matches(semverRegex)
+      if (headIsVersioned) head else "$branch-SNAPSHOT"
     }
-  }.orElse(currentCommitHash)
+  }.orElse(currentCommitHash) // fall back to using the git commit hash
 
 gradle.allprojects {
   extensions.add<Provider<String>>("gitVersion", gitVersion)
