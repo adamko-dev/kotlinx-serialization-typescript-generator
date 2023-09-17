@@ -3,9 +3,9 @@ import java.net.URI
 import buildsrc.config.*
 
 plugins {
-  buildsrc.convention.base
-  com.github.`node-gradle`.node
-  buildsrc.convention.`knit-files`
+  id("buildsrc.convention.base")
+  id("com.github.node-gradle.node")
+  id("buildsrc.convention.knit-files")
 }
 
 description = "builds the kxs-ts-gen website"

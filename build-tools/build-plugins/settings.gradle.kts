@@ -1,4 +1,4 @@
-rootProject.name = "buildSrc"
+rootProject.name = "build-plugins"
 
 pluginManagement {
   repositories {
@@ -15,7 +15,7 @@ dependencyResolutionManagement {
   }
   versionCatalogs {
     create("libs") {
-      from(files("../gradle/libs.versions.toml"))
+      from(files("../../gradle/libs.versions.toml"))
     }
   }
 }

@@ -3,6 +3,8 @@
 rootProject.name = "kotlinx-serialization-typescript-generator"
 
 pluginManagement {
+  includeBuild("build-tools/build-plugins")
+  includeBuild("build-tools/settings-plugins")
   repositories {
     mavenCentral()
     gradlePluginPortal()
@@ -43,6 +45,10 @@ dependencyResolutionManagement {
   }
 }
 
+plugins {
+  id("kxstsgen.settings.git-version-setup")
+}
+
 include(
   ":modules:kxs-ts-gen-core",
   ":modules:kxs-ts-gen-gradle-plugin",
@@ -55,64 +61,42 @@ include(
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 enableFeaturePreview("STABLE_CONFIGURATION_CACHE")
 
-//region git versioning
-val gitDescribe: Provider<String> =
-  providers
-    .exec {
-      workingDir(rootDir)
-      commandLine(
-        "git",
-        "describe",
-        "--always",
-        "--tags",
-        "--dirty=-DIRTY",
-        "--broken=-BROKEN",
-        "--match=v[0-9]*\\.[0-9]*\\.[0-9]*",
-      )
-      isIgnoreExitValue = true
-    }.standardOutput.asText.map { it.trim() }
-
-val currentBranchName: Provider<String> =
-  providers
-    .exec {
-      workingDir(rootDir)
-      commandLine(
-        "git",
-        "branch",
-        "--show-current",
-      )
-      isIgnoreExitValue = true
-    }.standardOutput.asText.map { it.trim() }
-
-val currentCommitHash: Provider<String> =
-  providers.exec {
-    workingDir(rootDir)
-    commandLine(
-      "git",
-      "rev-parse",
-      "--short",
-      "HEAD",
-    )
-    isIgnoreExitValue = true
-  }.standardOutput.asText.map { it.trim() }
-
-val semverRegex = Regex("""v[0-9]+\.[0-9]+\.[0-9]+""")
-
-val gitVersion: Provider<String> =
-  gitDescribe.zip(currentBranchName) { described, branch ->
-    val detached = branch.isNullOrBlank()
-
-    if (!detached) {
-      "$branch-SNAPSHOT"
-    } else {
-      val descriptions = described.split("-")
-      val head = descriptions.singleOrNull() ?: ""
-      val headIsVersioned = head.matches(semverRegex)
-      if (headIsVersioned) head else "$branch-SNAPSHOT"
-    }
-  }.orElse(currentCommitHash) // fall back to using the git commit hash
-
-gradle.allprojects {
-  extensions.add<Provider<String>>("gitVersion", gitVersion)
-}
-//endregion
+////region git versioning
+//
+//gradle.allprojects {
+//  plugins.apply("kxstsgen.settings.git-version")
+//
+////  val gitVersion = providers.of(GitVersionSource::class) {
+////    parameters {
+////      projectRootDir.set(objects.directoryProperty().fileValue(rootDir))
+////      gitDescribe.convention(exec {
+////        commandLine(
+////          "git",
+////          "describe",
+////          "--always",
+////          "--tags",
+////          "--dirty=-DIRTY",
+////          "--broken=-BROKEN",
+////          "--match=v[0-9]*\\.[0-9]*\\.[0-9]*",
+////        )
+////      })
+////      currentBranchName.convention(exec {
+////        commandLine(
+////          "git",
+////          "branch",
+////          "--show-current",
+////        )
+////      })
+////      currentCommitHash.convention(exec {
+////        commandLine(
+////          "git",
+////          "rev-parse",
+////          "--short",
+////          "HEAD",
+////        )
+////      })
+////    }
+////  }
+//  extensions.add<Provider<String>>("gitVersion", providers.provider { "unknown" })
+//}
+////endregion

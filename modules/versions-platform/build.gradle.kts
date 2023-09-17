@@ -1,6 +1,6 @@
 plugins {
-  buildsrc.convention.base
-  buildsrc.convention.`maven-publish`
+  id("buildsrc.convention.base")
+  id("buildsrc.convention.maven-publish")
 
   `java-platform`
 }

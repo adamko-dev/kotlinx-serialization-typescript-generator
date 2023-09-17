@@ -1,5 +1,5 @@
 plugins {
-  buildsrc.convention.`kotlin-jvm`
+  id("buildsrc.convention.kotlin-jvm")
 }
 
 description = "Experimental alternative to Kotlinx Serialization. Currently unused."

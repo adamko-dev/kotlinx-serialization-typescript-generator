@@ -1,7 +1,7 @@
 plugins {
-  buildsrc.convention.`kotlin-jvm`
-  buildsrc.convention.node
-  buildsrc.convention.`knit-tests`
+  id("buildsrc.convention.kotlin-jvm")
+  id("buildsrc.convention.node")
+  id("buildsrc.convention.knit-tests")
   kotlin("plugin.serialization")
   `java-test-fixtures`
 }

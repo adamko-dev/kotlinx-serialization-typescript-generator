@@ -2,16 +2,13 @@ import buildsrc.config.excludeGeneratedGradleDsl
 
 plugins {
   idea
-  id("org.jetbrains.kotlinx.kover")
-  buildsrc.convention.base
+  id("org.jetbrains.kotlinx.kover") version "0.6.1"
+  id("buildsrc.convention.base")
 }
 
 
 project.group = "dev.adamko.kxstsgen"
-project.version = object {
-  private val gitVersion = project.gitVersion
-  override fun toString(): String = gitVersion.get()
-}
+project.version = gitVersion
 
 idea {
   module {
