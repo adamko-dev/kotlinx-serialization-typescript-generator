@@ -5,7 +5,7 @@
 # Kotlinx Serialization TypeScript Generator
 
 [Kotlinx Serialization TypeScript Generator](https://github.com/adamko-dev/kotlinx-serialization-typescript-generator)
-(or **kxs-ts-gen** for short) creates TypeScript interfaces from
+(or **KxsTsGen** for short) creates TypeScript interfaces from
 [Kotlinx Serialization](https://github.com/Kotlin/kotlinx.serialization/)
 classes, allowing for quick and easy communication via JSON with a Kotlin-first approach.
 
