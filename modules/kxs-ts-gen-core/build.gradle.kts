@@ -9,7 +9,10 @@ kotlin {
 
   sourceSets {
     configureEach {
-      languageSettings.optIn("kotlinx.serialization.ExperimentalSerializationApi")
+      languageSettings {
+        optIn("dev.adamko.kxstsgen.core.UnimplementedKxsTsGenApi")
+        optIn("kotlinx.serialization.ExperimentalSerializationApi")
+      }
     }
 
     commonMain {

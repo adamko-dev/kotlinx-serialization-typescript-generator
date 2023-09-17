@@ -37,7 +37,6 @@ tasks.withType<KotlinCompile>().configureEach {
     languageVersion = KotlinVersion.KOTLIN_1_7
 
     freeCompilerArgs.addAll(
-      "-opt-in=kotlin.RequiresOptIn",
       "-opt-in=kotlin.ExperimentalStdlibApi",
       "-opt-in=kotlin.time.ExperimentalTime",
     )
