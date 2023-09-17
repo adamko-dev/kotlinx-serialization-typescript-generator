@@ -5,7 +5,6 @@ run-name: "Gradle Task ${{ inputs.gradle-task }} @ ${{ inputs.runs-on }}"
 
 on:
   workflow_dispatch:
-
   workflow_call:
     inputs:
       gradle-task:
@@ -20,12 +19,13 @@ on:
 
 concurrency:
   # note: the Workflow inputs are also included in the concurrency group
-  group: "${{ github.workflow }} ${{ join(inputs.*) }} @ ${{ github.event.pull_request.head.label || github.head_ref || github.ref }}"
+  group: "Gradle Task: ${{ github.workflow }} ${{ join(inputs.*) }} @ ${{ github.event.pull_request.head.label || github.head_ref || github.ref }}"
   cancel-in-progress: true
 
 
 permissions:
   contents: read
+  checks: write # required by mikepenz/action-junit-report
 
 
 jobs:
@@ -35,18 +35,20 @@ jobs:
     name: "./gradlew ${{ inputs.gradle-task}} @ ${{ inputs.runs-on }}"
     timeout-minutes: 60
     steps:
+
+      ### Gradle task ###
+
       - name: Checkout the repo
         uses: actions/checkout@v3
+
+      - name: Validate Gradle Wrapper
+        uses: gradle/wrapper-validation-action@v1
 
       - name: Setup JDK
         uses: actions/setup-java@v3
         with:
           distribution: temurin
           java-version: 11
-
-      - uses: gradle/gradle-build-action@v2
-        with:
-          gradle-home-cache-cleanup: true
 
       - name: Cache NPM
         uses: actions/cache@v3
@@ -61,14 +63,32 @@ jobs:
             ${{ runner.os }}-build-
             ${{ runner.os }}-
 
-      - name: Run ${{ inputs.gradle-task }}
-        run: >-
-          ./gradlew ${{ inputs.gradle-task }}
+      - uses: gradle/gradle-build-action@v2
+        with:
+          gradle-home-cache-cleanup: true
+          arguments: ${{ inputs.gradle-task }}
+        env:
+          ORG_GRADLE_PROJECT_sonatypeRepositoryUsername: ${{ secrets.MAVEN_SONATYPE_USERNAME }}
+          ORG_GRADLE_PROJECT_sonatypeRepositoryPassword: ${{ secrets.MAVEN_SONATYPE_PASSWORD }}
+          "ORG_GRADLE_PROJECT_signing.keyId": ${{ secrets.MAVEN_SONATYPE_SIGNING_KEY_ID }}
+          "ORG_GRADLE_PROJECT_signing.key": ${{ secrets.MAVEN_SONATYPE_SIGNING_KEY }}
+          "ORG_GRADLE_PROJECT_signing.password": ${{ secrets.MAVEN_SONATYPE_SIGNING_PASSWORD }}
 
       - name: Upload build reports
         if: failure()
         uses: actions/upload-artifact@v3
         with:
-          name: build-report-${{ runner.os }}-${{ github.action }}
-          path: "**/build/reports/"
+          name: build-report-${{ runner.os }}${{ github.action }}
+          path: |
+            **/build/reports/
+            **/*.hprof
+            **/*.log
           if-no-files-found: ignore
+
+      - name: Publish Test Reports
+        uses: mikepenz/action-junit-report@v3
+        if: always()
+        with:
+          report_paths: |
+            **/build/test-results/**/TEST-*.xml
+          require_tests: false

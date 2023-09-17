@@ -1,6 +1,5 @@
 package buildsrc.convention
 
-import buildsrc.config.createKxsTsGenPom
 import buildsrc.config.credentialsAction
 import buildsrc.config.isKotlinMultiplatformJavaEnabled
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinMultiplatformPlugin
@@ -14,36 +13,44 @@ plugins {
 val sonatypeRepositoryCredentials: Provider<Action<PasswordCredentials>> =
   providers.credentialsAction("sonatypeRepository")
 
+val projectVersion: Provider<String> = provider { project.version.toString() }
 
-val sonatypeRepositoryReleaseUrl: Provider<String> = provider {
-  if (version.toString().endsWith("SNAPSHOT")) {
-    "https://s01.oss.sonatype.org/content/repositories/snapshots/"
-  } else {
+val sonatypeRepositoryReleaseUrl: Provider<String> = projectVersion.map { version ->
+  val isRelease = version.endsWith("SNAPSHOT")
+  if (isRelease) {
     "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
+  } else {
+    "https://s01.oss.sonatype.org/content/repositories/snapshots/"
   }
 }
 
 
+//region Signing
 val signingKeyId: Provider<String> =
   providers.gradleProperty("signing.keyId")
 val signingKey: Provider<String> =
   providers.gradleProperty("signing.key")
 val signingPassword: Provider<String> =
   providers.gradleProperty("signing.password")
-val signingSecretKeyRingFile: Provider<String> =
-  providers.gradleProperty("signing.secretKeyRingFile")
-
 
 signing {
-  if (sonatypeRepositoryCredentials.isPresent()) {
-    if (signingKeyId.isPresent() && signingKey.isPresent() && signingPassword.isPresent()) {
-      useInMemoryPgpKeys(signingKeyId.get(), signingKey.get(), signingPassword.get())
-    } else {
-      useGpgCmd()
-    }
-  }
-}
+  logger.info("maven-publishing.gradle.kts enabled signing for ${project.path}")
 
+  val keyId = signingKeyId.orNull
+  val key = signingKey.orNull
+  val password = signingPassword.orNull
+
+  if (!keyId.isNullOrBlank() && !key.isNullOrBlank() && !password.isNullOrBlank()) {
+    useInMemoryPgpKeys(keyId, key, password)
+  }
+
+  // only require signing when publishing to Sonatype
+  setRequired({
+    gradle.taskGraph.allTasks.filterIsInstance<PublishToMavenRepository>().any {
+      it.repository.name == "SonatypeRelease"
+    }
+  })
+}
 
 afterEvaluate {
   // Register signatures afterEvaluate, otherwise the signing plugin creates the signing tasks
@@ -51,13 +58,12 @@ afterEvaluate {
   // Use .all { }, not .configureEach { }, otherwise the signing plugin doesn't create the tasks
   // soon enough.
 
-  if (sonatypeRepositoryCredentials.isPresent()) {
-    publishing.publications.withType<MavenPublication>().all {
-      signing.sign(this)
-      logger.lifecycle("configuring signature for publication ${this.name}")
-    }
+  publishing.publications.withType<MavenPublication>().all {
+    signing.sign(this)
+    logger.lifecycle("configuring signature for publication ${this.name}")
   }
 }
+//endregion
 
 //region Javadoc JAR stub
 // use creating, not registering, because the signing plugin doesn't accept task providers
@@ -66,24 +72,14 @@ val javadocJarStub by tasks.creating(Jar::class) {
   description = "Stub javadoc.jar artifact (required by Maven Central)"
   archiveClassifier.set("javadoc")
 }
-
-tasks.withType<AbstractPublishToMaven>().all {
-  dependsOn(javadocJarStub)
-}
-
-if (sonatypeRepositoryCredentials.isPresent()) {
-  val signingTasks = signing.sign(javadocJarStub)
-  tasks.withType<AbstractPublishToMaven>().all {
-    signingTasks.forEach { dependsOn(it) }
-  }
-}
 //endregion
+
 
 publishing {
   if (sonatypeRepositoryCredentials.isPresent()) {
     repositories {
       maven(sonatypeRepositoryReleaseUrl) {
-        name = "sonatype"
+        name = "SonatypeRelease"
         credentials(sonatypeRepositoryCredentials.get())
       }
 //      // publish to local dir, for testing
@@ -92,7 +88,30 @@ publishing {
 //      }
     }
     publications.withType<MavenPublication>().configureEach {
-      createKxsTsGenPom()
+      pom {
+        name.set("Kotlinx Serialization Typescript Generator")
+        description.set("KxsTsGen creates TypeScript interfaces from Kotlinx Serialization @Serializable classes")
+        url.set("https://github.com/adamko-dev/kotlinx-serialization-typescript-generator")
+
+        licenses {
+          license {
+            name.set("The Apache License, Version 2.0")
+            url.set("https://www.apache.org/licenses/LICENSE-2.0.txt")
+          }
+        }
+
+        developers {
+          developer {
+            email.set("adam@adamko.dev")
+          }
+        }
+
+        scm {
+          connection.set("scm:git:git://github.com/adamko-dev/kotlinx-serialization-typescript-generator.git")
+          developerConnection.set("scm:git:ssh://github.com:adamko-dev/kotlinx-serialization-typescript-generator.git")
+          url.set("https://github.com/adamko-dev/kotlinx-serialization-typescript-generator")
+        }
+      }
       artifact(javadocJarStub)
     }
   }
@@ -126,6 +145,7 @@ plugins.withType<JavaPlatformPlugin>().configureEach {
   }
 }
 
+
 //region Fix Gradle warning about signing tasks using publishing task outputs without explicit dependencies
 // https://youtrack.jetbrains.com/issue/KT-46466 https://github.com/gradle/gradle/issues/26091
 tasks.withType<AbstractPublishToMaven>().configureEach {
@@ -133,6 +153,7 @@ tasks.withType<AbstractPublishToMaven>().configureEach {
   mustRunAfter(signingTasks)
 }
 //endregion
+
 
 //region publishing logging
 tasks.withType<AbstractPublishToMaven>().configureEach {
@@ -144,6 +165,7 @@ tasks.withType<AbstractPublishToMaven>().configureEach {
   }
 }
 //endregion
+
 
 //region IJ workarounds
 // manually define the Kotlin DSL accessors because IntelliJ _still_ doesn't load them properly
