@@ -96,7 +96,7 @@ val currentCommitHash: Provider<String> =
     isIgnoreExitValue = true
   }.standardOutput.asText.map { it.trim() }
 
-val semverRegex = Regex("""v[0-9]+\.[0-9]+\.[0-9]+""")
+val semverRegex = Regex("""v(?:0|[1-9][0-9]*)\.(?:0|[1-9][0-9]*)\.(?:0|[1-9][0-9]*)""")
 
 val gitVersion: Provider<String> =
   gitDescribe.zip(currentBranchName) { described, branch ->
@@ -108,9 +108,9 @@ val gitVersion: Provider<String> =
       val descriptions = described.split("-")
       val head = descriptions.singleOrNull() ?: ""
       val headIsVersioned = head.matches(semverRegex)
-      if (headIsVersioned) head else "$branch-SNAPSHOT"
+      if (headIsVersioned) head else currentCommitHash.get() // fall back to using the git commit hash
     }
-  }.orElse(currentCommitHash) // fall back to using the git commit hash
+  }
 
 gradle.allprojects {
   extensions.add<Provider<String>>("gitVersion", gitVersion)
