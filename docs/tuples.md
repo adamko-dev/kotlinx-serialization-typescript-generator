@@ -10,25 +10,27 @@ is important, because the JSON will be much more compact.
 
 Here's an example of a tuple definition in TypeScript:
 
-```typescript
+<!-- this code block uses four backticks ```` to workaround https://github.com/Kotlin/kotlinx-knit/issues/57 -->
+
+````typescript
 type StringNumberPair = [str: string, num: number];
-```
+````
 
 This would get serialized to a JSON array
 
-[//]: # (@formatter:off)
+<!--- @formatter:off -->
 ```json
 ["some string value", 123]
 ```
-[//]: # (@formatter:on)
+<!--- @formatter:on -->
 
 which is more compact than an equivalent JSON object, which requires property names.
 
-[//]: # (@formatter:off)
+<!--- @formatter:off -->
 ```json
 { "str": "some string value", "num": 123 }
 ```
-[//]: # (@formatter:on)
+<!--- @formatter:on -->
 
 ## Tuples in KxsTsGen
 
