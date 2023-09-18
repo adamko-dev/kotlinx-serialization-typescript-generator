@@ -20,7 +20,6 @@ permissions:
 jobs:
 
   sonatype-release:
-    if: github.ref == 'refs/heads/main'
     permissions:
       contents: read
       packages: write
