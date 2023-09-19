@@ -96,7 +96,8 @@ val currentCommitHash: Provider<String> =
     isIgnoreExitValue = true
   }.standardOutput.asText.map { it.trim() }
 
-val semverRegex = Regex("""v(?:0|[1-9][0-9]*)\.(?:0|[1-9][0-9]*)\.(?:0|[1-9][0-9]*)""")
+/** Match simple SemVer tags. The first group is the `major.minor.patch` digits. */
+val semverRegex = Regex("""v((?:0|[1-9][0-9]*)\.(?:0|[1-9][0-9]*)\.(?:0|[1-9][0-9]*))""")
 
 val gitVersion: Provider<String> =
   gitDescribe.zip(currentBranchName) { described, branch ->
@@ -107,8 +108,9 @@ val gitVersion: Provider<String> =
     } else {
       val descriptions = described.split("-")
       val head = descriptions.singleOrNull() ?: ""
-      val headIsVersioned = head.matches(semverRegex)
-      if (headIsVersioned) head else currentCommitHash.get() // fall back to using the git commit hash
+      // drop the leading `v`, try to find the `major.minor.patch` digits group
+      val headVersion = semverRegex.matchEntire(head)?.groupValues?.last()
+      headVersion ?: currentCommitHash.get() // fall back to using the git commit hash
     }
   }
 
