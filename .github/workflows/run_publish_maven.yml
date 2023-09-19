@@ -9,6 +9,11 @@ on:
         required: false
         type: string
   workflow_call:
+    inputs:
+      checkout-ref:
+        description: "The repository reference to checkout"
+        required: false
+        type: string
 
 
 concurrency:

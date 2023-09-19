@@ -3,6 +3,11 @@ name: Releases
 
 on:
   workflow_dispatch:
+    inputs:
+      checkout-ref:
+        description: "The repository reference to checkout"
+        required: false
+        type: string
   push:
     branches: [ main ]
   release:

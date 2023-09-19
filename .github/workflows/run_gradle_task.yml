@@ -6,6 +6,14 @@ run-name: "Gradle Task ${{ inputs.gradle-task }} @ ${{ inputs.runs-on }}"
 on:
   workflow_dispatch:
     inputs:
+      gradle-task:
+        description: "The Gradle task to run, including any flags"
+        required: true
+        type: string
+      runs-on:
+        description: "OS to run the task on"
+        required: true
+        type: string
       checkout-ref:
         description: "The repository reference to checkout"
         required: false
@@ -17,8 +25,12 @@ on:
         required: true
         type: string
       runs-on:
-        description: "OSes to run the task on"
+        description: "OS to run the task on"
         required: true
+        type: string
+      checkout-ref:
+        description: "The repository reference to checkout"
+        required: false
         type: string
 
 
