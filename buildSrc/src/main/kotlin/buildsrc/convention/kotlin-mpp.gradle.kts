@@ -20,6 +20,7 @@ kotlin {
     nodejs()
   }
 
+  jvmToolchain(11)
   jvm {
     withJava()
   }
