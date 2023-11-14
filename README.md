@@ -65,5 +65,5 @@ for working examples.
 | Polymorphism - Sealed classes         | ✅/⚠ [example](./docs/polymorphism-sealed.md#sealed-classes)     | Nested sealed classes are ignored, [see documentation](./docs/polymorphism-sealed.md#nested-sealed-classes)    |
 | Polymorphism - Open classes           | ❌   [example](./docs/polymorphism-open.md)                       | Not implemented. Converted to `type MyClass = any`                                                             |
 | `@JsonClassDiscriminator`             | ❌                                                               | Not implemented                                                                                                |
-| JSON Content polymorphism             | ❌   [example](./docs/polymorphism.md#json-content-polymorphism) | Not implemented. Converted to `type MyClass = any`                                                             |
+| JSON Content polymorphism             | ❌   [example](./docs/polymorphism-open.md#json-content-polymorphism) | Not implemented. Converted to `type MyClass = any`                                                             |
 | Edge cases - circular dependencies    | ✅   [example](./docs/edgecases.md)                              |                                                                                                                |
