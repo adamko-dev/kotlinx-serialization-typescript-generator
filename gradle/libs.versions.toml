@@ -3,7 +3,7 @@
 jvmTarget = "11"
 kotlinTarget = "1.8"
 
-kotlin = "1.9.10"                        # https://github.com/JetBrains/kotlin/releases
+kotlin = "1.9.22"                        # https://github.com/JetBrains/kotlin/releases
 
 kotlinSymbolProcessing = "1.9.10-1.0.13" # https://github.com/google/ksp/releases
 kotlinCompileTesting = "1.5.0"           # https://github.com/tschuchortdev/kotlin-compile-testing/releases
