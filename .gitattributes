@@ -1,7 +1,7 @@
-# Common settings that generally should always be used with your language specific settings
+# https://help.github.com/articles/dealing-with-line-endings/
+# https://github.com/alexkaratarakis/gitattributes
 
-# Auto detect text files and perform LF normalization
-*          text eol=lf
+* text=auto
 
 # The above will handle all files NOT found below
 
@@ -44,12 +44,14 @@
 *.cmd      text eol=crlf
 *.ps1      text eol=crlf
 
-
-# JVM sources
-*.java         text diff=java
-*.gradle       text diff=java
-*.kt           text diff=java
-*.kts          text diff=java
+# JVM
+*.java          text diff=java
+*.gradle        text diff=java
+*.java          text diff=java
+*.kt            text diff=kotlin
+*.kts           text diff=kotlin
+*.properties    text
+*.jar           binary
 
 # Text files where line endings should be preserved
 *.patch    -text
