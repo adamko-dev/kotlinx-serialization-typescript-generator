@@ -29,7 +29,8 @@ jobs:
 
   publish-maven:
     needs: tests
-    if: github.ref == 'refs/heads/main'
+    # only publish when manually triggered, or it's the main branch, or it's for a release
+    if: inputs.checkout-ref || github.ref == 'refs/heads/main' || (github.event_name == 'release' && github.event.action == 'created')
     uses: ./.github/workflows/run_publish_maven.yml
     secrets: inherit
     permissions:
@@ -41,8 +42,8 @@ jobs:
 
   publish-site:
     needs: tests
-    # only publish site when releasing
-    if: github.ref == 'refs/heads/main' && github.event_name == 'release' && github.event.action == 'created'
+    # only publish when manually triggered, or it's for a release
+    if: inputs.checkout-ref || (github.event_name == 'release' && github.event.action == 'created')
     uses: ./.github/workflows/run_publish_site.yml
     permissions:
       checks: write
