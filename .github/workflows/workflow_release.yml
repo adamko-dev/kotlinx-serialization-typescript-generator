@@ -15,8 +15,8 @@ on:
 
 
 concurrency:
-  group: "Releases: ${{ github.workflow }} @ ${{ github.event.pull_request.head.label || github.head_ref || github.ref }}"
-  cancel-in-progress: false
+  group: "Releases: ${{ github.workflow }} @ ${{ inputs.checkout-ref }} ${{ github.event.pull_request.head.label || github.head_ref || github.ref }}"
+  cancel-in-progress: true
 
 
 jobs:
