@@ -26,6 +26,8 @@ jobs:
     permissions:
       checks: write
       contents: read
+    with:
+      checkout-ref: ${{ inputs.checkout-ref }}
 
   publish-maven:
     needs: tests
