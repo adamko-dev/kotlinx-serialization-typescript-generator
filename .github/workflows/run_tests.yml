@@ -3,7 +3,17 @@ name: Tests
 
 on:
   workflow_dispatch:
+    inputs:
+      checkout-ref:
+        description: "The branch, tag or SHA to checkout. See actions/checkout 'ref'."
+        required: false
+        type: string
   workflow_call:
+    inputs:
+      checkout-ref:
+        description: "The branch, tag or SHA to checkout. See actions/checkout 'ref'."
+        required: false
+        type: string
 
 
 concurrency:
@@ -28,6 +38,7 @@ jobs:
       runs-on: ${{ matrix.os }}
       gradle-task: >-
         check -Pkxstsgen_enableTsCompileTests=true --stacktrace
+      checkout-ref: ${{ inputs.checkout-ref }}
 
   build-site:
     # verify that the site can be built, but don't deploy it
@@ -35,3 +46,4 @@ jobs:
     with:
       runs-on: ubuntu-latest
       gradle-task: docusaurusBuild
+      checkout-ref: ${{ inputs.checkout-ref }}
