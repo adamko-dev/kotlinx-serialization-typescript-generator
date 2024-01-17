@@ -5,7 +5,7 @@ on:
   workflow_dispatch:
     inputs:
       checkout-ref:
-        description: "The repository reference to checkout"
+        description: "The branch, tag or SHA to checkout. See actions/checkout 'ref'."
         required: false
         type: string
   push:
