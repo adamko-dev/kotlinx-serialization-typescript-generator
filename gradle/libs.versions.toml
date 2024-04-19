@@ -5,7 +5,7 @@ kotlinTarget = "1.8"
 
 kotlin = "1.9.23"                        # https://github.com/JetBrains/kotlin/releases
 
-kotlinSymbolProcessing = "1.9.23-1.0.19" # https://github.com/google/ksp/releases
+kotlinSymbolProcessing = "1.9.23-1.0.20" # https://github.com/google/ksp/releases
 kotlinCompileTesting = "1.5.0"           # https://github.com/tschuchortdev/kotlin-compile-testing/releases
 
 kotlinx-serialization = "1.6.3"          # https://github.com/Kotlin/kotlinx.serialization/releases/
