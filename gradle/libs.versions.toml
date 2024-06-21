@@ -8,7 +8,7 @@ kotlin = "1.9.24"                        # https://github.com/JetBrains/kotlin/r
 kotlinSymbolProcessing = "1.9.24-1.0.20" # https://github.com/google/ksp/releases
 kotlinCompileTesting = "1.6.0"           # https://github.com/tschuchortdev/kotlin-compile-testing/releases
 
-kotlinx-serialization = "1.6.3"          # https://github.com/Kotlin/kotlinx.serialization/releases/
+kotlinx-serialization = "1.7.0"          # https://github.com/Kotlin/kotlinx.serialization/releases/
 kotlinx-knit = "0.5.0"                   # https://github.com/Kotlin/kotlinx-knit/releases
 kotlinx-coroutines = "1.8.1"             # https://github.com/Kotlin/kotlinx.coroutines/releases
 kotlinx-kover = "0.6.1"                  # https://github.com/Kotlin/kotlinx-kover/releases
