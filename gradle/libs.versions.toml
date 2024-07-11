@@ -17,7 +17,7 @@ okio = "3.9.0"                           # https://search.maven.org/artifact/com
 
 kotest = "5.9.1"                         # https://github.com/kotest/kotest/releases
 
-kotlinProcess = "1.4.1"                  # https://github.com/pgreze/kotlin-process/releases
+kotlinProcess = "1.5"                  # https://github.com/pgreze/kotlin-process/releases
 
 classgraph = "4.8.174"                   # https://github.com/classgraph/classgraph/releases
 
