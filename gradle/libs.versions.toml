@@ -21,7 +21,7 @@ kotlinProcess = "1.5"                  # https://github.com/pgreze/kotlin-proces
 
 classgraph = "4.8.175"                   # https://github.com/classgraph/classgraph/releases
 
-gradleNodePlugin = "7.0.2"               # https://github.com/node-gradle/gradle-node-plugin/releases
+gradleNodePlugin = "7.1.0"               # https://github.com/node-gradle/gradle-node-plugin/releases
 
 [libraries]
 
