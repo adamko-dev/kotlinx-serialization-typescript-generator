@@ -19,7 +19,7 @@ kotest = "5.9.1"                         # https://github.com/kotest/kotest/rele
 
 kotlinProcess = "1.5"                  # https://github.com/pgreze/kotlin-process/releases
 
-classgraph = "4.8.175"                   # https://github.com/classgraph/classgraph/releases
+classgraph = "4.8.177"                   # https://github.com/classgraph/classgraph/releases
 
 gradleNodePlugin = "7.1.0"               # https://github.com/node-gradle/gradle-node-plugin/releases
 
