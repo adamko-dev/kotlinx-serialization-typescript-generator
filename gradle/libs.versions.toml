@@ -15,7 +15,7 @@ kotlinx-kover = "0.6.1"                  # https://github.com/Kotlin/kotlinx-kov
 
 okio = "3.9.1"                           # https://search.maven.org/artifact/com.squareup.okio/okio
 
-kotest = "5.9.1"                         # https://github.com/kotest/kotest/releases
+kotest = "6.0.0-LOCAL"                         # https://github.com/kotest/kotest/releases
 
 kotlinProcess = "1.5"                  # https://github.com/pgreze/kotlin-process/releases
 
