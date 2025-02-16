@@ -82,10 +82,11 @@ jobs:
             ${{ runner.os }}-build-
             ${{ runner.os }}-
 
-      - uses: gradle/gradle-build-action@v3
+      - uses: gradle/actions/setup-gradle@v4
         with:
           gradle-home-cache-cleanup: true
-          arguments: ${{ inputs.gradle-task }}
+      - name: Run the tests
+        run: ./gradlew ${{ inputs.gradle-task }}
         env:
           ORG_GRADLE_PROJECT_sonatypeRepositoryUsername: ${{ secrets.MAVEN_SONATYPE_USERNAME }}
           ORG_GRADLE_PROJECT_sonatypeRepositoryPassword: ${{ secrets.MAVEN_SONATYPE_PASSWORD }}
