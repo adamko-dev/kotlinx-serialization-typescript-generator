@@ -14,6 +14,7 @@ import dev.adamko.kxstsgen.core.TsTypeRefConverter
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.descriptors.nullable
+import kotlinx.serialization.modules.SerializersModule
 
 
 /**
@@ -28,8 +29,8 @@ import kotlinx.serialization.descriptors.nullable
  */
 open class KxsTsGenerator(
   open val config: KxsTsConfig = KxsTsConfig(),
-
   open val sourceCodeGenerator: TsSourceCodeGenerator = TsSourceCodeGenerator.Default(config),
+  open val serializersModule: SerializersModule = SerializersModule { },
 ) {
 
 
@@ -60,7 +61,8 @@ open class KxsTsGenerator(
 
 
   open val descriptorsExtractor = object : SerializerDescriptorsExtractor {
-    val extractor: SerializerDescriptorsExtractor = SerializerDescriptorsExtractor.Default
+    val extractor: SerializerDescriptorsExtractor =
+      SerializerDescriptorsExtractor.default(serializersModule)
     val cache: MutableMap<KSerializer<*>, Set<SerialDescriptor>> = mutableMapOf()
 
     override fun invoke(serializer: KSerializer<*>): Set<SerialDescriptor> =
