@@ -18,9 +18,9 @@ dependencies {
   api(platform(libs.kotest.bom))
 
   constraints {
-    api(libs.classgraph)
-    api(libs.kotlinSymbolProcessing)
-    api(libs.kotlinCompileTesting)
-    api(libs.kotlinCompileTesting.ksp)
+//    api(libs.classgraph)
+//    api(libs.kotlinSymbolProcessing)
+//    api(libs.kotlinCompileTesting)
+//    api(libs.kotlinCompileTesting.ksp)
   }
 }

@@ -8,43 +8,54 @@ import kotlinx.serialization.KSerializer
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.descriptors.StructureKind
 import kotlinx.serialization.descriptors.buildSerialDescriptor
-import kotlinx.serialization.encoding.CompositeDecoder
-import kotlinx.serialization.encoding.CompositeEncoder
-import kotlinx.serialization.encoding.Decoder
-import kotlinx.serialization.encoding.Encoder
-import kotlinx.serialization.encoding.decodeStructure
-import kotlinx.serialization.encoding.encodeCollection
+import kotlinx.serialization.encoding.*
 import kotlinx.serialization.serializer
 
 
+/**
+ * A single element of a Tuple.
+ * Used to encode and decode a single element of a Tuple.
+ *
+ * See [TupleSerializer] for more information.
+ */
 data class TupleElement<T, E>(
   val name: String,
   val index: Int,
   val elementSerializer: KSerializer<E>,
   val elementAccessor: T.() -> E,
 ) {
-  internal val descriptor: SerialDescriptor
+  internal val elementDescriptor: SerialDescriptor
     get() = elementSerializer.descriptor
 
-  fun encodeElement(encoder: CompositeEncoder, value: T) {
+  fun encodeElement(
+    encoder: CompositeEncoder,
+    tupleDescriptor: SerialDescriptor,
+    value: T,
+  ) {
     encoder.encodeSerializableElement(
-      descriptor,
-      index,
-      elementSerializer,
-      value.elementAccessor(),
+      descriptor = tupleDescriptor,
+      index = index,
+      serializer = elementSerializer,
+      value = value.elementAccessor(),
     )
   }
 
-  fun decodeElement(decoder: CompositeDecoder): E {
+  fun decodeElement(
+    decoder: CompositeDecoder,
+    tupleDescriptor: SerialDescriptor,
+  ): E {
     return decoder.decodeSerializableElement(
-      descriptor,
-      index,
-      elementSerializer,
+      descriptor = tupleDescriptor,
+      index = index,
+      deserializer = elementSerializer,
     )
   }
 }
 
 
+/**
+ * Create a new [TupleElement].
+ */
 inline fun <T, reified E> tupleElement(
   index: Int,
   name: String,
@@ -52,10 +63,10 @@ inline fun <T, reified E> tupleElement(
   serializer: KSerializer<E> = serializer(),
 ): TupleElement<T, E> {
   return TupleElement(
-    name,
-    index,
-    serializer,
-    elementAccessor,
+    name = name,
+    index = index,
+    elementSerializer = serializer,
+    elementAccessor = elementAccessor,
   )
 }
 
@@ -97,6 +108,12 @@ class TupleElementsBuilder<T> {
 }
 
 
+/**
+ * Encode a serializable class as a Tuple: a collection of the class' properties.
+ *
+ * In JSON a tuple is represented as an array.
+ * Encoding as a tuple saves space because the names of the properties are not encoded.
+ */
 abstract class TupleSerializer<T>(
   serialName: String,
   buildElements: TupleElementsBuilder<T>.() -> Unit
@@ -119,15 +136,16 @@ abstract class TupleSerializer<T>(
     tupleElements
       .sortedBy { it.index }
       .forEach { tupleElement ->
-        element(tupleElement.name, tupleElement.descriptor)
+        element(
+          elementName = tupleElement.name,
+          descriptor = tupleElement.elementDescriptor,
+        )
       }
   }
 
   override fun serialize(encoder: Encoder, value: T) {
-    encoder.encodeCollection(descriptor, tupleElements.size) {
-      tupleElements.forEach { tupleElement ->
-        tupleElement.encodeElement(this, value)
-      }
+    encoder.encodeCollection(descriptor, tupleElements) { i, tupleElement ->
+      tupleElement.encodeElement(this, descriptor, value)
     }
   }
 
@@ -138,7 +156,7 @@ abstract class TupleSerializer<T>(
 
     val elements = if (decodeSequentially()) {
       tupleElements.asSequence().map {
-        it.decodeElement(this@decodeStructure)
+        it.decodeElement(this@decodeStructure, descriptor)
       }
     } else {
       generateSequence { decodeElementIndex(descriptor) }
@@ -153,7 +171,7 @@ abstract class TupleSerializer<T>(
           val tupleElement = indexedTupleElements.getOrElse(index) {
             error("no tuple element at index:$index")
           }
-          tupleElement.decodeElement(this@decodeStructure)
+          tupleElement.decodeElement(this@decodeStructure, descriptor)
         }
     }
     // elements sequence *must* be collected inside 'decodeStructure'

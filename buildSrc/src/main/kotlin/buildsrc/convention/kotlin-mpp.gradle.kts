@@ -1,49 +1,58 @@
 package buildsrc.convention
 
 import buildsrc.config.relocateKotlinJsStore
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
-import org.jetbrains.kotlin.gradle.targets.jvm.KotlinJvmTarget
+import org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_1_8
+import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
 
 
 plugins {
   id("buildsrc.convention.base")
   kotlin("multiplatform")
+  id("io.kotest")
+  id("com.google.devtools.ksp")
 }
 
 
 relocateKotlinJsStore()
 
 
-kotlin {
-  js(IR) {
+// IJ still doesn't support script plugins???
+extensions.configure<KotlinMultiplatformExtension> {
+//kotlin {
+  js {
     browser()
     nodejs()
   }
 
-  jvmToolchain(11)
+  jvmToolchain(21)
+
+  compilerOptions {
+    languageVersion = KOTLIN_1_8
+    apiVersion = KOTLIN_1_8
+  }
+
   jvm {
-    withJava()
+    compilerOptions {
+      jvmTarget = JvmTarget.JVM_11
+      freeCompilerArgs.add(jvmTarget.map { target ->
+        "-Xjdk-release=${target.target}"
+      })
+    }
   }
+}
 
-  targets.configureEach {
-    compilations.configureEach {
-      kotlinOptions {
-        languageVersion = "1.8"
-        apiVersion = "1.8"
-      }
-    }
+tasks.withType<KotlinJvmCompile>().configureEach {
+  compilerOptions {
+    jvmTarget = JvmTarget.JVM_11
   }
+}
 
-  targets.withType<KotlinJvmTarget> {
-    compilations.configureEach {
-      kotlinOptions {
-        jvmTarget = "11"
-      }
-    }
-    testRuns.configureEach {
-      executionTask.configure {
-        useJUnitPlatform()
-      }
-    }
-  }
+tasks.withType<JavaCompile>().configureEach {
+  targetCompatibility = "11"
+}
+
+tasks.withType<Test>().configureEach {
+  useJUnitPlatform()
 }

@@ -43,14 +43,3 @@ fun ProviderFactory.credentialsAction(
     password = pass
   }
 }
-
-
-/** Logic from [KotlinJvmTarget.withJava] */
-fun Project.isKotlinMultiplatformJavaEnabled(): Boolean {
-  val multiplatformExtension: KotlinMultiplatformExtension? =
-    extensions.findByType(KotlinMultiplatformExtension::class)
-
-  return multiplatformExtension?.targets
-    ?.any { it is KotlinJvmTarget && it.withJavaEnabled }
-    ?: false
-}

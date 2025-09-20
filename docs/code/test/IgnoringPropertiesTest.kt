@@ -11,7 +11,7 @@ class IgnoringPropertiesTest : FunSpec({
 
   tags(Knit)
   context("ExamplePlainClassIgnoredProperty01") {
-    val caseName = testCase.name.testName
+    val caseName = testCase.name.name
 
     val actual = captureOutput(caseName) {
       dev.adamko.kxstsgen.example.examplePlainClassIgnoredProperty01.main()

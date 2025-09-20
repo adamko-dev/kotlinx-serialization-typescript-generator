@@ -11,7 +11,7 @@ class DefaultValuesTest : FunSpec({
 
   tags(Knit)
   context("ExampleDefaultValuesSingleField01") {
-    val caseName = testCase.name.testName
+    val caseName = testCase.name.name
 
     val actual = captureOutput(caseName) {
       dev.adamko.kxstsgen.example.exampleDefaultValuesSingleField01.main()
@@ -35,7 +35,7 @@ class DefaultValuesTest : FunSpec({
   }
 
   context("ExampleDefaultValuesSingleField02") {
-    val caseName = testCase.name.testName
+    val caseName = testCase.name.name
 
     val actual = captureOutput(caseName) {
       dev.adamko.kxstsgen.example.exampleDefaultValuesSingleField02.main()
@@ -59,7 +59,7 @@ class DefaultValuesTest : FunSpec({
   }
 
   context("ExampleDefaultValuesPrimitiveFields01") {
-    val caseName = testCase.name.testName
+    val caseName = testCase.name.name
 
     val actual = captureOutput(caseName) {
       dev.adamko.kxstsgen.example.exampleDefaultValuesPrimitiveFields01.main()
@@ -86,7 +86,7 @@ class DefaultValuesTest : FunSpec({
   }
 
   context("ExampleDefaultValuesPrimitiveFields02") {
-    val caseName = testCase.name.testName
+    val caseName = testCase.name.name
 
     val actual = captureOutput(caseName) {
       dev.adamko.kxstsgen.example.exampleDefaultValuesPrimitiveFields02.main()

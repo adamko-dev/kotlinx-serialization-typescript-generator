@@ -3,23 +3,23 @@
 jvmTarget = "11"
 kotlinTarget = "1.8"
 
-kotlin = "1.9.25"                        # https://github.com/JetBrains/kotlin/releases
+kotlin = "2.2.20"                        # https://github.com/JetBrains/kotlin/releases
 
-kotlinSymbolProcessing = "1.9.25-1.0.20" # https://github.com/google/ksp/releases
-kotlinCompileTesting = "1.6.0"           # https://github.com/tschuchortdev/kotlin-compile-testing/releases
+kotlinSymbolProcessing = "2.2.20-2.0.2" # https://github.com/google/ksp/releases
+#kotlinCompileTesting = "1.6.0"           # https://github.com/tschuchortdev/kotlin-compile-testing/releases
 
-kotlinx-serialization = "1.6.3"          # https://github.com/Kotlin/kotlinx.serialization/releases/
+kotlinx-serialization = "1.9.0"          # https://github.com/Kotlin/kotlinx.serialization/releases/
 kotlinx-knit = "0.5.0"                   # https://github.com/Kotlin/kotlinx-knit/releases
-kotlinx-coroutines = "1.9.0"             # https://github.com/Kotlin/kotlinx.coroutines/releases
-kotlinx-kover = "0.6.1"                  # https://github.com/Kotlin/kotlinx-kover/releases
+kotlinx-coroutines = "1.10.2"            # https://github.com/Kotlin/kotlinx.coroutines/releases
+kotlinx-kover = "0.9.1"                  # https://github.com/Kotlin/kotlinx-kover/releases
 
-okio = "3.9.1"                           # https://search.maven.org/artifact/com.squareup.okio/okio
+okio = "3.12.0"                           # https://search.maven.org/artifact/com.squareup.okio/okio
 
-kotest = "5.9.1"                         # https://github.com/kotest/kotest/releases
+kotest = "6.0.3"                         # https://github.com/kotest/kotest/releases
 
-kotlinProcess = "1.5"                  # https://github.com/pgreze/kotlin-process/releases
+kotlinProcess = "1.5.1"                  # https://github.com/pgreze/kotlin-process/releases
 
-classgraph = "4.8.179"                   # https://github.com/classgraph/classgraph/releases
+#classgraph = "4.8.179"                   # https://github.com/classgraph/classgraph/releases
 
 gradleNodePlugin = "7.1.0"               # https://github.com/node-gradle/gradle-node-plugin/releases
 
@@ -27,7 +27,7 @@ gradleNodePlugin = "7.1.0"               # https://github.com/node-gradle/gradle
 
 kotlin-bom = { module = "org.jetbrains.kotlin:kotlin-bom", version.ref = "kotlin" }
 
-kotlinSymbolProcessing = { module = "com.google.devtools.ksp:symbol-processing-api", version.ref = "kotlinSymbolProcessing" }
+#kotlinSymbolProcessing = { module = "com.google.devtools.ksp:symbol-processing-api", version.ref = "kotlinSymbolProcessing" }
 
 kotlinx-coroutines-bom = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-bom", version.ref = "kotlinx-coroutines" }
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core" }
@@ -40,12 +40,12 @@ kotlinx-serialization-cbor = { module = "org.jetbrains.kotlinx:kotlinx-serializa
 okio-bom = { module = "com.squareup.okio:okio-bom", version.ref = "okio" }
 okio-core = { module = "com.squareup.okio:okio" }
 
-classgraph = { module = "io.github.classgraph:classgraph", version.ref = "classgraph" }
+#classgraph = { module = "io.github.classgraph:classgraph", version.ref = "classgraph" }
 
 kotlinProcess = { module = "com.github.pgreze:kotlin-process", version.ref = "kotlinProcess" }
 
-kotlinCompileTesting = { module = "com.github.tschuchortdev:kotlin-compile-testing", version.ref = "kotlinCompileTesting" }
-kotlinCompileTesting-ksp = { module = "com.github.tschuchortdev:kotlin-compile-testing-ksp", version.ref = "kotlinCompileTesting" }
+#kotlinCompileTesting = { module = "com.github.tschuchortdev:kotlin-compile-testing", version.ref = "kotlinCompileTesting" }
+#kotlinCompileTesting-ksp = { module = "com.github.tschuchortdev:kotlin-compile-testing-ksp", version.ref = "kotlinCompileTesting" }
 
 ## Kotest ##
 
@@ -54,7 +54,7 @@ kotest-assertionsCore = { module = "io.kotest:kotest-assertions-core" }
 kotest-assertionsJson = { module = "io.kotest:kotest-assertions-json" }
 kotest-property = { module = "io.kotest:kotest-property" }
 kotest-frameworkEngine = { module = "io.kotest:kotest-framework-engine" }
-kotest-frameworkDatatest = { module = "io.kotest:kotest-framework-datatest" }
+#kotest-frameworkDatatest = { module = "io.kotest:kotest-framework-datatest" }
 kotest-runnerJUnit5 = { module = "io.kotest:kotest-runner-junit5" }
 
 ## Knit ##
@@ -68,10 +68,10 @@ kotlinx-knit-test = { module = "org.jetbrains.kotlinx:kotlinx-knit-test", versio
 gradlePlugin-kotlin = {  module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
 gradlePlugin-kotlinSerialization = {  module = "org.jetbrains.kotlin:kotlin-serialization", version.ref = "kotlin" }
 gradlePlugin-gradleNode = { module = "com.github.node-gradle:gradle-node-plugin", version.ref = "gradleNodePlugin" }
-gradlePlugin-kotlinxKover = { module = "org.jetbrains.kotlinx:kover", version.ref = "kotlinx-kover" }
+gradlePlugin-kotlinxKover = { module = "org.jetbrains.kotlinx:kover-gradle-plugin", version.ref = "kotlinx-kover" }
 gradlePlugin-kotlinxKnit = { module = "org.jetbrains.kotlinx:kotlinx-knit", version.ref = "kotlinx-knit" }
-gradlePlugin-kotest = { module = "io.kotest:kotest-framework-multiplatform-plugin-gradle", version.ref = "kotest" }
-gradlePlugin-kotlinSymbolProcessing = { module = "com.google.devtools.ksp:com.google.devtools.ksp.gradle.plugin", version.ref = "kotlinSymbolProcessing" }
+gradlePlugin-kotest = { module = "io.kotest:io.kotest.gradle.plugin", version.ref = "kotest" }
+gradlePlugin-kotlinSymbolProcessing = { module = "com.google.devtools.ksp:symbol-processing-gradle-plugin", version.ref = "kotlinSymbolProcessing" }
 
 [plugins]
 # Gradle Plugin versions are set in buildSrc/build.gradle.kts as regular dependencies, not via aliases

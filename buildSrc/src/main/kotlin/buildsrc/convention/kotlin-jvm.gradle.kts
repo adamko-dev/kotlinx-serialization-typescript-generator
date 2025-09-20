@@ -1,44 +1,40 @@
 package buildsrc.convention
 
-import org.gradle.kotlin.dsl.kotlin
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.jetbrains.kotlin.gradle.dsl.KotlinJvmProjectExtension
+import org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_1_8
 
 plugins {
   id("buildsrc.convention.base")
   kotlin("jvm")
   `java-library`
+  id("io.kotest")
 }
 
-dependencies {
-  // versions provided by versions-platform subproject
-  testImplementation("io.kotest:kotest-runner-junit5")
-  testImplementation("io.kotest:kotest-assertions-core")
-  testImplementation("io.kotest:kotest-property")
-  testImplementation("io.kotest:kotest-framework-datatest")
-}
-
-kotlin {
-  jvmToolchain(11)
+// IJ still doesn't support script plugins???
+extensions.configure<KotlinJvmProjectExtension> {
+//kotlin {
+  jvmToolchain(21)
+  compilerOptions {
+    languageVersion = KOTLIN_1_8
+    apiVersion = KOTLIN_1_8
+    jvmTarget = JvmTarget.JVM_11
+    freeCompilerArgs.add(jvmTarget.map { target ->
+      "-Xjdk-release=${target.target}"
+    })
+    freeCompilerArgs.addAll(
+      "-opt-in=kotlin.ExperimentalStdlibApi",
+      "-opt-in=kotlin.time.ExperimentalTime",
+    )
+  }
 }
 
 java {
   withJavadocJar()
   withSourcesJar()
 }
-
-tasks.withType<KotlinCompile>().configureEach {
-  compilerOptions {
-    jvmTarget = JvmTarget.JVM_11
-    apiVersion = KotlinVersion.KOTLIN_1_7
-    languageVersion = KotlinVersion.KOTLIN_1_7
-
-    freeCompilerArgs.addAll(
-      "-opt-in=kotlin.ExperimentalStdlibApi",
-      "-opt-in=kotlin.time.ExperimentalTime",
-    )
-  }
+tasks.withType<JavaCompile>().configureEach {
+  targetCompatibility = "11"
 }
 
 tasks.compileTestKotlin {

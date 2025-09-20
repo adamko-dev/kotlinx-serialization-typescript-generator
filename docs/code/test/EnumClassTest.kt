@@ -11,7 +11,7 @@ class EnumClassTest : FunSpec({
 
   tags(Knit)
   context("ExampleEnumClass01") {
-    val caseName = testCase.name.testName
+    val caseName = testCase.name.name
 
     val actual = captureOutput(caseName) {
       dev.adamko.kxstsgen.example.exampleEnumClass01.main()
@@ -37,7 +37,7 @@ class EnumClassTest : FunSpec({
   }
 
   context("ExampleEnumClass02") {
-    val caseName = testCase.name.testName
+    val caseName = testCase.name.name
 
     val actual = captureOutput(caseName) {
       dev.adamko.kxstsgen.example.exampleEnumClass02.main()

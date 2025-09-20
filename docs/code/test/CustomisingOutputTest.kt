@@ -11,7 +11,7 @@ class CustomisingOutputTest : FunSpec({
 
   tags(Knit)
   context("ExampleCustomisingOutput01") {
-    val caseName = testCase.name.testName
+    val caseName = testCase.name.name
 
     val actual = captureOutput(caseName) {
       dev.adamko.kxstsgen.example.exampleCustomisingOutput01.main()
@@ -38,7 +38,7 @@ class CustomisingOutputTest : FunSpec({
   }
 
   context("ExampleCustomisingOutput02") {
-    val caseName = testCase.name.testName
+    val caseName = testCase.name.name
 
     val actual = captureOutput(caseName) {
       dev.adamko.kxstsgen.example.exampleCustomisingOutput02.main()
@@ -63,7 +63,7 @@ class CustomisingOutputTest : FunSpec({
   }
 
   context("ExampleCustomisingOutput03") {
-    val caseName = testCase.name.testName
+    val caseName = testCase.name.name
 
     val actual = captureOutput(caseName) {
       dev.adamko.kxstsgen.example.exampleCustomisingOutput03.main()
@@ -94,7 +94,7 @@ class CustomisingOutputTest : FunSpec({
   }
 
   context("ExampleCustomisingOutput04") {
-    val caseName = testCase.name.testName
+    val caseName = testCase.name.name
 
     val actual = captureOutput(caseName) {
       dev.adamko.kxstsgen.example.exampleCustomisingOutput04.main()
