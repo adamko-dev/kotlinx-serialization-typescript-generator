@@ -60,12 +60,21 @@ fun interface TsElementDescriptorsExtractor {
 
   companion object {
 
-    fun default(serializersModule: SerializersModule) =
+    @Suppress("UNUSED_PARAMETER")
+    fun default(
+      serializersModule: SerializersModule,
+    ) =
       TsElementDescriptorsExtractor { descriptor ->
+        // TODO: Use serializersModule to resolve contextual and polymorphic serializers
+        // The module is available for future enhancements where it can be used to:
+        // - Resolve @Contextual serializer types to their actual descriptors
+        // - Discover all polymorphic subclasses registered in the module
         when (descriptor.kind) {
           SerialKind.ENUM       -> emptyList()
 
-          SerialKind.CONTEXTUAL -> emptyList()
+          SerialKind.CONTEXTUAL -> {
+            emptyList()
+          }
 
           PrimitiveKind.BOOLEAN,
           PrimitiveKind.BYTE,
@@ -84,10 +93,6 @@ fun interface TsElementDescriptorsExtractor {
 
           PolymorphicKind.SEALED,
           PolymorphicKind.OPEN  ->
-            // Polymorphic descriptors have 2 elements, the 'type' and 'value' - we don't need either
-            // for generation, they're metadata that will be used later.
-            // The elements of 'value' are similarly unneeded, but their elements might contain new
-            // descriptors - so extract them
             descriptor.elementDescriptors
               .flatMap { it.elementDescriptors }
               .flatMap { it.elementDescriptors }

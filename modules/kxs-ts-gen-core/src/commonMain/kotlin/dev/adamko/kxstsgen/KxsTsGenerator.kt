@@ -14,6 +14,7 @@ import dev.adamko.kxstsgen.core.TsTypeRefConverter
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.descriptors.nullable
+import kotlinx.serialization.modules.EmptySerializersModule
 import kotlinx.serialization.modules.SerializersModule
 
 
@@ -30,7 +31,7 @@ import kotlinx.serialization.modules.SerializersModule
 open class KxsTsGenerator(
   open val config: KxsTsConfig = KxsTsConfig(),
   open val sourceCodeGenerator: TsSourceCodeGenerator = TsSourceCodeGenerator.Default(config),
-  open val serializersModule: SerializersModule = SerializersModule { },
+  open val serializersModule: SerializersModule = EmptySerializersModule(),
 ) {
 
 
