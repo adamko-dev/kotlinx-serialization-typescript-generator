@@ -16,11 +16,14 @@ val projectVersion: Provider<String> = provider { project.version.toString() }
 
 //region Signing
 val signingKeyId: Provider<String> =
-  providers.gradleProperty("signing.keyId")
+  providers.gradleProperty("dev.adamko.kxstsgen.signing.keyId")
+    .orElse(providers.environmentVariable("MAVEN_SONATYPE_SIGNING_KEY_ID"))
 val signingKey: Provider<String> =
-  providers.gradleProperty("signing.key")
+  providers.gradleProperty("dev.adamko.kxstsgen.signing.key")
+    .orElse(providers.environmentVariable("MAVEN_SONATYPE_SIGNING_KEY"))
 val signingPassword: Provider<String> =
-  providers.gradleProperty("signing.password")
+  providers.gradleProperty("dev.adamko.kxstsgen.signing.password")
+    .orElse(providers.environmentVariable("MAVEN_SONATYPE_SIGNING_PASSWORD"))
 
 signing {
   val keyId = signingKeyId.orNull
