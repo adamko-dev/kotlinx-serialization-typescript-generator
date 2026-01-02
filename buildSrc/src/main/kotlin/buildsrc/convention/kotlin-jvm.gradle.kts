@@ -2,7 +2,7 @@ package buildsrc.convention
 
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.dsl.KotlinJvmProjectExtension
-import org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_1_8
+import org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_0
 
 plugins {
   id("buildsrc.convention.base")
@@ -16,8 +16,8 @@ extensions.configure<KotlinJvmProjectExtension> {
 //kotlin {
   jvmToolchain(21)
   compilerOptions {
-    languageVersion = KOTLIN_1_8
-    apiVersion = KOTLIN_1_8
+    languageVersion = KOTLIN_2_0
+    apiVersion = KOTLIN_2_0
     jvmTarget = JvmTarget.JVM_11
     freeCompilerArgs.add(jvmTarget.map { target ->
       "-Xjdk-release=${target.target}"
