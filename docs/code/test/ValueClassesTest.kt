@@ -11,7 +11,7 @@ class ValueClassesTest : FunSpec({
 
   tags(Knit)
   context("ExampleValueClasses01") {
-    val caseName = testCase.name.testName
+    val caseName = testCase.name.name
 
     val actual = captureOutput(caseName) {
       dev.adamko.kxstsgen.example.exampleValueClasses01.main()
@@ -33,7 +33,7 @@ class ValueClassesTest : FunSpec({
   }
 
   context("ExampleValueClasses02") {
-    val caseName = testCase.name.testName
+    val caseName = testCase.name.name
 
     val actual = captureOutput(caseName) {
       dev.adamko.kxstsgen.example.exampleValueClasses02.main()
@@ -61,7 +61,7 @@ class ValueClassesTest : FunSpec({
   }
 
   context("ExampleValueClasses03") {
-    val caseName = testCase.name.testName
+    val caseName = testCase.name.name
 
     val actual = captureOutput(caseName) {
       dev.adamko.kxstsgen.example.exampleValueClasses03.main()
@@ -83,7 +83,7 @@ class ValueClassesTest : FunSpec({
   }
 
   context("ExampleValueClasses04") {
-    val caseName = testCase.name.testName
+    val caseName = testCase.name.name
 
     val actual = captureOutput(caseName) {
       dev.adamko.kxstsgen.example.exampleValueClasses04.main()

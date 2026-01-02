@@ -1,9 +1,6 @@
 package buildsrc.convention
 
 import buildsrc.config.credentialsAction
-import buildsrc.config.isKotlinMultiplatformJavaEnabled
-import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinMultiplatformPlugin
-
 
 plugins {
   `maven-publish`
@@ -67,7 +64,7 @@ afterEvaluate {
 
 //region Javadoc JAR stub
 // use creating, not registering, because the signing plugin doesn't accept task providers
-val javadocJarStub by tasks.creating(Jar::class) {
+val javadocJarStub by tasks.registering(Jar::class) {
   group = JavaBasePlugin.DOCUMENTATION_GROUP
   description = "Stub javadoc.jar artifact (required by Maven Central)"
   archiveClassifier.set("javadoc")
@@ -82,7 +79,7 @@ publishing {
       name = "MavenInternal"
     }
 
-    if (sonatypeRepositoryCredentials.isPresent()) {
+    if (sonatypeRepositoryCredentials.isPresent) {
       maven(sonatypeRepositoryReleaseUrl) {
         name = "SonatypeRelease"
         credentials(sonatypeRepositoryCredentials.get())
@@ -117,26 +114,6 @@ publishing {
     artifact(javadocJarStub)
   }
 }
-
-
-plugins.withType<KotlinMultiplatformPlugin>().configureEach {
-  publishing.publications.withType<MavenPublication>().configureEach {
-    //artifact(javadocJarStub)
-  }
-}
-
-
-plugins.withType<JavaPlugin>().configureEach {
-  afterEvaluate {
-    if (!isKotlinMultiplatformJavaEnabled()) {
-      publishing.publications.create<MavenPublication>("mavenJava") {
-        from(components["java"])
-        artifact(tasks["sourcesJar"])
-      }
-    }
-  }
-}
-
 
 plugins.withType<JavaPlatformPlugin>().configureEach {
 //  val javadocJarStub = javadocStubTask()

@@ -11,7 +11,7 @@ class EdgeCasesTest : FunSpec({
 
   tags(Knit)
   context("ExampleEdgecaseRecursiveReferences01") {
-    val caseName = testCase.name.testName
+    val caseName = testCase.name.name
 
     val actual = captureOutput(caseName) {
       dev.adamko.kxstsgen.example.exampleEdgecaseRecursiveReferences01.main()
@@ -39,7 +39,7 @@ class EdgeCasesTest : FunSpec({
   }
 
   context("ExampleEdgecaseRecursiveReferences02") {
-    val caseName = testCase.name.testName
+    val caseName = testCase.name.name
 
     val actual = captureOutput(caseName) {
       dev.adamko.kxstsgen.example.exampleEdgecaseRecursiveReferences02.main()
@@ -67,7 +67,7 @@ class EdgeCasesTest : FunSpec({
   }
 
   context("ExampleEdgecaseRecursiveReferences03") {
-    val caseName = testCase.name.testName
+    val caseName = testCase.name.name
 
     val actual = captureOutput(caseName) {
       dev.adamko.kxstsgen.example.exampleEdgecaseRecursiveReferences03.main()

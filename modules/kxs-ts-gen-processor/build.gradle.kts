@@ -7,10 +7,10 @@ description = "Experimental alternative to Kotlinx Serialization. Currently unus
 dependencies {
   implementation(platform(projects.modules.versionsPlatform))
 
-  implementation(libs.kotlinSymbolProcessing)
+//  implementation(libs.kotlinSymbolProcessing)
 
-  testImplementation(libs.kotlinCompileTesting)
-  testImplementation(libs.kotlinCompileTesting.ksp)
+//  testImplementation(libs.kotlinCompileTesting)
+//  testImplementation(libs.kotlinCompileTesting.ksp)
 
   implementation(projects.modules.kxsTsGenCore)
 

@@ -11,7 +11,7 @@ class TuplesTest : FunSpec({
 
   tags(Knit)
   context("ExampleTuple01") {
-    val caseName = testCase.name.testName
+    val caseName = testCase.name.name
 
     val actual = captureOutput(caseName) {
       dev.adamko.kxstsgen.example.exampleTuple01.main()
@@ -39,7 +39,7 @@ class TuplesTest : FunSpec({
   }
 
   context("ExampleTuple02") {
-    val caseName = testCase.name.testName
+    val caseName = testCase.name.name
 
     val actual = captureOutput(caseName) {
       dev.adamko.kxstsgen.example.exampleTuple02.main()
@@ -65,7 +65,7 @@ class TuplesTest : FunSpec({
   }
 
   context("ExampleTuple03") {
-    val caseName = testCase.name.testName
+    val caseName = testCase.name.name
 
     val actual = captureOutput(caseName) {
       dev.adamko.kxstsgen.example.exampleTuple03.main()
@@ -92,7 +92,7 @@ class TuplesTest : FunSpec({
   }
 
   context("ExampleTuple04") {
-    val caseName = testCase.name.testName
+    val caseName = testCase.name.name
 
     val actual = captureOutput(caseName) {
       dev.adamko.kxstsgen.example.exampleTuple04.main()
@@ -118,7 +118,7 @@ class TuplesTest : FunSpec({
   }
 
   context("ExampleTuple05") {
-    val caseName = testCase.name.testName
+    val caseName = testCase.name.name
 
     val actual = captureOutput(caseName) {
       dev.adamko.kxstsgen.example.exampleTuple05.main()

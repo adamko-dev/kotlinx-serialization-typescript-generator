@@ -7,19 +7,13 @@ import org.gradle.api.model.ObjectFactory
 import org.gradle.kotlin.dsl.named
 
 /** Mark this [Configuration] as one that will be consumed by other subprojects. */
-fun Configuration.asProvider(
-  visible: Boolean = false
-) {
-  isVisible = visible
+fun Configuration.asProvider() {
   isCanBeResolved = false
   isCanBeConsumed = true
 }
 
 /** Mark this [Configuration] as one that will consume (also known as 'resolving') artifacts from other subprojects */
-fun Configuration.asConsumer(
-  visible: Boolean = false
-) {
-  isVisible = visible
+fun Configuration.asConsumer() {
   isCanBeResolved = true
   isCanBeConsumed = false
 }

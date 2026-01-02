@@ -18,6 +18,8 @@ idea {
     excludeGeneratedGradleDsl(layout)
     excludeDirs = excludeDirs + layout.files(
       ".idea",
+      ".kotlin",
+      "buildSrc/.kotlin",
       "gradle/kotlin-js-store",
       "gradle/wrapper",
       "site/.docusaurus",

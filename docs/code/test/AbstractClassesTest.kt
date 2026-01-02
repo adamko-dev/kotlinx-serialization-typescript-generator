@@ -11,7 +11,7 @@ class AbstractClassesTest : FunSpec({
 
   tags(Knit)
   context("ExampleAbstractClassSingleField01") {
-    val caseName = testCase.name.testName
+    val caseName = testCase.name.name
 
     val actual = captureOutput(caseName) {
       dev.adamko.kxstsgen.example.exampleAbstractClassSingleField01.main()
@@ -36,7 +36,7 @@ class AbstractClassesTest : FunSpec({
   }
 
   context("ExampleAbstractClassPrimitiveFields01") {
-    val caseName = testCase.name.testName
+    val caseName = testCase.name.name
 
     val actual = captureOutput(caseName) {
       dev.adamko.kxstsgen.example.exampleAbstractClassPrimitiveFields01.main()
@@ -65,7 +65,7 @@ class AbstractClassesTest : FunSpec({
   }
 
   context("ExampleAbstractClassAbstractField01") {
-    val caseName = testCase.name.testName
+    val caseName = testCase.name.name
 
     val actual = captureOutput(caseName) {
       dev.adamko.kxstsgen.example.exampleAbstractClassAbstractField01.main()

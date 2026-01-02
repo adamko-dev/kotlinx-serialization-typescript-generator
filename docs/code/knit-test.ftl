@@ -19,7 +19,7 @@ class ${test.name} : FunSpec({
 <#--<#assign method = test["mode.${case.param}"]!"custom">-->
 <#list cases as case>
   context("${case.name}") {
-    val caseName = testCase.name.testName
+    val caseName = testCase.name.name
 
     val actual = captureOutput(caseName) {
       ${case.knit.package}.${case.knit.name}.main()

@@ -11,7 +11,7 @@ class MapsTests : FunSpec({
 
   tags(Knit)
   context("ExampleMapPrimitive01") {
-    val caseName = testCase.name.testName
+    val caseName = testCase.name.name
 
     val actual = captureOutput(caseName) {
       dev.adamko.kxstsgen.example.exampleMapPrimitive01.main()
@@ -35,7 +35,7 @@ class MapsTests : FunSpec({
   }
 
   context("ExampleMapPrimitive02") {
-    val caseName = testCase.name.testName
+    val caseName = testCase.name.name
 
     val actual = captureOutput(caseName) {
       dev.adamko.kxstsgen.example.exampleMapPrimitive02.main()
@@ -64,7 +64,7 @@ class MapsTests : FunSpec({
   }
 
   context("ExampleMapPrimitive03") {
-    val caseName = testCase.name.testName
+    val caseName = testCase.name.name
 
     val actual = captureOutput(caseName) {
       dev.adamko.kxstsgen.example.exampleMapPrimitive03.main()
@@ -88,7 +88,7 @@ class MapsTests : FunSpec({
   }
 
   context("ExampleMapPrimitive04") {
-    val caseName = testCase.name.testName
+    val caseName = testCase.name.name
 
     val actual = captureOutput(caseName) {
       dev.adamko.kxstsgen.example.exampleMapPrimitive04.main()
@@ -114,7 +114,7 @@ class MapsTests : FunSpec({
   }
 
   context("ExampleMapPrimitive05") {
-    val caseName = testCase.name.testName
+    val caseName = testCase.name.name
 
     val actual = captureOutput(caseName) {
       dev.adamko.kxstsgen.example.exampleMapPrimitive05.main()
@@ -140,7 +140,7 @@ class MapsTests : FunSpec({
   }
 
   context("ExampleMapPrimitive06") {
-    val caseName = testCase.name.testName
+    val caseName = testCase.name.name
 
     val actual = captureOutput(caseName) {
       dev.adamko.kxstsgen.example.exampleMapPrimitive06.main()
@@ -186,7 +186,7 @@ class MapsTests : FunSpec({
   }
 
   context("ExampleMapComplex01") {
-    val caseName = testCase.name.testName
+    val caseName = testCase.name.name
 
     val actual = captureOutput(caseName) {
       dev.adamko.kxstsgen.example.exampleMapComplex01.main()
@@ -219,7 +219,7 @@ class MapsTests : FunSpec({
   }
 
   context("ExampleMapComplex02") {
-    val caseName = testCase.name.testName
+    val caseName = testCase.name.name
 
     val actual = captureOutput(caseName) {
       dev.adamko.kxstsgen.example.exampleMapComplex02.main()
@@ -245,7 +245,7 @@ class MapsTests : FunSpec({
   }
 
   context("ExampleMapComplex03") {
-    val caseName = testCase.name.testName
+    val caseName = testCase.name.name
 
     val actual = captureOutput(caseName) {
       dev.adamko.kxstsgen.example.exampleMapComplex03.main()
