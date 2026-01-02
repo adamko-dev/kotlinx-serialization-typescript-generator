@@ -52,7 +52,8 @@ nmcpAggregation {
 }
 
 dependencies {
-  nmcpAggregation(project)
+  nmcpAggregation(projects.modules.kxsTsGenCore)
+  nmcpAggregation(projects.modules.versionsPlatform)
 }
 
 val isReleaseVersion: Provider<Boolean> =
