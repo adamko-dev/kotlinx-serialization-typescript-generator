@@ -23,6 +23,8 @@ kotlinProcess = "1.5.1"                  # https://github.com/pgreze/kotlin-proc
 
 gradleNodePlugin = "7.1.0"               # https://github.com/node-gradle/gradle-node-plugin/releases
 
+gradlePlugin-nmcp = "1.4.3"
+
 [libraries]
 
 kotlin-bom = { module = "org.jetbrains.kotlin:kotlin-bom", version.ref = "kotlin" }
@@ -65,13 +67,14 @@ kotlinx-knit-test = { module = "org.jetbrains.kotlinx:kotlinx-knit-test", versio
 
 ### Gradle Plugins ###
 
-gradlePlugin-kotlin = {  module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
-gradlePlugin-kotlinSerialization = {  module = "org.jetbrains.kotlin:kotlin-serialization", version.ref = "kotlin" }
+gradlePlugin-kotlin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
+gradlePlugin-kotlinSerialization = { module = "org.jetbrains.kotlin:kotlin-serialization", version.ref = "kotlin" }
 gradlePlugin-gradleNode = { module = "com.github.node-gradle:gradle-node-plugin", version.ref = "gradleNodePlugin" }
 gradlePlugin-kotlinxKover = { module = "org.jetbrains.kotlinx:kover-gradle-plugin", version.ref = "kotlinx-kover" }
 gradlePlugin-kotlinxKnit = { module = "org.jetbrains.kotlinx:kotlinx-knit", version.ref = "kotlinx-knit" }
 gradlePlugin-kotest = { module = "io.kotest:io.kotest.gradle.plugin", version.ref = "kotest" }
 gradlePlugin-kotlinSymbolProcessing = { module = "com.google.devtools.ksp:symbol-processing-gradle-plugin", version.ref = "kotlinSymbolProcessing" }
+gradlePlugin-nmcp = { module = "com.gradleup.nmcp:nmcp", version.ref = "gradlePlugin-nmcp" }
 
 [plugins]
 # Gradle Plugin versions are set in buildSrc/build.gradle.kts as regular dependencies, not via aliases
