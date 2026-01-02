@@ -1,13 +1,11 @@
 package buildsrc.convention
 
 import buildsrc.config.credentialsAction
-import buildsrc.config.isKotlinMultiplatformJavaEnabled
-import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinMultiplatformPlugin
-
 
 plugins {
   `maven-publish`
   signing
+  id("com.gradleup.nmcp")
 }
 
 val sonatypeRepositoryCredentials: Provider<Action<PasswordCredentials>> =
@@ -15,45 +13,39 @@ val sonatypeRepositoryCredentials: Provider<Action<PasswordCredentials>> =
 
 val projectVersion: Provider<String> = provider { project.version.toString() }
 
-val sonatypeRepositoryReleaseUrl: Provider<String> = projectVersion.map { version ->
-  val isSnapshot = version.endsWith("SNAPSHOT")
-  if (isSnapshot) {
-    "https://s01.oss.sonatype.org/content/repositories/snapshots/"
-  } else {
-    "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
-  }
-}
-
 
 //region Signing
 val signingKeyId: Provider<String> =
-  providers.gradleProperty("signing.keyId")
+  providers.gradleProperty("dev.adamko.kxstsgen.signing.keyId")
+    .orElse(providers.environmentVariable("MAVEN_SONATYPE_SIGNING_KEY_ID"))
 val signingKey: Provider<String> =
-  providers.gradleProperty("signing.key")
+  providers.gradleProperty("dev.adamko.kxstsgen.signing.key")
+    .orElse(providers.environmentVariable("MAVEN_SONATYPE_SIGNING_KEY"))
 val signingPassword: Provider<String> =
-  providers.gradleProperty("signing.password")
+  providers.gradleProperty("dev.adamko.kxstsgen.signing.password")
+    .orElse(providers.environmentVariable("MAVEN_SONATYPE_SIGNING_PASSWORD"))
 
 signing {
-  logger.info("maven-publishing.gradle.kts enabled signing for ${project.path}")
-
   val keyId = signingKeyId.orNull
   val key = signingKey.orNull
   val password = signingPassword.orNull
 
-  val signingKeysPresent =
+  val signingCredentialsPresent =
     !keyId.isNullOrBlank() && !key.isNullOrBlank() && !password.isNullOrBlank()
 
-  if (signingKeysPresent) {
+  if (signingCredentialsPresent) {
+    logger.info("maven-publishing.gradle.kts enabled signing for ${project.displayName}")
     useInMemoryPgpKeys(keyId, key, password)
   }
 
-  // only require signing when publishing to Sonatype
   setRequired({
-    signingKeysPresent
-      ||
-      gradle.taskGraph.allTasks
-        .filterIsInstance<PublishToMavenRepository>()
-        .any { it.repository.name == "SonatypeRelease" }
+    signingCredentialsPresent || gradle.taskGraph.allTasks
+      .filterIsInstance<PublishToMavenRepository>()
+      .any { task ->
+        task.repository.name in setOf(
+          "SonatypeRelease",
+        )
+      }
   })
 }
 
@@ -67,7 +59,7 @@ afterEvaluate {
 
 //region Javadoc JAR stub
 // use creating, not registering, because the signing plugin doesn't accept task providers
-val javadocJarStub by tasks.creating(Jar::class) {
+val javadocJarStub by tasks.registering(Jar::class) {
   group = JavaBasePlugin.DOCUMENTATION_GROUP
   description = "Stub javadoc.jar artifact (required by Maven Central)"
   archiveClassifier.set("javadoc")
@@ -80,13 +72,6 @@ publishing {
     // publish to local dir, for testing
     maven(rootProject.layout.buildDirectory.dir("maven-internal")) {
       name = "MavenInternal"
-    }
-
-    if (sonatypeRepositoryCredentials.isPresent()) {
-      maven(sonatypeRepositoryReleaseUrl) {
-        name = "SonatypeRelease"
-        credentials(sonatypeRepositoryCredentials.get())
-      }
     }
   }
   publications.withType<MavenPublication>().configureEach {
@@ -117,26 +102,6 @@ publishing {
     artifact(javadocJarStub)
   }
 }
-
-
-plugins.withType<KotlinMultiplatformPlugin>().configureEach {
-  publishing.publications.withType<MavenPublication>().configureEach {
-    //artifact(javadocJarStub)
-  }
-}
-
-
-plugins.withType<JavaPlugin>().configureEach {
-  afterEvaluate {
-    if (!isKotlinMultiplatformJavaEnabled()) {
-      publishing.publications.create<MavenPublication>("mavenJava") {
-        from(components["java"])
-        artifact(tasks["sourcesJar"])
-      }
-    }
-  }
-}
-
 
 plugins.withType<JavaPlatformPlugin>().configureEach {
 //  val javadocJarStub = javadocStubTask()
@@ -169,17 +134,15 @@ tasks.withType<AbstractPublishToMaven>().configureEach {
 //endregion
 
 
-//region IJ workarounds
-// manually define the Kotlin DSL accessors because IntelliJ _still_ doesn't load them properly
-fun Project.publishing(configure: PublishingExtension.() -> Unit): Unit =
-  extensions.configure(configure)
+//region Maven Central can't handle parallel uploads, so limit parallel uploads with a service.
+abstract class MavenPublishLimiter : BuildService<BuildServiceParameters.None>
 
-val Project.publishing: PublishingExtension
-  get() = extensions.getByType()
+val mavenPublishLimiter =
+  gradle.sharedServices.registerIfAbsent("mavenPublishLimiter", MavenPublishLimiter::class) {
+    maxParallelUsages = 1
+  }
 
-fun Project.signing(configure: SigningExtension.() -> Unit): Unit =
-  extensions.configure(configure)
-
-val Project.signing: SigningExtension
-  get() = extensions.getByType()
+tasks.withType<PublishToMavenRepository>().configureEach {
+  usesService(mavenPublishLimiter)
+}
 //endregion

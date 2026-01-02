@@ -1,10 +1,7 @@
 package buildsrc.config
 
-import org.gradle.api.GradleException
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.findByType
-import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
-import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTargetWithHostTests
 import org.jetbrains.kotlin.gradle.targets.js.yarn.YarnRootExtension
 
 

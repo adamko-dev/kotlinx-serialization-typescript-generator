@@ -61,13 +61,13 @@ jobs:
           ref: ${{ inputs.checkout-ref || github.ref }}
 
       - name: Validate Gradle Wrapper
-        uses: gradle/wrapper-validation-action@v3
+        uses: gradle/actions/wrapper-validation@v5
 
       - name: Setup JDK
         uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: 11
+          java-version: 17
 
       - name: Cache NPM
         uses: actions/cache@v4
@@ -88,11 +88,11 @@ jobs:
       - name: Run the tests
         run: ./gradlew ${{ inputs.gradle-task }}
         env:
-          ORG_GRADLE_PROJECT_sonatypeRepositoryUsername: ${{ secrets.MAVEN_SONATYPE_USERNAME }}
-          ORG_GRADLE_PROJECT_sonatypeRepositoryPassword: ${{ secrets.MAVEN_SONATYPE_PASSWORD }}
-          "ORG_GRADLE_PROJECT_signing.keyId": ${{ secrets.MAVEN_SONATYPE_SIGNING_KEY_ID }}
-          "ORG_GRADLE_PROJECT_signing.key": ${{ secrets.MAVEN_SONATYPE_SIGNING_KEY }}
-          "ORG_GRADLE_PROJECT_signing.password": ${{ secrets.MAVEN_SONATYPE_SIGNING_PASSWORD }}
+          MAVEN_SONATYPE_USERNAME: ${{ secrets.MAVEN_SONATYPE_USERNAME }}
+          MAVEN_SONATYPE_PASSWORD: ${{ secrets.MAVEN_SONATYPE_PASSWORD }}
+          MAVEN_SONATYPE_SIGNING_KEY_ID: ${{ secrets.MAVEN_SONATYPE_SIGNING_KEY_ID }}
+          MAVEN_SONATYPE_SIGNING_KEY: ${{ secrets.MAVEN_SONATYPE_SIGNING_KEY }}
+          MAVEN_SONATYPE_SIGNING_PASSWORD: ${{ secrets.MAVEN_SONATYPE_SIGNING_PASSWORD }}
 
       - name: Upload build reports
         if: failure()

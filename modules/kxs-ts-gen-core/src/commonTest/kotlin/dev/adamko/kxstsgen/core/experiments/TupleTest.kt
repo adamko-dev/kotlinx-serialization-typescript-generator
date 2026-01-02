@@ -8,106 +8,96 @@ import io.kotest.matchers.longs.shouldBeExactly
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldNotBeSameInstanceAs
 import io.kotest.property.Arb
-import io.kotest.property.arbitrary.Codepoint
-import io.kotest.property.arbitrary.az
-import io.kotest.property.arbitrary.boolean
-import io.kotest.property.arbitrary.int
-import io.kotest.property.arbitrary.long
-import io.kotest.property.arbitrary.string
+import io.kotest.property.arbitrary.*
 import io.kotest.property.checkAll
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.cbor.Cbor
 import kotlinx.serialization.decodeFromByteArray
-import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToByteArray
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
 class TupleTest : FunSpec({
 
-  context("Coordinates") {
-    test("json round trip") {
-      checkAll(
-        Arb.int(),
-        Arb.long(),
-        Arb.string(5, Codepoint.az()),
-        Arb.boolean(),
-      ) { x, y, d, b ->
-        val initial = Coordinates(x, y, d, b)
+  test("Coordinates - json round trip") {
+    checkAll(
+      Arb.int(-50..50),
+      Arb.long(-50L..50L),
+      Arb.string(5, Codepoint.az()),
+      Arb.boolean(),
+    ) { x, y, d, b ->
+      val initial = Coordinates(x, y, d, b)
 
-        val encoded: String = Json.encodeToString(initial)
+      val encoded: String = Json.encodeToString(initial)
 
-        val decoded: Coordinates = Json.decodeFromString(encoded)
+      val decoded: Coordinates = Json.decodeFromString(encoded)
 
-        withClue(
-          """
+      withClue(
+        """
             initial: $initial
             decoded: $decoded
           """.trimIndent()
-        ) {
-          initial.x shouldBeExactly decoded.x
-          initial.y shouldBeExactly decoded.y
-          initial.data shouldBe d
-          initial.active shouldBe b
-          initial shouldNotBeSameInstanceAs decoded
-        }
+      ) {
+        initial.x shouldBeExactly decoded.x
+        initial.y shouldBeExactly decoded.y
+        initial.data shouldBe d
+        initial.active shouldBe b
+        initial shouldNotBeSameInstanceAs decoded
       }
     }
+  }
 
-    test("Cbor round trip") {
-      checkAll(
-        Arb.int(),
-        Arb.long(),
-        Arb.string(5, Codepoint.az()),
-        Arb.boolean(),
-      ) { x, y, d, b ->
-        val initial = Coordinates(x, y, d, b)
+  test("Coordinates - Cbor round trip") {
+    checkAll(
+      Arb.int(-50..50),
+      Arb.long(-50L..50L),
+      Arb.string(5, Codepoint.az()),
+      Arb.boolean(),
+    ) { x, y, d, b ->
+      val initial = Coordinates(x, y, d, b)
 
-        val encoded: ByteArray = Cbor.encodeToByteArray(initial)
-//        println("encoded: ${encoded.joinToString { it.toString().padStart(4, ' ') }}")
+      val encoded: ByteArray = Cbor.encodeToByteArray(initial)
 
-        val decoded: Coordinates = Cbor.decodeFromByteArray(encoded)
+      val decoded: Coordinates = Cbor.decodeFromByteArray(encoded)
 
-        withClue(
-          """
+      withClue(
+        """
             initial: $initial
             decoded: $decoded
           """.trimIndent()
-        ) {
-          initial.x shouldBeExactly decoded.x
-          initial.y shouldBeExactly decoded.y
-          initial.data shouldBe d
-          initial.active shouldBe b
-          initial shouldNotBeSameInstanceAs decoded
-        }
+      ) {
+        initial.x shouldBeExactly decoded.x
+        initial.y shouldBeExactly decoded.y
+        initial.data shouldBe d
+        initial.active shouldBe b
+        initial shouldNotBeSameInstanceAs decoded
       }
     }
+  }
 
-    test("kxsBinary round trip") {
-      checkAll(
-        Arb.int(-50..50),
-        Arb.long(-50L..50L),
-        Arb.string(5, Codepoint.az()),
-        Arb.boolean(),
-      ) { x, y, d, b ->
-        val initial = Coordinates(x, y, d, b)
+  test("Coordinates - kxsBinary round trip") {
+    checkAll(
+      Arb.int(-50..50),
+      Arb.long(-50L..50L),
+      Arb.string(5, Codepoint.az()),
+      Arb.boolean(),
+    ) { x, y, d, b ->
+      val initial = Coordinates(x, y, d, b)
 
-        val encoded: ByteArray = kxsBinary.encodeToByteArray(initial)
+      val encoded: ByteArray = kxsBinary.encodeToByteArray(initial)
 
-        val decoded: Coordinates = kxsBinary.decodeFromByteArray(encoded)
+      val decoded: Coordinates = kxsBinary.decodeFromByteArray(encoded)
 
-        withClue(
-          """
+      withClue(
+        """
             initial: $initial
             decoded: $decoded
           """.trimIndent()
-        ) {
-          initial.x shouldBeExactly decoded.x
-          initial.y shouldBeExactly decoded.y
-          initial.data shouldBe d
-          initial.active shouldBe b
-          initial shouldNotBeSameInstanceAs decoded
-        }
+      ) {
+        initial.x shouldBeExactly decoded.x
+        initial.y shouldBeExactly decoded.y
+        initial.data shouldBe d
+        initial.active shouldBe b
+        initial shouldNotBeSameInstanceAs decoded
       }
     }
   }

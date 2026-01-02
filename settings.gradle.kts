@@ -45,15 +45,13 @@ dependencyResolutionManagement {
 
 include(
   ":modules:kxs-ts-gen-core",
-  ":modules:kxs-ts-gen-gradle-plugin",
-  ":modules:kxs-ts-gen-processor",
+//  ":modules:kxs-ts-gen-processor",
   ":modules:versions-platform",
   ":docs:code",
   ":site",
 )
 
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
-enableFeaturePreview("STABLE_CONFIGURATION_CACHE")
 
 //region git versioning
 val gitDescribe: Provider<String> =

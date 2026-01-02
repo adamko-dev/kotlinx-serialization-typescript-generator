@@ -12,4 +12,5 @@ dependencies {
   implementation(libs.gradlePlugin.kotlinxKnit)
   implementation(libs.gradlePlugin.kotest)
   implementation(libs.gradlePlugin.kotlinSymbolProcessing)
+  implementation(libs.gradlePlugin.nmcp)
 }

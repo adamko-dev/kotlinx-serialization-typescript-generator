@@ -11,7 +11,7 @@ class ListsTests : FunSpec({
 
   tags(Knit)
   context("ExampleListPrimitive01") {
-    val caseName = testCase.name.testName
+    val caseName = testCase.name.name
 
     val actual = captureOutput(caseName) {
       dev.adamko.kxstsgen.example.exampleListPrimitive01.main()
@@ -37,7 +37,7 @@ class ListsTests : FunSpec({
   }
 
   context("ExampleListObjects01") {
-    val caseName = testCase.name.testName
+    val caseName = testCase.name.name
 
     val actual = captureOutput(caseName) {
       dev.adamko.kxstsgen.example.exampleListObjects01.main()
@@ -67,7 +67,7 @@ class ListsTests : FunSpec({
   }
 
   context("ExampleListObjects02") {
-    val caseName = testCase.name.testName
+    val caseName = testCase.name.name
 
     val actual = captureOutput(caseName) {
       dev.adamko.kxstsgen.example.exampleListObjects02.main()

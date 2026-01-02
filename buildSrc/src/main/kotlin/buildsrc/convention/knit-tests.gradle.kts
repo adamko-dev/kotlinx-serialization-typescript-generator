@@ -1,8 +1,5 @@
 package buildsrc.convention
 
-import buildsrc.config.knitDocsAttributes
-import buildsrc.config.asConsumer
-import org.gradle.kotlin.dsl.withType
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {

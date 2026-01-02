@@ -11,7 +11,7 @@ class PolymorphismTest : FunSpec({
 
   tags(Knit)
   context("ExamplePolymorphicStaticTypes01") {
-    val caseName = testCase.name.testName
+    val caseName = testCase.name.name
 
     val actual = captureOutput(caseName) {
       dev.adamko.kxstsgen.example.examplePolymorphicStaticTypes01.main()
@@ -35,7 +35,7 @@ class PolymorphismTest : FunSpec({
   }
 
   context("ExamplePolymorphicStaticTypes02") {
-    val caseName = testCase.name.testName
+    val caseName = testCase.name.name
 
     val actual = captureOutput(caseName) {
       dev.adamko.kxstsgen.example.examplePolymorphicStaticTypes02.main()
@@ -65,7 +65,7 @@ class PolymorphismTest : FunSpec({
   }
 
   context("ExamplePolymorphicSealedClass01") {
-    val caseName = testCase.name.testName
+    val caseName = testCase.name.name
 
     val actual = captureOutput(caseName) {
       dev.adamko.kxstsgen.example.examplePolymorphicSealedClass01.main()
@@ -108,7 +108,7 @@ class PolymorphismTest : FunSpec({
   }
 
   context("ExamplePolymorphicSealedClass02") {
-    val caseName = testCase.name.testName
+    val caseName = testCase.name.name
 
     val actual = captureOutput(caseName) {
       dev.adamko.kxstsgen.example.examplePolymorphicSealedClass02.main()
@@ -196,7 +196,7 @@ class PolymorphismTest : FunSpec({
   }
 
   context("ExamplePolymorphicObjects01") {
-    val caseName = testCase.name.testName
+    val caseName = testCase.name.name
 
     val actual = captureOutput(caseName) {
       dev.adamko.kxstsgen.example.examplePolymorphicObjects01.main()
@@ -236,7 +236,7 @@ class PolymorphismTest : FunSpec({
   }
 
   context("ExampleGenerics01") {
-    val caseName = testCase.name.testName
+    val caseName = testCase.name.name
 
     val actual = captureOutput(caseName) {
       dev.adamko.kxstsgen.example.exampleGenerics01.main()
@@ -260,7 +260,7 @@ class PolymorphismTest : FunSpec({
   }
 
   context("ExampleJsonPolymorphic01") {
-    val caseName = testCase.name.testName
+    val caseName = testCase.name.name
 
     val actual = captureOutput(caseName) {
       dev.adamko.kxstsgen.example.exampleJsonPolymorphic01.main()
