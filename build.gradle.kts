@@ -57,7 +57,7 @@ dependencies {
 }
 
 val isReleaseVersion: Provider<Boolean> =
-  providers.provider { project.version.toString().endsWith("-SNAPSHOT") }
+  providers.provider { !project.version.toString().endsWith("-SNAPSHOT") }
 
 tasks.nmcpPublishAggregationToCentralPortal {
   val isReleaseVersion = isReleaseVersion
