@@ -30,7 +30,6 @@ kotlin {
         implementation(libs.kotest.assertionsJson)
         implementation(libs.kotest.property)
         implementation(libs.kotest.frameworkEngine)
-//        implementation(libs.kotest.frameworkDatatest)
 
         implementation(libs.kotlinx.serialization.cbor)
         implementation(libs.okio.core)
