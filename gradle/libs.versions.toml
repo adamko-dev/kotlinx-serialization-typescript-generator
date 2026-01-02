@@ -13,7 +13,7 @@ kotlinx-knit = "0.5.0"                   # https://github.com/Kotlin/kotlinx-kni
 kotlinx-coroutines = "1.10.2"            # https://github.com/Kotlin/kotlinx.coroutines/releases
 kotlinx-kover = "0.9.4"                  # https://github.com/Kotlin/kotlinx-kover/releases
 
-okio = "3.12.0"                           # https://search.maven.org/artifact/com.squareup.okio/okio
+okio = "3.16.4"                           # https://search.maven.org/artifact/com.squareup.okio/okio
 
 kotest = "6.0.7"                         # https://github.com/kotest/kotest/releases
 
