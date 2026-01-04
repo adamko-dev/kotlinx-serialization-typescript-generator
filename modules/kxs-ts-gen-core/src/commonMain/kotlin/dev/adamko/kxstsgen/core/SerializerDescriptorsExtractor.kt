@@ -1,8 +1,13 @@
 package dev.adamko.kxstsgen.core
 
-import dev.adamko.kxstsgen.core.util.MutableMapWithDefaultPut
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.descriptors.*
+import kotlinx.serialization.modules.SerializersModule
+import kotlinx.serialization.modules.SerializersModuleCollector
+import kotlinx.serialization.DeserializationStrategy
+import kotlinx.serialization.SerializationStrategy
+import kotlin.reflect.KClass
+
 
 
 /**
@@ -14,75 +19,188 @@ fun interface SerializerDescriptorsExtractor {
     serializer: KSerializer<*>
   ): Set<SerialDescriptor>
 
+  companion object {
+    /** The default [SerializerDescriptorsExtractor], for easy use. */
+    fun default(
+      serializersModule: SerializersModule,
+    ): SerializerDescriptorsExtractor {
+      return Default(
+        elementDescriptorsExtractor = TsElementDescriptorsExtractor.default(serializersModule)
+      )
+    }
+  }
 
-  object Default : SerializerDescriptorsExtractor {
+  class Default(
+    private val elementDescriptorsExtractor: TsElementDescriptorsExtractor,
+  ) : SerializerDescriptorsExtractor {
 
     override operator fun invoke(
       serializer: KSerializer<*>
     ): Set<SerialDescriptor> {
-      return extractDescriptors(serializer.descriptor)
+      val moduleDescriptors = elementDescriptorsExtractor.collectModuleDescriptors()
+      return extractDescriptors(
+        current = serializer.descriptor,
+        queue = ArrayDeque(),
+        extracted = emptySet(),
+        moduleDescriptors = moduleDescriptors
+      )
         .distinctBy { it.nullable }
         .toSet()
     }
-
 
     private tailrec fun extractDescriptors(
       current: SerialDescriptor? = null,
       queue: ArrayDeque<SerialDescriptor> = ArrayDeque(),
       extracted: Set<SerialDescriptor> = emptySet(),
+      moduleDescriptors: Set<SerialDescriptor> = emptySet(),
     ): Set<SerialDescriptor> {
       return if (current == null) {
         extracted
       } else {
-        val currentDescriptors = elementDescriptors.getValue(current)
+        val currentDescriptors = elementDescriptorsExtractor.elementDescriptors(current, moduleDescriptors)
         queue.addAll(currentDescriptors - extracted)
-        extractDescriptors(queue.removeFirstOrNull(), queue, extracted + current)
+        extractDescriptors(queue.removeFirstOrNull(), queue, extracted + current, moduleDescriptors)
       }
     }
+  }
+}
 
 
-    private val elementDescriptors by MutableMapWithDefaultPut<SerialDescriptor, Iterable<SerialDescriptor>> { descriptor ->
-      when (descriptor.kind) {
-        SerialKind.ENUM       -> emptyList()
+interface TsElementDescriptorsExtractor {
+  fun elementDescriptors(descriptor: SerialDescriptor, moduleDescriptors: Set<SerialDescriptor>): Iterable<SerialDescriptor>
+  fun collectModuleDescriptors(): Set<SerialDescriptor> = emptySet()
 
-        SerialKind.CONTEXTUAL -> emptyList()
+  companion object {
 
-        PrimitiveKind.BOOLEAN,
-        PrimitiveKind.BYTE,
-        PrimitiveKind.CHAR,
-        PrimitiveKind.SHORT,
-        PrimitiveKind.INT,
-        PrimitiveKind.LONG,
-        PrimitiveKind.FLOAT,
-        PrimitiveKind.DOUBLE,
-        PrimitiveKind.STRING  -> emptyList()
+    fun default(serializersModule: SerializersModule) =
+      object : TsElementDescriptorsExtractor {
 
-        StructureKind.CLASS,
-        StructureKind.LIST,
-        StructureKind.MAP,
-        StructureKind.OBJECT  -> descriptor.elementDescriptors
+        private val cachedModuleDescriptors by lazy {
+          collectDescriptorsFromModule(serializersModule)
+        }
 
-        PolymorphicKind.SEALED,
-        PolymorphicKind.OPEN  ->
-          // Polymorphic descriptors have 2 elements, the 'type' and 'value' - we don't need either
-          // for generation, they're metadata that will be used later.
-          // The elements of 'value' are similarly unneeded, but their elements might contain new
-          // descriptors - so extract them
-          descriptor.elementDescriptors
-            .flatMap { it.elementDescriptors }
-            .flatMap { it.elementDescriptors }
+        override fun collectModuleDescriptors(): Set<SerialDescriptor> = cachedModuleDescriptors
 
-        // Example:
-        // com.application.Polymorphic<MySealedClass>
-        //   ├── 'type' descriptor (ignore / it's a String, so check its elements, it doesn't hurt)
-        //   └── 'value' descriptor (check elements...)
-        //        ├── com.application.Polymorphic<Subclass1>  (ignore)
-        //        │   ├── Double                              (extract!)
-        //        │   └── com.application.SomeOtherClass      (extract!)
-        //        └── com.application.Polymorphic<Subclass2>  (ignore)
-        //            ├── UInt                                (extract!)
-        //            └── List<com.application.AnotherClass   (extract!
+        override fun elementDescriptors(descriptor: SerialDescriptor, moduleDescriptors: Set<SerialDescriptor>): Iterable<SerialDescriptor> {
+          return when (descriptor.kind) {
+            SerialKind.ENUM       -> emptyList()
+
+            SerialKind.CONTEXTUAL -> {
+              resolveContextualDescriptor(descriptor, moduleDescriptors)
+            }
+
+            PrimitiveKind.BOOLEAN,
+            PrimitiveKind.BYTE,
+            PrimitiveKind.CHAR,
+            PrimitiveKind.SHORT,
+            PrimitiveKind.INT,
+            PrimitiveKind.LONG,
+            PrimitiveKind.FLOAT,
+            PrimitiveKind.DOUBLE,
+            PrimitiveKind.STRING -> emptyList()
+
+            StructureKind.CLASS,
+            StructureKind.LIST,
+            StructureKind.MAP,
+            StructureKind.OBJECT -> descriptor.elementDescriptors
+
+            PolymorphicKind.SEALED,
+            PolymorphicKind.OPEN  -> {
+              resolvePolymorphicDescriptors(descriptor, moduleDescriptors)
+            }
+          }
+        }
+
+        private fun resolveContextualDescriptor(descriptor: SerialDescriptor, moduleDescriptors: Set<SerialDescriptor>): Iterable<SerialDescriptor> {
+          val typeParameters = getTypeParametersFromDescriptor(descriptor)
+          return typeParameters.flatMap { typeParam ->
+            moduleDescriptors.filter { moduleDesc ->
+              moduleDesc.serialName.endsWith(typeParam) || 
+              moduleDesc.serialName.endsWith(".$typeParam")
+            }
+          }
+        }
+
+        private fun resolvePolymorphicDescriptors(descriptor: SerialDescriptor, moduleDescriptors: Set<SerialDescriptor>): Iterable<SerialDescriptor> {
+          val baseType = getPolymorphicBaseType(descriptor) ?: descriptor.serialName
+          
+          val subclassDescriptors = moduleDescriptors.filter { moduleDesc ->
+            moduleDesc.kind.let { it is StructureKind.CLASS || it is StructureKind.OBJECT } &&
+            isSubclassOf(moduleDesc.serialName, baseType)
+          }
+
+          return subclassDescriptors + subclassDescriptors.flatMap { it.elementDescriptors } + 
+                 descriptor.elementDescriptors
+                   .flatMap { it.elementDescriptors }
+                   .flatMap { it.elementDescriptors }
+        }
+
+        private fun getTypeParametersFromDescriptor(descriptor: SerialDescriptor): List<String> {
+          val serialName = descriptor.serialName
+          if (serialName.contains("<") && serialName.contains(">")) {
+            val typeParam = serialName.substringAfter("<").substringBefore(">")
+            return listOf(typeParam)
+          }
+          return emptyList()
+        }
+
+        private fun getPolymorphicBaseType(descriptor: SerialDescriptor): String? {
+          val serialName = descriptor.serialName
+          return if (serialName.contains("<") && serialName.contains(">")) {
+            serialName.substringAfter("<").substringBefore(">")
+          } else {
+            null
+          }
+        }
+
+        private fun isSubclassOf(subclassSerialName: String, baseClassSerialName: String): Boolean {
+          val subclassSimpleName = subclassSerialName.substringAfterLast(".")
+          val baseSimpleName = baseClassSerialName.substringAfterLast(".")
+          
+          val subclassPackage = subclassSerialName.substringBeforeLast(".", "")
+          val basePackage = baseClassSerialName.substringBeforeLast(".", "")
+          
+          return subclassSimpleName != baseSimpleName &&
+                 !subclassSimpleName.contains("$") &&
+                 !subclassSimpleName.contains("Companion") &&
+                 subclassPackage == basePackage
+        }
       }
+
+    private fun collectDescriptorsFromModule(serializersModule: SerializersModule): Set<SerialDescriptor> {
+      val descriptors = mutableSetOf<SerialDescriptor>()
+
+      serializersModule.dumpTo(object : SerializersModuleCollector {
+        override fun <T : Any> contextual(
+          kClass: KClass<T>,
+          provider: (typeArgumentsSerializers: List<KSerializer<*>>) -> KSerializer<*>
+        ) {
+          val serializer = provider(emptyList())
+          descriptors.add(serializer.descriptor)
+        }
+
+        override fun <Base : Any, Sub : Base> polymorphic(
+          baseClass: KClass<Base>,
+          actualClass: KClass<Sub>,
+          actualSerializer: KSerializer<Sub>
+        ) {
+          descriptors.add(actualSerializer.descriptor)
+        }
+
+        override fun <Base : Any> polymorphicDefaultSerializer(
+          baseClass: KClass<Base>,
+          defaultSerializerProvider: (value: Base) -> SerializationStrategy<Base>?
+        ) {
+        }
+
+        override fun <Base : Any> polymorphicDefaultDeserializer(
+          baseClass: KClass<Base>,
+          defaultDeserializerProvider: (className: String?) -> DeserializationStrategy<Base>?
+        ) {
+        }
+      })
+
+      return descriptors
     }
   }
 }
