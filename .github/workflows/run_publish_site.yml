@@ -59,7 +59,7 @@ jobs:
           gradle-home-cache-cleanup: true
           arguments: docusaurusBuild
 
-      - uses: actions/upload-pages-artifact@v3
+      - uses: actions/upload-pages-artifact@v4
         with:
           path: ./site/build
 
